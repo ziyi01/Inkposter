@@ -1,0 +1,28 @@
+{
+  "name": "inkposter",
+  "version": "0.0.0",
+  "description": "A real-time party game based on skribbl.io and Fake Artist goes to New York. ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ziyi01/Inkposter.git"
+  },
+  "contributors": [
+    {
+      "name": "Julia Wang",
+      "url": "https://github.com/ziyi01/"
+    },
+    {
+      "name": "Julia Hallberg"
+    },
+    {
+      "name": "Jessica Gorwat"
+    }, {
+      "name": "Oliver Kamruzzaman"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ziyi01/Inkposter/issues"
+  },
+  "homepage": "https://github.com/ziyi01/Inkposter#readme"
+}
