@@ -5,6 +5,10 @@
 */.pnp
 *.pnp.js
 
+# dotenv environment variables file
+.env
+.env.test
+
 # testing
 */coverage
 
@@ -21,3 +25,4 @@
 *npm-debug.log*
 *yarn-debug.log*
 *yarn-error.log*
+.vscode
