@@ -1,6 +1,6 @@
 services:
   web:
     build: ./
-    image: inkposter
+    image: ziyi01/inkposter
     ports:
       - "3000:3000"
