@@ -1,18 +1,15 @@
 ###################################################
 # Stage 1: Base
 FROM node:20 AS base
+WORKDIR /usr/local/app
+COPY package*.json ./
+RUN npm install
 
 ###################################################
 # Stage 2: client-base
 FROM base AS client-base
 WORKDIR /usr/local/app/app
-RUN npm install && npm run build
-
-###################################################
-# Stage 3: server-base
-FROM base AS server-base
-WORKDIR /usr/local/app/server
-RUN npm install
+RUN npm run build
 
 ###################################################
 # FROM server-base AS test
