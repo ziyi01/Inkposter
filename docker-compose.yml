@@ -1,0 +1,22 @@
+services:
+  server:
+    build: ./server
+    container_name: server-base
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    expose:
+      - "8080"
+  client:
+    build: ./app
+    container_name: client-base
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
