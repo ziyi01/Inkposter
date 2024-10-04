@@ -20,8 +20,8 @@ async function connectToMongoDB() {
   }
 }
 
-async function create() {
-    await client.db("sample_dh2643").collection('users').insertOne({ name: "Göran" });
+async function create(username) {
+    await client.db("dh2643_inkposter").collection('users').insertOne({ name: username });
     console.log("\nInserted new document in collection")
 }
 
