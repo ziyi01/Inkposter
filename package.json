@@ -37,8 +37,5 @@
   "homepage": "https://github.com/ziyi01/Inkposter#readme",
   "devDependencies": {
     "jest": "^29.7.0"
-  },
-  "dependencies": {
-    "react-sketch-canvas": "^6.2.0"
   }
 }
