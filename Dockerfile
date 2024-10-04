@@ -26,7 +26,7 @@ RUN npm install
 ###################################################
 # Stage 4: final
 # FROM base AS final
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 EXPOSE 3000
 COPY . ./
 CMD ["npm","start"]
