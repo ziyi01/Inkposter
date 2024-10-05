@@ -24,9 +24,16 @@ async function connectToMongoDB() {
 // --- CREATE ---
 
 async function createUser(userID, username, avatar) {
+  try {
     await client.db("dh2643_inkposter").collection('users').insertOne({_id : userID, username, avatar});
-    await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}});
-}
+    await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: []});
+  
+  } catch (err) {
+    throw new Error(err);
+  }
+
+    
+  }
 
 // --- READ ---
 
@@ -41,30 +48,34 @@ async function getUserStats(userID) {
 
 // --- UPDATE ---
 
-async function udpateUsername(userID, username) {
-  await client.db("dh2643_inkposter").collection('users').updateOne({ userID: userID }, {$set: {username: username}});
-  return {};
+async function updateUsername(userID, username) {
+  return await client.db("dh2643_inkposter").collection('users').updateOne({ _id: userID }, {$set: {username: username}});
 }
 
-async function udpateAvatar(userID, avatar) {
-  await client.db("dh2643_inkposter").collection('users').updateOne({ userID: userID }, {$set: {avatar: avatar}});
-  return {};
+async function updateAvatar(userID, avatar) {
+  return await client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$set: {avatar: avatar}});
 }
 
-async function addSessionResults(userID, avatar) {
-  //await client.db("dh2643_inkposter").collection('user_stats').updateOne({ userID: userID }, {$set: {avatar: avatar}});
-  return {};
+async function addSessionResults(userID, scores, drawing) {
+  return await client.db("dh2643_inkposter").collection('user_stats').updateOne({ _id: userID }, {$set: scores, $push: {gallery: drawing}});
 }
+
 
 // --- DELETE ---
 
 // Delete user
-async function getUserProfile(userID) {
-  await client.db("dh2643_inkposter").collection('users').deleteOne({ userID: username });
-  await client.db("dh2643_inkposter").collection('user_stats').insertOne({ userID: username });
+async function deleteUserProfile(userID) {
+  const response_user = await client.db("dh2643_inkposter").collection('users').deleteOne({ _id: userID });
+  const response_stats = await client.db("dh2643_inkposter").collection('user_stats').deleteOne({ _id: userID });
+  
+  return (response_user.deletedCount == 1 && response_stats.deletedCount == 1);
 }
 
 exports.connectToMongoDB = connectToMongoDB;
 exports.createUser = createUser;
 exports.getUser = getUser;
 exports.getUserStats = getUserStats;
+exports.updateUsername = updateUsername;
+exports.updateAvatar = updateAvatar;
+exports.addSessionResults = addSessionResults;
+exports.deleteUserProfile = deleteUserProfile;

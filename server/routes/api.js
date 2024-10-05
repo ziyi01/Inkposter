@@ -9,7 +9,7 @@ var db = require('../db');
 // --- CREATE ----
 
 // Create and persist user with unique userID
-router.post('/user', async function (req, res, next) { // tested as get
+router.post('/user', async function (req, res, next) { 
   const userID = '12345'; //req.body.userID;
   const username = 'test_user'; //req.body.userID;
   const avatar = 'me.png'; //req.body.userID;
@@ -37,14 +37,13 @@ router.get('/user/:user_id', async function (req, res, next) {
       res.status(404).send('404 | User not found.');
     }
   } catch (err) {
-    res.status(502).send('502 | Bad Gateway.');
+    res.status(500).send('500 | Something went wrong.');
   }
 });
 
 // Get stats from user's previous games
 router.get('/user/:user_id/user_stats', async function (req, res, next) {
   const {user_id} = req.params; 
-  console.log(user_id);
 
   try {
     var response = await db.getUserStats(user_id);
@@ -54,7 +53,7 @@ router.get('/user/:user_id/user_stats', async function (req, res, next) {
       res.status(404).send('404 | User not found.');
     }
   } catch (err) {
-    res.status(502).send('502 | Bad Gateway.');
+    res.status(500).send('500 | Something went wrong.');
   }
 
 });
@@ -63,33 +62,86 @@ router.get('/user/:user_id/user_stats', async function (req, res, next) {
 // --- UPDATE ---
 
 // Update username
-router.put('/user/:user_id/username', function (req, res, next) {
-  res.status(501).send('not implemented');
-  // res.status(400).send('Username already exists');
+// TODO (potentially): make sure users can't choose an existing username
+router.put('/user/:user_id/username', async function (req, res, next) {
+  const {user_id} = req.params; 
+  const username = 'placeholder_new_name'; //req.body.userID;
+
+  try {
+    var response = await db.updateUsername(user_id, username);
+    if (response != null) {
+        if (response.acknowledged) {
+          res.status(200).send('200 | Username updated.');
+        } else {
+          res.status(500).send('500 | Could not update username.');
+        }
+    } else {
+      res.status(500).send('500 | Something went wrong :(');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.');
+  }
 });
 
 // Update avatar
-router.put('/user/:user_id/avatar', function (req, res, next) {
-  res.status(501).send('not implemented');
+router.put('/user/:user_id/avatar', async function (req, res, next) {
+  const {user_id} = req.params; 
+  const avatar = 'placeholder_new_avatar.png'; //req.body.avatar;
+
+  try {
+    var response = await db.updateAvatar(user_id, avatar);
+    if (response != null) {
+        if (response.acknowledged) {
+          res.status(200).send('200 | Avatar updated.');
+        } else {
+          res.status(500).send('500 | Could not update avatar.');
+        }
+    } else {
+      res.status(500).send('500 | Something went wrong :(');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.');
+  }
 });
 
-// Add drawing to user's gallery
-router.put('/user/:user_id/session_results', function (req, res, next) {
-  res.status(501).send('not implemented');
+// Increment relevant wins/losses and add drawing to user's gallery
+router.put('/user/:user_id/session_results', async function (req, res, next) {
+  const {user_id} = req.params; 
+  const scores = {innocent: {wins: 4, losses:0}, inkposter: {wins: 4, losses: 7}}; //req.body.scores;
+  const drawing = 'placeholder_drawing.png' //req.body.drawing;
 
-  /*
-    TODO
-    - update relevant score (wins/losses as innocent/impostor)
-    - add drawing to user's gallery
-  */
-
+  try {
+    var response = await db.addSessionResults(user_id, scores, drawing);
+    if (response != null) {
+        if (response.acknowledged) {
+          res.status(200).send(response); //'200 | Sessions results added to profile.' 
+        } else {
+          res.status(500).send('500 | Could not sessions scores.');
+        }
+    } else {
+      res.status(500).send('500 | Something went wrong :(');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.' + err);
+  }
 });
 
 // --- DELETE ---
 
 // Delete user
-router.delete('/user/:user_id', function (req, res, next) {
-  res.status(501).send('not implemented');
+router.delete('/user/:user_id/delete', async function (req, res, next) { //delete('/user/:user_id', async function (req, res, next) {
+  const {user_id} = req.params; 
+
+  try {
+    var deleted = await db.deleteUserProfile(user_id);
+    if (deleted) {
+        res.status(200).send('200 | User deleted.');
+    } else {
+      res.status(500).send('500 | Something went wrong :(');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.');
+  }
 });
 
 
