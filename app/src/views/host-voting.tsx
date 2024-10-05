@@ -1,11 +1,16 @@
 import React from 'react';
 
-const SomeComponent: React.FC = () => {
+const HostVoting: React.FC = () => {
   return (
     <div>
-      {/* Component logic will go here */}
+      <h1>
+        Guess the theme!
+      </h1>
+      <h1>
+        Vote for the Inkposter!
+      </h1>
     </div>
   );
 }
 
-export default SomeComponent;
+export default HostVoting;
