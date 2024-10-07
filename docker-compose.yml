@@ -1,5 +1,6 @@
 services:
   web:
+    env_file: .env
     build: ./
     image: ziyi01/inkposter
     ports:

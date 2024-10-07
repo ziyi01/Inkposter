@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/ziyi01/Inkposter#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^4.3.2",
     "jest": "^29.7.0"
   }
 }
