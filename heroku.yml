@@ -1,0 +1,8 @@
+# Add environment variables
+# process.env.VARIABLE_NAME
+# setup:
+#  config:
+#    env_file: .env
+build:
+  docker:
+    web: Dockerfile
