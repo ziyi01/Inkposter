@@ -1,7 +1,7 @@
 // setup connection to mongodb
 const { json } = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://jessicagorwat:adviprog24@cluster0.mf3im.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -18,6 +18,15 @@ async function connectToMongoDB() {
     return client.db();
   } catch (err) {
     console.error("MongoDB connection error:", err);
+  }
+}
+
+async function disconnectFromMongoDB() {
+  try {
+    await client.close();
+    console.log("Successfully disconnected from MongoDB!");
+  } catch (err) {
+    console.error("MongoDB disconnection error:", err);
   }
 }
 
@@ -72,6 +81,7 @@ async function deleteUserProfile(userID) {
 }
 
 exports.connectToMongoDB = connectToMongoDB;
+exports.disconnectFromMongoDB = disconnectFromMongoDB;
 exports.createUser = createUser;
 exports.getUser = getUser;
 exports.getUserStats = getUserStats;
