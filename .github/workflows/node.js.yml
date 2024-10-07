@@ -3,6 +3,9 @@
 
 name: Node.js CI
 
+env:
+  MONGODB_URI: ${{secrets.MONGODB_URI}}
+
 on:
   pull_request:
     branches: [ "main" ]
