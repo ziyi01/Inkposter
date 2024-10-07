@@ -3,5 +3,8 @@ services:
     env_file: .env
     build: ./
     image: ziyi01/inkposter
+    container_name: inkposter
+    volumes:
+      - .:/usr/local/app
     ports:
       - "3000:3000"
