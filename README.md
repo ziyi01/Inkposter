@@ -102,17 +102,48 @@ $ npm start
 | `docker.yml`    | `Docker CI`                        | Deploys the docker image          | Push to `main`-branch               |
 | `main.yml`      | `Deploy`                           | Deploys the application to Heroku | Pull request `main`-branch          |
 
-
 ### Tests
 Add tests
 
 ## File structure
 ### Front-end
 ```
+└── src/
+    ├── components/
+    │   └── toolbar.tsx
+    ├── presenters/
+    │   └── player-game-presenter.tsx
+    ├── views/
+    │   ├── homepage.tsx
+    │   ├── host-game.tsx
+    │   ├── host-session-end.tsx
+    │   ├── host-voting.tsx
+    │   ├── host-waiting.tsx
+    │   ├── loading.tsx
+    │   ├── login-page.tsx
+    │   ├── player-game.tsx
+    │   ├── player-session-end.tsx
+    │   ├── player-voting.tsx
+    │   ├── player-waiting.tsx
+    │   └── profile.tsx
+    ├── App.css
+    ├── App.tsx
+    ├── global.css
+    ├── index.css
+    ├── index.tsx
+    └── logo.svg
 ```
 
 ### Back-end
 ```
+└── server/
+    ├── bin/
+    │   └── www
+    ├── routes/
+    │   ├── api.js
+    │   └── index.js
+    ├── app.js
+    └── db.js
 ```
 
 ## The Developers
