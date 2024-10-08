@@ -1,6 +1,6 @@
 services:
   web:
-    env_file: ./server/.env
+    env_file: .env
     build: ./
     image: ziyi01/inkposter
     container_name: inkposter

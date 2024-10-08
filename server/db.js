@@ -1,3 +1,5 @@
+var debug = require('debug')('server:db');
+
 // setup connection to mongodb
 const { json } = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -14,7 +16,7 @@ const client = new MongoClient(uri, {
 async function connectToMongoDB() {
   try {
     await client.connect();
-    console.log("Successfully connected to MongoDB!");
+    debug("Successfully connected to MongoDB!");
     return client.db();
   } catch (err) {
     console.error("MongoDB connection error:", err);
@@ -24,7 +26,7 @@ async function connectToMongoDB() {
 async function disconnectFromMongoDB() {
   try {
     await client.close();
-    console.log("Successfully disconnected from MongoDB!");
+    debug("Successfully disconnected from MongoDB!");
   } catch (err) {
     console.error("MongoDB disconnection error:", err);
   }

@@ -7,9 +7,6 @@ on:
     pull_request:
         branches:
             - main
-    push:
-        branches:
-            - socket-testing
 jobs:
     coverage:
         runs-on: ubuntu-latest
