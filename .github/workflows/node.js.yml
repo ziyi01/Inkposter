@@ -29,3 +29,11 @@ jobs:
     - run: npm ci
     - run: npm run dev-build --if-present
     - run: npm test
+  
+  
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: npm run dev-build --if-present
+    - uses: ArtiomTr/jest-coverage-report-action@v2
