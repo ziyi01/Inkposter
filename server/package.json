@@ -14,7 +14,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mongodb": "~6.8.1",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "openai": "^4.67.2"
   },
   "devDependencies": {
     "jest": "^29.7.0"
