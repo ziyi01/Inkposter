@@ -2,7 +2,7 @@ var debug = require('debug')('server:openai');
 var OpenAI = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function generate_session_params(previousThemes="", fakeThemeCount=3, playerCount=8) {
+async function generateSessionParams(previousThemes="", fakeThemeCount=3, playerCount=8) {
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -38,7 +38,7 @@ async function generate_session_params(previousThemes="", fakeThemeCount=3, play
     }
 }
 
-async function generate_username() {
+async function generateUsername() {
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -69,5 +69,5 @@ async function generate_username() {
     }
 }
 
-exports.generate_session_params = generate_session_params;
-exports.generate_username = generate_username;
+exports.generateSessionParams = generateSessionParams;
+exports.generateUsername = generateUsername;
