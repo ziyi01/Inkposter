@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server/bin/www",
     "dev-build": "cd app/ && npm install && npm run build && cd ../server/ && npm install",
-    "test": "cd server/ && npm test && cd ../app/ && npm run test:nowatch"
+    "test": "jest"
   },
   "cacheDirectories": [
     "server/node_modules",
@@ -36,6 +36,21 @@
   },
   "homepage": "https://github.com/ziyi01/Inkposter#readme",
   "devDependencies": {
-    "dotenv": "^16.4.5"
+    "@babel/core": "^7.25.7",
+    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-react": "^7.25.7",
+    "@babel/preset-typescript": "^7.25.7",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "babel-jest": "^29.7.0",
+    "dotenv": "^16.4.5",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "projects": [
+      "app/jest.config.js",
+      "server/jest.config.js"
+    ]
   }
 }
