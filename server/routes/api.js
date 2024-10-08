@@ -26,7 +26,7 @@ router.post('/user', async function (req, res, next) {
 
 // --- READ ---
 
-// Get name and avatar
+// Get general user information (name, avatar, previous themes)
 router.get('/user/:user_id', async function (req, res, next) {
   const {user_id} = req.params; 
   
@@ -99,6 +99,27 @@ router.put('/user/:user_id/avatar', async function (req, res, next) {
         }
     } else {
       res.status(500).send('500 | Something went wrong :(');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.');
+  }
+});
+
+// Add current theme to users previous themes
+router.put('/user/:user_id/previousTheme', async function (req, res, next) {
+  const {user_id} = req.params; 
+  const currentTheme = 'space'; //req.body.currentTheme;
+
+  try {
+    var response = await db.addPreviousTheme(user_id, currentTheme);
+    if (response != null) {
+        if (response.acknowledged) {
+          res.status(200).send('200 | Theme added to previous themes.');
+        } else {
+          res.status(500).send('500 | Could not add theme.');
+        }
+    } else {
+      res.status(500).send('500 | Something went wrong.');
     }
   } catch (err) {
     res.status(500).send('500 | Something went wrong.');
