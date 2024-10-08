@@ -1,5 +1,5 @@
 require("dotenv").config();
-var db = require("../server/db");
+var db = require("../db.js");
 
 describe("Connection and db test", () => { 
     beforeAll(async () => {
