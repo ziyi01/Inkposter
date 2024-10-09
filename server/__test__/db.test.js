@@ -1,5 +1,5 @@
 require("dotenv").config();
-var db = require("../server/db");
+var db = require("../db.js");
 
 describe("Connection and db test", () => { 
     beforeAll(async () => {
@@ -33,9 +33,9 @@ describe("Connection and db test", () => {
         await db.updateUsername("0", "rat");
     });
 
-    afterAll(async () => {
+    afterAll((done) => {
         // Close connection
-        await db.disconnectFromMongoDB();
-        return;
+        db.disconnectFromMongoDB();
+        done();
     });
 });

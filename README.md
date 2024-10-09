@@ -103,7 +103,21 @@ $ npm start
 | `main.yml`      | `Deploy`                           | Deploys the application to Heroku | Pull request `main`-branch          |
 
 ### Tests
-Add tests
+Test coverage is reported when creating a pull-request into the `main`-branch. Unit tests are separated into the folders `./app/__tests__` for UI tests and `./server/__test__` for server tests:
+
+| **File**             | **Test**                                  | **Type**            |
+|----------------------|-------------------------------------------|---------------------|
+| `App.test.tsx`       | `App renders login page properly`         | UI test             |
+| `App.test.tsx`       | `Login button fires off callback`         | UI test             |
+| `App.test.tsx`       | `Redirect to /login when app rendered`    | UI test             |
+| `db.test.js`         | `Create and delete user`                  | Database test       |
+| `db.test.js`         | `Retrieve user`                           | Database test       |
+| `db.test.js`         | `Retrieve user stats`                     | Database test       |
+| `db.test.js`         | `Update username`                         | Database test       |
+| `route.test.js`      | `/api/user/0 return test user`            | REST API test       |
+| `route.test.js`      | `/api/user/0/user_stats return stats`     | REST API test       |
+| `route.test.js`      | `/api/user/10000 return 404`              | REST API test       |
+
 
 ## File structure
 ### Front-end
@@ -113,6 +127,7 @@ Add tests
     │   └── toolbar.tsx
     ├── presenters/
     │   └── player-game-presenter.tsx
+    |   └── host-game-presenter.tsx
     ├── views/
     │   ├── homepage.tsx
     │   ├── host-game.tsx
@@ -131,6 +146,7 @@ Add tests
     ├── global.css
     ├── index.css
     ├── index.tsx
+    ├── serModel.tsx
     └── logo.svg
 ```
 
@@ -140,8 +156,7 @@ Add tests
     ├── bin/
     │   └── www
     ├── routes/
-    │   ├── api.js
-    │   └── index.js
+    │   └── api.js
     ├── app.js
     └── db.js
 ```

@@ -1,3 +1,5 @@
+var debug = require('debug')('server:db');
+
 // setup connection to mongodb
 var debug = require('debug')('server:mongodb');
 const { MongoClient, ServerApiVersion } = require('mongodb');
