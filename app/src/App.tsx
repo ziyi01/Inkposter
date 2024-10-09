@@ -8,10 +8,13 @@ import SettingsPage from './views/host-game';
 import HostGamePage from './presenters/host-game-presenter';
 import { UserModel } from './userModel';
 
-const App: React.FC = () => {
+interface AppProps {
+  model: UserModel;
+}
+
+const App: React.FC<AppProps> = ({model}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const model = new UserModel();
   const handleLogin = (username: string, password: string): boolean => {
     // Mock login
     if (username === 'admin' && password === 'password') {

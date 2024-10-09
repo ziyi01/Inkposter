@@ -4,13 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './global.css';
+import { UserModel } from './userModel';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const model = new UserModel();
+
 root.render(
   <React.StrictMode>
-    <App />
+    <App model={model} />
   </React.StrictMode>
 );
 
