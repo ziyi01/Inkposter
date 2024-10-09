@@ -33,9 +33,9 @@ describe("Connection and db test", () => {
         await db.updateUsername("0", "rat");
     });
 
-    afterAll(async () => {
+    afterAll((done) => {
         // Close connection
-        await db.disconnectFromMongoDB();
-        return;
+        db.disconnectFromMongoDB();
+        done();
     });
 });

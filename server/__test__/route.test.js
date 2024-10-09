@@ -2,6 +2,7 @@ require("dotenv").config();
 var debug = require('debug')('test:route');
 const request = require('supertest');
 const app = require('../app');
+var db = require("../db.js");
 
 describe('REST API endpoint tests', () => {
     test('/api/user/0 should return test user', async () => {
@@ -26,6 +27,12 @@ describe('REST API endpoint tests', () => {
 
         expect(response.statusCode).toBe(404);
     })
+
+    afterAll((done) => {
+        // Close connection
+        db.disconnectFromMongoDB();
+        done();
+    });
 });
 
 // TODO: Add tests for OpenAI API

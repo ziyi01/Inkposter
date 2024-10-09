@@ -156,8 +156,7 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
     ├── bin/
     │   └── www
     ├── routes/
-    │   ├── api.js
-    │   └── index.js
+    │   └── api.js
     ├── app.js
     └── db.js
 ```

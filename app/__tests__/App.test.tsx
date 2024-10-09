@@ -3,7 +3,7 @@ var debug = require('debug')('test:app');
 import React from 'react';
 import "@testing-library/jest-dom"
 import { render, fireEvent, screen } from '@testing-library/react';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 // import client components
 import App from '../src/App';
@@ -33,4 +33,8 @@ test('Redirect to /login when rendered', () => {
   render(<App/>);
   debug('Current path: ' + window.location.pathname);
   expect(window.location.pathname).toBe('/login');
+});
+
+afterAll((done) => {
+  done();
 });
