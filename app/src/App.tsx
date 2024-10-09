@@ -5,12 +5,13 @@ import LoginPage from './views/login-page';
 import HomePage from './views/homepage';
 import ProfilePage from './views/profile';
 import SettingsPage from './views/host-game'; 
-import HostGamePage from './views/host-game';
-
+import HostGamePage from './presenters/host-game-presenter';
+import { UserModel } from './userModel';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  const model = new UserModel();
   const handleLogin = (username: string, password: string): boolean => {
     // Mock login
     if (username === 'admin' && password === 'password') {
@@ -21,7 +22,8 @@ const App: React.FC = () => {
       return false; 
     }
   };
-
+  
+  // TODO: Pass model to components and link to presenters
   return (
     <Router>
       <Routes>
@@ -43,7 +45,7 @@ const App: React.FC = () => {
         />
         <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
 
-        <Route path="/host-game" element={isAuthenticated ? <HostGamePage /> : <Navigate to="/login" />}
+        <Route path="/host-game" element={isAuthenticated ? <HostGamePage model={model}/> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>

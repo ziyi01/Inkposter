@@ -17,7 +17,7 @@ test('App renders login page and finds login button', () => {
   expect(buttonElement).not.toBeDisabled();
 });
 
-test('login with invalid credentials', () => {
+test('Login fires off onLogin', () => {
   const onLogin = jest.fn(() => false);
   render(<MemoryRouter initialEntries={['/login']}>
       <LoginPage onLogin={onLogin} />
@@ -29,7 +29,7 @@ test('login with invalid credentials', () => {
 });
 
 
-test('redirect to /login when rendered', () => {
+test('Redirect to /login when rendered', () => {
   render(<App/>);
   debug('Current path: ' + window.location.pathname);
   expect(window.location.pathname).toBe('/login');
