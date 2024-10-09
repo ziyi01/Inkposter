@@ -1,7 +1,7 @@
 var debug = require('debug')('server:db');
 
 // setup connection to mongodb
-const { json } = require('express');
+var debug = require('debug')('server:mongodb');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.MONGODB_URI
 
@@ -19,7 +19,7 @@ async function connectToMongoDB() {
     debug("Successfully connected to MongoDB!");
     return client.db();
   } catch (err) {
-    console.error("MongoDB connection error:", err);
+    debug("MongoDB connection error:", err);
   }
 }
 
@@ -28,7 +28,7 @@ async function disconnectFromMongoDB() {
     await client.close();
     debug("Successfully disconnected from MongoDB!");
   } catch (err) {
-    console.error("MongoDB disconnection error:", err);
+    debug("MongoDB disconnection error:", err);
   }
 }
 
@@ -40,6 +40,7 @@ async function createUser(userID, username, avatar) {
     await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: []});
   
   } catch (err) {
+    debug("An error occured: ", err);
     throw new Error(err);
   }
 
