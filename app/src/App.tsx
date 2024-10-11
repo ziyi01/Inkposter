@@ -8,12 +8,16 @@ import SettingsPage from './views/host-game';
 import HostGamePage from './presenters/host-game-presenter';
 import { UserModel } from './userModel';
 
+import runTests from './server-requests-tests';
+
 interface AppProps {
   model: UserModel;
 }
 
 const App: React.FC<AppProps> = ({model}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  runTests();
 
   const handleLogin = (username: string, password: string): boolean => {
     // Mock login
