@@ -1,8 +1,7 @@
 import io from 'socket.io-client';
-require('debug')('app:socket');
-
-var socket = io();
+var debug = require('debug')('app:socket');
 var roomId = '';
+const socket = io();
 debug('Socket: ' + socket);
 
 // ------------------------------
@@ -12,7 +11,7 @@ export function initSockets(model) {
     // Host-side listeners
     socket.on('room-created', (data) => {   // Server answer with roomID
         debug('Room created: ' + data.roomId);
-        roomId = data.roomId;
+        model.roomId = data.roomId;
     }); 
     socket.on('player-joined', (data) => {  // Player joined room
         debug('Player joined: ' + data.playerName);
@@ -27,7 +26,7 @@ export function initSockets(model) {
 
     // Player-side listeners
     socket.on('game-started', (data) => {   // Player game started
-        model.startGame(data.prompt);
+        model.startGamePlayer(data.prompt);
     });
     socket.on('voting-ended', (data) => {   // Voting ended at the end of game
         model.endVoting(data.result);

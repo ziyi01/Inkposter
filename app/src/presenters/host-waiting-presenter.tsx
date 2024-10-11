@@ -1,19 +1,19 @@
 import React from 'react';
 // import components
-import HostGameView from '../views/host-game';
+import HostWaitingView from '../views/host-waiting';
 import { UserModel } from '../userModel';
 import { endGame } from '../components/socket-client';
 var debug = require('debug')('app:host-game-presenter');
 
-interface HostGameProps {
+interface HostWaitingProps {
     model: UserModel;
 }
 
-const HostGame: React.FC<HostGameProps> = ({model}) => {
+const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
 
     return (
-        <HostGameView />
+        <HostWaiting />
     );
 }
 
-export default HostGame;
+export default HostWaiting;

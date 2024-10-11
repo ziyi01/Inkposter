@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SomeComponent: React.FC = () => {
+const HostWaitingView: React.FC = () => {
   return (
     <div>
       {/* Component logic will go here */}
@@ -8,4 +8,4 @@ const SomeComponent: React.FC = () => {
   );
 }
 
-export default SomeComponent;
+export default HostWaitingView;

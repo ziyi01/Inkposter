@@ -6,7 +6,6 @@ export type playerSession = {
 }
 
 export type hostSession = {
-    sessionID: string;
     players: playerSession[];
     theme: string;
 };
@@ -18,6 +17,7 @@ export class UserModel {
     id: number | undefined;
     name: string | undefined;
     host: boolean;
+    roomId: string | undefined;
     sessionHost: hostSession | undefined;
     sessionPlayer: playerSession | undefined;
 
@@ -25,6 +25,7 @@ export class UserModel {
         this.id = id;
         this.name = name;
         this.host = host;
+        this.roomId = undefined; 
         this.sessionHost = undefined;
         this.sessionPlayer = undefined; 
     }
@@ -34,7 +35,43 @@ export class UserModel {
         this.name = playerName;
     }
     
-    /**
-     * TODO: Create functions to add sessions for host and player
-     */
+    createHostSession(room:string) {
+        this.host = true;
+        this.roomId = room
+        this.sessionHost = {
+            players: [],
+            theme: ""
+        } as hostSession;
+    }
+
+    getRoom() {
+        if (!this.roomId) {
+            throw Error("No room ID found");
+        }
+        return this.roomId;
+    }
+
+    updateGame() { // Update theme and players
+
+    }
+
+    updateCanvas() { // Receives playerName and canvas-file
+
+    }
+
+    updateVoting() {
+
+    }
+
+    startGameHost() {
+        
+    }
+
+    startGamePlayer() {
+
+    }
+
+    endVoting() {
+
+    }
 }
