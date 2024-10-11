@@ -116,20 +116,29 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 | `db.test.js`         | `Retrieve user stats`                          | Database test       |
 | `db.test.js`         | `Update username and retrieve user`            | Database test       |
 | `route.test.js`      | `/api/user/0 return test user`                 | REST API test       |
-| `route.test.js`      | `/api/user/0/user_stats return stats`          | REST API test       |
+| `route.test.js`      | `/api/user/0/userStats return stats`           | REST API test       |
 | `route.test.js`      | `/api/user/10000 return 404`                   | REST API test       |
 | `route.test.js`      | `/api/openai/username should return 200`       | REST API test       |
 | `route.test.js`      | `/api/openai/sessionPrompts should return 200` | REST API test       |
 
 ## File structure
 ### Front-end
+The front-end application uses a MVP-architecture. The code is divided into folders `components` (for repeated components and cripts), `presenters` and `views`. `userModel.tsx` is the model for the application and the app is mounted using `App.tsx` and `index.tsx`.
+
 ```
 └── src/
     ├── components/
+    │   ├── socket-client.js
     │   └── toolbar.tsx
     ├── presenters/
-    │   └── player-game-presenter.tsx
-    |   └── host-game-presenter.tsx
+    │   ├── host-end-presenter.tsx
+    │   ├── host-game-presenter.tsx
+    │   ├── host-voting-presenter.tsx
+    │   ├── host-waiting-presenter.tsx
+    │   ├── player-end-presenter.tsx
+    │   ├── player-game-presenter.tsx
+    │   ├── player-voting-presenter.tsx
+    │   └── player-waiting-presenter.tsx
     ├── views/
     │   ├── homepage.tsx
     │   ├── host-game.tsx
@@ -148,11 +157,13 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
     ├── global.css
     ├── index.css
     ├── index.tsx
-    ├── serModel.tsx
+    ├── userModel.tsx
     └── logo.svg
 ```
 
 ### Back-end
+The back-end is quite short, `routes/api.js` contain the REST endpoints of the app. `bin/www` initialises the server and socket.io. `db.js`, `openai.js` and `socket.js` implement MongoDB, OpenAI and socket.io respectively.
+
 ```
 └── server/
     ├── bin/
@@ -160,7 +171,9 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
     ├── routes/
     │   └── api.js
     ├── app.js
-    └── db.js
+    ├── db.js
+    ├── openai.js
+    └── socket.js
 ```
 
 ## The Developers
