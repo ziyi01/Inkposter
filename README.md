@@ -96,28 +96,29 @@ $ npm start
 | `GET`        | `/openai/session_prompts`          |                   |
 
 ## Workflows
-| **File**        | **Workflow**                       | **Description**                   | **On**                              |
-|-----------------|------------------------------------|-----------------------------------|-------------------------------------|
-| `node.js.yml`   | `Node.js CI`                       | Runs unit tests in `/test`        | Pull and Push to `main`-branch      |
-| `docker.yml`    | `Docker CI`                        | Deploys the docker image          | Push to `main`-branch               |
-| `main.yml`      | `Deploy`                           | Deploys the application to Heroku | Pull request `main`-branch          |
+| **File**        | **Workflow**                       | **Description**                       | **On**                              |
+|-----------------|------------------------------------|---------------------------------------|-------------------------------------|
+| `node.js.yml`   | `Node.js CI`                       | Build and run tests                   | Pull and Push to `main`-branch      |
+| `test.yml`      | `Coverage`                         | Runs tests and create coverage report | Pull `main`-branch       |
+| `docker.yml`    | `Docker CI`                        | Deploys the docker image              | Push to `main`-branch               |
+| `main.yml`      | `Deploy`                           | Deploys the application to Heroku     | Pull request `main`-branch          |
 
 ### Tests
 Test coverage is reported when creating a pull-request into the `main`-branch. Unit tests are separated into the folders `./app/__tests__` for UI tests and `./server/__test__` for server tests:
 
-| **File**             | **Test**                                  | **Type**            |
-|----------------------|-------------------------------------------|---------------------|
-| `App.test.tsx`       | `App renders login page properly`         | UI test             |
-| `App.test.tsx`       | `Login button fires off callback`         | UI test             |
-| `App.test.tsx`       | `Redirect to /login when app rendered`    | UI test             |
-| `db.test.js`         | `Create and delete user`                  | Database test       |
-| `db.test.js`         | `Retrieve user`                           | Database test       |
-| `db.test.js`         | `Retrieve user stats`                     | Database test       |
-| `db.test.js`         | `Update username`                         | Database test       |
-| `route.test.js`      | `/api/user/0 return test user`            | REST API test       |
-| `route.test.js`      | `/api/user/0/user_stats return stats`     | REST API test       |
-| `route.test.js`      | `/api/user/10000 return 404`              | REST API test       |
-
+| **File**             | **Test**                                       | **Type**            |
+|----------------------|------------------------------------------------|---------------------|
+| `App.test.tsx`       | `App renders login page properly`              | UI test             |
+| `App.test.tsx`       | `Login button fires off callback`              | UI test             |
+| `App.test.tsx`       | `Redirect to /login when app rendered`         | UI test             |
+| `db.test.js`         | `Create and delete user`                       | Database test       |
+| `db.test.js`         | `Retrieve user stats`                          | Database test       |
+| `db.test.js`         | `Update username and retrieve user`            | Database test       |
+| `route.test.js`      | `/api/user/0 return test user`                 | REST API test       |
+| `route.test.js`      | `/api/user/0/user_stats return stats`          | REST API test       |
+| `route.test.js`      | `/api/user/10000 return 404`                   | REST API test       |
+| `route.test.js`      | `/api/openai/username should return 200`       | REST API test       |
+| `route.test.js`      | `/api/openai/sessionPrompts should return 200` | REST API test       |
 
 ## File structure
 ### Front-end
@@ -162,9 +163,9 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 ```
 
 ## The Developers
-- <a href="/">Jessica Gorwat</a>
-- <a href="/">Julia Hallberg</a>
-- <a href="/">Oliver Kamruzzaman</a>
-- <a href="/">Julia Wang</a>
+- <a href="https://github.com/gorwat">Jessica Gorwat</a>
+- <a href="https://github.com/JuliaHallberg">Julia Hallberg</a>
+- <a href="https://github.com/okam97">Oliver Kamruzzaman</a>
+- <a href="https://github.com/ziyi01/">Julia Wang</a>
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>

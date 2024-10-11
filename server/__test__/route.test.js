@@ -4,7 +4,7 @@ const request = require('supertest');
 const app = require('../app');
 var db = require("../db.js");
 
-describe('REST API endpoint tests', () => {
+describe('MongoDB endpoint tests', () => {
     test('/api/user/0 should return test user', async () => {
         const response = await request(app).get('/api/user/0');
         debug(response);
@@ -35,4 +35,22 @@ describe('REST API endpoint tests', () => {
     });
 });
 
-// TODO: Add tests for OpenAI API
+// ------------------------------
+// OpenAI tests
+// ------------------------------
+describe('OpenAI endpoint tests', () => {
+    test('/api/openai/username should return 200', async () => {
+        const response = await request(app).get('/api/openai/username');
+        debug(response);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.type).toBe('text/html');
+    });
+    test('/api/openai/sessionPrompts should return 200', async () => {
+        const response = await request(app).get('/api/openai/sessionPrompts');
+        debug(response);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.type).toBe('text/html');
+    });
+});

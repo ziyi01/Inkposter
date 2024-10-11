@@ -15,11 +15,6 @@ describe("Connection and db test", () => {
         expect(user).toBe(null);
     })
 
-    test("Retrieve user", async () => {
-        const user = await db.getUser("0");
-        expect(user).toEqual({ _id: "0", username: 'rat', avatar: 'rat.png' });
-    });
-
     test("Retrieve user stats", async () => {
         const stats = await db.getUserStats("0");
         expect(stats).toEqual({ _id: "0", innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: [] });
@@ -29,7 +24,7 @@ describe("Connection and db test", () => {
         const response = await db.updateUsername("0", "rat1");
         expect(response.acknowledged).toBe(true);
         const user = await db.getUser("0");
-        expect(user).toEqual({ _id: "0", username: 'rat1', avatar: 'rat.png' });
+        expect(user).toEqual({ _id: "0", username: 'rat1', avatar: 'rat.png' , "previousThemes": []});
         await db.updateUsername("0", "rat");
     });
 
