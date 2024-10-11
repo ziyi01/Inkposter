@@ -12,7 +12,7 @@ const players: Player[] = [
     { id: 3, name: 'Player 3' },
 ];
 
-const HostGame: React.FC = () => {
+const HostGameView: React.FC = () => {
   return (
     <div>
       <h1>Draw!</h1>
@@ -50,4 +50,4 @@ const styles = {
   },
 };
 
-export default HostGame;
+export default HostGameView;

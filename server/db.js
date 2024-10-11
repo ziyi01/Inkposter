@@ -1,3 +1,5 @@
+var debug = require('debug')('server:db');
+
 // setup connection to mongodb
 var debug = require('debug')('server:mongodb');
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -34,7 +36,7 @@ async function disconnectFromMongoDB() {
 
 async function createUser(userID, username, avatar) {
   try {
-    await client.db("dh2643_inkposter").collection('users').insertOne({_id : userID, username, avatar});
+    await client.db("dh2643_inkposter").collection('users').insertOne({_id : userID, username, avatar, previousThemes: []});
     await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: []});
   
   } catch (err) {
@@ -66,6 +68,10 @@ async function updateAvatar(userID, avatar) {
   return await client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$set: {avatar: avatar}});
 }
 
+async function addPreviousTheme(userID, currentTheme) {
+  return await  client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$push: {previousThemes: currentTheme}});
+}
+
 async function addSessionResults(userID, scores, drawing) {
   return await client.db("dh2643_inkposter").collection('user_stats').updateOne({ _id: userID }, {$set: scores, $push: {gallery: drawing}});
 }
@@ -88,5 +94,6 @@ exports.getUser = getUser;
 exports.getUserStats = getUserStats;
 exports.updateUsername = updateUsername;
 exports.updateAvatar = updateAvatar;
+exports.addPreviousTheme = addPreviousTheme;
 exports.addSessionResults = addSessionResults;
 exports.deleteUserProfile = deleteUserProfile;
