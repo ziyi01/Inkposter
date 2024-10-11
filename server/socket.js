@@ -9,7 +9,7 @@ module.exports.initSockets = function(socket, io){
     socket.on('host-room', () => { // Host create room
         
         // Initialise room
-        roomId = require('crypto').randomBytes(2).toString('hex'); // Create room ID
+        const roomId = require('crypto').randomBytes(2).toString('hex'); // Create room ID
         roomData[roomId] = {
             host: socket,
             playerCount: 0,
