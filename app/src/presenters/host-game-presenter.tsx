@@ -19,6 +19,7 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
     */
    const navigate = useNavigate();
    const [playerCanvas, setCanvas] = useState({}); // Filled with base64-encoded images 
+   const [timer, setTimer] = useState(60); // TODO: Update timer and add to view
 
     useEffect(() => {
         // Update when model.updateCanvas is called from player
@@ -28,15 +29,14 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
         });
     }, []);
 
-    // TODO: add a timer that runs
     function onTimerEnd() {
         endGame(model.roomId);
-        navigate('/host-end');
+        navigate('/host-voting');
     }
 
     return (
         <div>
-            <HostGameView players={playerCanvas}/>
+            <HostGameView playerCanvas={playerCanvas}/>
             Socket: {socket.id}
             Canvas: {playerCanvas.toString()}
         </div>

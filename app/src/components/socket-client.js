@@ -4,28 +4,6 @@ var debug = require('debug')('app:socket');
 export const socket = io();
 debug('Socket: ' + socket);
 
-// ------------------------------
-// Client-side socket listeners
-// ------------------------------
-export function initSockets(model) {
-    // Player-side listeners
-    socket.on('game-started', (data) => {   // Player game started
-        model.startGamePlayer(data.prompt);
-    });
-    socket.on('voting-ended', (data) => {   // Voting ended at the end of game
-        model.endVoting(data.result);
-    });
-
-    // Error handling
-    socket.on('room-not-found', (data) => {
-        debug('Room not found: ' + data.roomId);
-    });
-
-    socket.on('player-count-error', (data) => { 
-        debug('Player count error, player count at: ' + data.playerCount);
-    });
-}
-
 export function closeConnection() {
     socket.close();
 }
@@ -40,8 +18,12 @@ export function hostRoom() {
 }
 
 export function startGame(roomId, players) {
-    // A player has {playerName, prompt}, prompt is "Inkposter" if evil
+    // A player has {playerName, prompt}, prompt is '' or "inkposter" if evil
     socket.emit('start-game', {roomId: roomId, players: players});
+}
+
+export function votingEnded(roomId, result) {
+    socket.emit('end-voting', {roomId: roomId, result: result});
 }
 
 export function endGame(roomId) {

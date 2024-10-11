@@ -18,13 +18,13 @@ export type hostSession = {
  */
 export class UserModel {
     id: number | undefined;
-    name: string | undefined;
+    name: string;
     host: boolean;
     roomId: string;
     sessionHost: hostSession | undefined;
     sessionPlayer: playerSession | undefined;
 
-    constructor(id=undefined, name=undefined, host: boolean=false) {
+    constructor(id=undefined, name='', host: boolean=false) {
         this.id = id;
         this.name = name;
         this.host = host;
@@ -38,6 +38,10 @@ export class UserModel {
         this.name = playerName;
     }
     
+    setRoomId(roomId:string) {
+        this.roomId = roomId;
+    }
+
     createHostSession(room:string) {
         if(this.roomId != '') {
             closeGame(this.roomId);
@@ -74,17 +78,17 @@ export class UserModel {
         }
     }
 
-    updateVoting() { // Update model with voting results
-
+    updateVoting(playerName:string, vote:string, themeVote:string) { // Update model with voting results
+        // TODO: Implement
     }
 
-    startGamePlayer() { // Update model with prompt and role
-        if(!this.host) {
-
+    startGamePlayer(prompt:string) { // Update model with prompt and role
+        if(!this.host) { 
+            this.sessionPlayer = {
+                playerName: this.name,
+                prompt: prompt,
+                role: prompt != '' ? "Innocent" : "Inkposter"
+            }
         }
-    }
-
-    endVoting() { //
-
     }
 }
