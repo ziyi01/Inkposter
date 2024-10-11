@@ -1,6 +1,6 @@
-// källa: https://vinoth.info/react-sketch-canvas/examples/
-
+// Need to npm install react-icons
 import React from 'react';
+import { FaPen, FaEraser, FaUndo, FaRedo, FaTrashAlt } from 'react-icons/fa'; // Import icons
 
 interface ToolbarProps {
   eraseMode: boolean;
@@ -32,63 +32,104 @@ const Toolbar: React.FC<ToolbarProps> = ({
   handleStrokeColorChange,
 }) => {
   return (
-    <div className="d-flex gap-2 align-items-center">
-      <button type="button" className="btn btn-sm btn-outline-primary" disabled={!eraseMode} onClick={handlePenClick}>
-        Pen
-      </button>
-
-      <span style={{ display: eraseMode ? 'none' : 'block' }}>
-        <label htmlFor="strokeWidth" className="form-label">
-          Stroke width
+    <div className="flex items-center gap-4 bg-gray-800 p-4 rounded-lg">
+      {/* Stroke Color Picker */}
+      <div className="flex items-center gap-2">
+        <label htmlFor="color" className="text-white">
+          Color
         </label>
         <input
-          disabled={eraseMode}
-          type="range"
-          className="form-range"
-          min="1"
-          max="20"
-          step="1"
-          id="strokeWidth"
-          value={strokeWidth}
-          onChange={handleStrokeWidthChange}
+          type="color"
+          value={strokeColor}
+          onChange={handleStrokeColorChange}
+          className="w-10 h-10 p-1 rounded-full"
         />
-      </span>
+      </div>
 
-      <button type="button" className="btn btn-sm btn-outline-primary" disabled={eraseMode} onClick={handleEraserClick}>
-        Eraser
+      {/* Pen Icon */}
+      <button
+        type="button"
+        className={`text-white p-2 rounded-full transition-colors ${!eraseMode ? 'bg-blue-500' : 'bg-gray-600'} hover:bg-blue-500`}
+        onClick={handlePenClick}
+        disabled={!eraseMode}
+      >
+        <FaPen size={20} />
       </button>
 
-      <span style={{ display: !eraseMode ? 'none' : 'block' }}>
-        <label htmlFor="eraserWidth" className="form-label">
-          Eraser width
-        </label>
-        <input
-          disabled={!eraseMode}
-          type="range"
-          className="form-range"
-          min="1"
-          max="20"
-          step="1"
-          id="eraserWidth"
-          value={eraserWidth}
-          onChange={handleEraserWidthChange}
-        />
-      </span>
-
-      <button type="button" className="btn btn-sm btn-outline-primary" onClick={handleUndoClick}>
-        Undo
+      {/* Eraser Icon */}
+      <button
+        type="button"
+        className={`text-white p-2 rounded-full transition-colors ${eraseMode ? 'bg-blue-500' : 'bg-gray-600'} hover:bg-blue-500`}
+        onClick={handleEraserClick}
+        disabled={eraseMode}
+      >
+        <FaEraser size={20} />
       </button>
 
-      <button type="button" className="btn btn-sm btn-outline-primary" onClick={handleRedoClick}>
-        Redo
+      {/* Eraser Width Control */}
+      {eraseMode && (
+        <div className="flex items-center gap-2">
+          <label htmlFor="eraserWidth" className="text-white">
+            Eraser Width
+          </label>
+          <input
+            type="range"
+            className="form-range w-24"
+            min="1"
+            max="20"
+            step="1"
+            id="eraserWidth"
+            value={eraserWidth}
+            onChange={handleEraserWidthChange}
+          />
+        </div>
+      )}
+
+      {/* Stroke Width Control */}
+      {!eraseMode && (
+        <div className="flex items-center gap-2">
+          <label htmlFor="strokeWidth" className="text-white">
+            Stroke Width
+          </label>
+          <input
+            type="range"
+            className="form-range w-24"
+            min="1"
+            max="20"
+            step="1"
+            id="strokeWidth"
+            value={strokeWidth}
+            onChange={handleStrokeWidthChange}
+          />
+        </div>
+      )}
+
+      {/* Undo Icon */}
+      <button
+        type="button"
+        className="text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500"
+        onClick={handleUndoClick}
+      >
+        <FaUndo size={20} />
       </button>
 
-      <button type="button" className="btn btn-sm btn-outline-primary" onClick={handleClearClick}>
-        Clear
+      {/* Redo Icon */}
+      <button
+        type="button"
+        className="text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500"
+        onClick={handleRedoClick}
+      >
+        <FaRedo size={20} />
       </button>
 
-      <label htmlFor="color">Stroke color</label>
-      <input type="color" value={strokeColor} onChange={handleStrokeColorChange} />
+      {/* Clear Icon */}
+      <button
+        type="button"
+        className="text-white bg-red-600 p-2 rounded-full transition-colors hover:bg-red-700"
+        onClick={handleClearClick}
+      >
+        <FaTrashAlt size={20} />
+      </button>
     </div>
   );
 };
