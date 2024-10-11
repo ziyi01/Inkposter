@@ -1,11 +1,11 @@
 import React from 'react';
 
-const SomeComponent: React.FC = () => {
+const PlayerSessionEnd: React.FC = () => {
   return (
     <div>
-      {/* Component logic will go here */}
+      {/* */}
     </div>
   );
 }
 
-export default SomeComponent;
+export default PlayerSessionEnd;

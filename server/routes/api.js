@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
+var openai = require('../openai');
 
 // ---------------
 // Database routes
@@ -25,12 +26,12 @@ router.post('/user', async function (req, res, next) {
 
 // --- READ ---
 
-// Get name and avatar
-router.get('/user/:user_id', async function (req, res, next) {
-  const {user_id} = req.params; 
+// Get general user information (name, avatar, previous themes)
+router.get('/user/:userID', async function (req, res, next) {
+  const {userID} = req.params; 
   
   try {
-    var response = await db.getUser(user_id);
+    var response = await db.getUser(userID);
     if (response != null) {
       res.send(response);
     } else {
@@ -42,11 +43,11 @@ router.get('/user/:user_id', async function (req, res, next) {
 });
 
 // Get stats from user's previous games
-router.get('/user/:user_id/user_stats', async function (req, res, next) {
-  const {user_id} = req.params; 
+router.get('/user/:userID/userStats', async function (req, res, next) {
+  const {userID} = req.params; 
 
   try {
-    var response = await db.getUserStats(user_id);
+    var response = await db.getUserStats(userID);
     if (response != null) {
       res.send(response);
     } else {
@@ -63,12 +64,12 @@ router.get('/user/:user_id/user_stats', async function (req, res, next) {
 
 // Update username
 // TODO (potentially): make sure users can't choose an existing username
-router.put('/user/:user_id/username', async function (req, res, next) {
-  const {user_id} = req.params; 
+router.put('/user/:userID/username', async function (req, res, next) {
+  const {userID} = req.params; 
   const username = 'placeholder_new_name'; //req.body.userID;
 
   try {
-    var response = await db.updateUsername(user_id, username);
+    var response = await db.updateUsername(userID, username);
     if (response != null) {
         if (response.acknowledged) {
           res.status(200).send('200 | Username updated.');
@@ -84,12 +85,12 @@ router.put('/user/:user_id/username', async function (req, res, next) {
 });
 
 // Update avatar
-router.put('/user/:user_id/avatar', async function (req, res, next) {
-  const {user_id} = req.params; 
+router.put('/user/:userID/avatar', async function (req, res, next) {
+  const {userID} = req.params; 
   const avatar = 'placeholder_new_avatar.png'; //req.body.avatar;
 
   try {
-    var response = await db.updateAvatar(user_id, avatar);
+    var response = await db.updateAvatar(userID, avatar);
     if (response != null) {
         if (response.acknowledged) {
           res.status(200).send('200 | Avatar updated.');
@@ -104,14 +105,35 @@ router.put('/user/:user_id/avatar', async function (req, res, next) {
   }
 });
 
+// Add current theme to users previous themes
+router.put('/user/:userID/previousTheme', async function (req, res, next) {
+  const {userID} = req.params; 
+  const currentTheme = 'space'; //req.body.currentTheme;
+
+  try {
+    var response = await db.addPreviousTheme(userID, currentTheme);
+    if (response != null) {
+        if (response.acknowledged) {
+          res.status(200).send('200 | Theme added to previous themes.');
+        } else {
+          res.status(500).send('500 | Could not add theme.');
+        }
+    } else {
+      res.status(500).send('500 | Something went wrong.');
+    }
+  } catch (err) {
+    res.status(500).send('500 | Something went wrong.');
+  }
+});
+
 // Increment relevant wins/losses and add drawing to user's gallery
-router.put('/user/:user_id/session_results', async function (req, res, next) {
-  const {user_id} = req.params; 
+router.put('/user/:userID/sessionResults', async function (req, res, next) {
+  const {userID} = req.params; 
   const scores = {innocent: {wins: 4, losses:0}, inkposter: {wins: 4, losses: 7}}; //req.body.scores;
   const drawing = 'placeholder_drawing.png' //req.body.drawing;
 
   try {
-    var response = await db.addSessionResults(user_id, scores, drawing);
+    var response = await db.addSessionResults(userID, scores, drawing);
     if (response != null) {
         if (response.acknowledged) {
           res.status(200).send(response); //'200 | Sessions results added to profile.' 
@@ -129,12 +151,12 @@ router.put('/user/:user_id/session_results', async function (req, res, next) {
 // --- DELETE ---
 
 // Delete user
-router.delete('/user/:user_id/delete', async function (req, res, next) { //delete('/user/:user_id', async function (req, res, next) {
-  const {user_id} = req.params; 
+router.delete('/user/:userID/delete', async function (req, res, next) { //delete('/user/:userID', async function (req, res, next) {
+  const {userID} = req.params; 
 
   try {
-    var deleted = await db.deleteUserProfile(user_id);
-    if (deleted) {
+    var deleted = await db.deleteUserProfile(userID);
+    if (deleted != null) {
         res.status(200).send('200 | User deleted.');
     } else {
       res.status(500).send('500 | Something went wrong :(');
@@ -150,14 +172,31 @@ router.delete('/user/:user_id/delete', async function (req, res, next) { //delet
 // ---------------
 
 // Return a unique username generated by openAI
-router.get('openai/username/', function (req, res, next) {
-  res.status(501).send('not implemented');
+router.get('openai/username/', async function (req, res, next) {
+  try {
+    var generatedUsername = await openai.generateUsername();
+    if (generatedUsername != null) {
+        res.status(200).send(generatedUsername);
+    } else {
+      res.status(500).send('500 | Something went wrong.');
+    }
+  } catch (err) {
+    res.status(502).send('502 | Bad gateway.');
+  }
 });
 
 // Return json object with theme and prompts for both innocents and inkposter
-router.get('openai/session_prompts', function (req, res, next) {
-  res.status(501).send('not implemented');
+router.get('openai/sessionPrompts', async function (req, res, next) {
+  try {
+    var sessionParams = await openai.generateSessionParams();
+    if (sessionParams != null) {
+        res.status(200).send(sessionParams);
+    } else {
+      res.status(500).send('500 | Something went wrong.');
+    }
+  } catch (err) {
+    res.status(502).send('502 | Bad gateway.');
+  }
 });
-
 
 module.exports = router;

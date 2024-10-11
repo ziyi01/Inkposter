@@ -86,14 +86,15 @@ $ npm start
 | **Method**   | **URL**                            | **Description**   |
 |--------------|------------------------------------|-------------------|
 | `POST`       | `/user`                            |                   |
-| `GET`        | `/user/:user_id`                   |                   |
-| `GET`        | `/user/:user_id/user_stats`        |                   |
-| `PUT`        | `/user/:user_id/username`          |                   |
-| `PUT`        | `/user/:user_id/avatar`            |                   |
-| `PUT`        | `/user/:user_id/session_results`   |                   |
-| `DELETE`     | `/user/:user_id/delete`            |                   |
+| `GET`        | `/user/:userID`                    |                   |
+| `GET`        | `/user/:userID/userStats`          |                   |
+| `PUT`        | `/user/:userID/username`           |                   |
+| `PUT`        | `/user/:userID/avatar`             |                   |
+| `PUT`        | `/user/:userID/previousTheme`      |                   |
+| `PUT`        | `/user/:userID/sessionResults`     |                   |
+| `DELETE`     | `/user/:userID/delete`             |                   |
 | `GET`        | `/openai/username`                 |                   |
-| `GET`        | `/openai/session_prompts`          |                   |
+| `GET`        | `/openai/sessionPrompts`           |                   |
 
 ## Workflows
 | **File**        | **Workflow**                       | **Description**                       | **On**                              |
