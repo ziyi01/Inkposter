@@ -1,5 +1,5 @@
 /**
- * API calls to server to deal with
+ * Fetch reqeusts to server to deal with
  *  - Persisted data (MongoDB)
  *  - Content generation (OpenAI)
  */
