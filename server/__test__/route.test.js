@@ -13,8 +13,8 @@ describe('MongoDB endpoint tests', () => {
         expect(response.type).toBe('application/json');
     })
 
-    test('/api/user/0/user_stats should return test user stats', async () => {
-        const response = await request(app).get('/api/user/0/user_stats');
+    test('/api/user/0/userStats should return test user stats', async () => {
+        const response = await request(app).get('/api/user/0/userStats');
         debug(response);
 
         expect(response.statusCode).toBe(200);

@@ -1,11 +1,22 @@
 import React from 'react';
 
-const HostWaitingView: React.FC = () => {
+interface HostWaitingViewProps {
+  roomId: string;
+  players: string[];
+  onStartGame: () => void;
+}
+
+const HostWaitingView: React.FC<HostWaitingViewProps> = ({ roomId, players, onStartGame }) => {
   return (
     <div>
-      {/* Component logic will go here */}
+      Join room: {roomId}
+      {players.map((name) => name)}
+      <button onClick={onStartGame}>
+        Start Game
+      </button>
     </div>
   );
+
 }
 
 export default HostWaitingView;

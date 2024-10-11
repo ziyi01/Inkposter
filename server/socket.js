@@ -9,14 +9,16 @@ module.exports.initSockets = function(socket, io){
     socket.on('host-room', () => { // Host create room
         
         // Initialise room
-        roomId = crypto.randomBytes(3).toString('hex'); // Create room ID
+        roomId = require('crypto').randomBytes(2).toString('hex'); // Create room ID
         roomData[roomId] = {
             host: socket,
             playerCount: 0,
             playerSocket: []
         };
+        debug('Room created: ' + roomId);
+        debug('Host: ' + socket.id);
         
-        socket.join(roomChannel(roomId));
+        socket.join(roomId);
         socket.emit('room-created', {roomId: roomId});
     });
     

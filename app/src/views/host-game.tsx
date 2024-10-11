@@ -12,7 +12,11 @@ const players: Player[] = [
     { id: 3, name: 'Player 3' },
 ];
 
-const HostGameView: React.FC = () => {
+interface HostGameViewProps {
+  playerCanvas: {} // Change in presenter to fit Player[]
+}
+
+const HostGameView: React.FC<HostGameViewProps> = (playerCanvas) => {
   return (
     <div>
       <h1>Draw!</h1>

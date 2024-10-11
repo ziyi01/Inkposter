@@ -1,29 +1,13 @@
 import io from 'socket.io-client';
 var debug = require('debug')('app:socket');
-var roomId = '';
-const socket = io();
+
+export const socket = io();
 debug('Socket: ' + socket);
 
 // ------------------------------
 // Client-side socket listeners
 // ------------------------------
 export function initSockets(model) {
-    // Host-side listeners
-    socket.on('room-created', (data) => {   // Server answer with roomID
-        debug('Room created: ' + data.roomId);
-        model.roomId = data.roomId;
-    }); 
-    socket.on('player-joined', (data) => {  // Player joined room
-        debug('Player joined: ' + data.playerName);
-
-    });
-    socket.on('receive-canvas', (data) => { // Receive player canvas
-        model.updateCanvas(data.playerName, data.canvas);
-    });
-    socket.on('receive-voting', (data) => { // Receive player vote
-        model.updateVoting(data.playerName, data.vote, data.themeVote);
-    });
-
     // Player-side listeners
     socket.on('game-started', (data) => {   // Player game started
         model.startGamePlayer(data.prompt);
@@ -42,6 +26,10 @@ export function initSockets(model) {
     });
 }
 
+export function closeConnection() {
+    socket.close();
+}
+
 // ------------------------------
 // Export server-side socket emitters
 // ------------------------------
@@ -51,16 +39,16 @@ export function hostRoom() {
     socket.emit('host-room');
 }
 
-export function startGame(players) {
+export function startGame(roomId, players) {
     // A player has {playerName, prompt}, prompt is "Inkposter" if evil
     socket.emit('start-game', {roomId: roomId, players: players});
 }
 
-export function endGame() {
+export function endGame(roomId) {
     socket.emit('end-game', {roomId: roomId});
 }
 
-export function closeGame() {
+export function closeGame(roomId) {
     socket.emit('close-game', {roomId: roomId});
 }
 
@@ -69,10 +57,10 @@ export function joinRoom(roomId, playerName) {
     socket.emit('join-room', {roomId: roomId, playerName: playerName});
 }
 
-export function sendCanvas(playerName, canvas) {
+export function sendCanvas(roomId, playerName, canvas) {
     socket.emit('send-canvas', {roomId: roomId, playerName: playerName, canvas: canvas});
 }
 
-export function sendVoting(playerName, vote, themeVote) {
+export function sendVoting(roomId, playerName, vote, themeVote) {
     socket.emit('send-voting', {roomId: roomId, playerName: playerName, vote: vote, themeVote: themeVote});
 }

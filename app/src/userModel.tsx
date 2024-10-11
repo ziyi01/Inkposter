@@ -1,3 +1,5 @@
+import { closeGame } from "./components/socket-client";
+
 export type playerSession = {
     playerName: string;
     prompt: string;
@@ -6,7 +8,8 @@ export type playerSession = {
 }
 
 export type hostSession = {
-    players: playerSession[];
+    players: string[];
+    playersData: playerSession[];
     theme: string;
 };
 
@@ -17,7 +20,7 @@ export class UserModel {
     id: number | undefined;
     name: string | undefined;
     host: boolean;
-    roomId: string | undefined;
+    roomId: string;
     sessionHost: hostSession | undefined;
     sessionPlayer: playerSession | undefined;
 
@@ -25,7 +28,7 @@ export class UserModel {
         this.id = id;
         this.name = name;
         this.host = host;
-        this.roomId = undefined; 
+        this.roomId = ''; 
         this.sessionHost = undefined;
         this.sessionPlayer = undefined; 
     }
@@ -36,42 +39,52 @@ export class UserModel {
     }
     
     createHostSession(room:string) {
+        if(this.roomId != '') {
+            closeGame(this.roomId);
+        }
+
         this.host = true;
         this.roomId = room
         this.sessionHost = {
             players: [],
+            playersData: [],
             theme: ""
-        } as hostSession;
+        };
     }
 
-    getRoom() {
-        if (!this.roomId) {
-            throw Error("No room ID found");
+    addPlayer(playerName:string) {
+        if(this.sessionHost) {
+            this.sessionHost.players.push(playerName);
         }
-        return this.roomId;
     }
 
-    updateGame() { // Update theme and players
+    updateGame(theme:string, playerData:[]) { // Update host model theme and players
+        if(this.sessionHost) {
+            this.sessionHost.theme = theme;
+            this.sessionHost.playersData = playerData;
+        }
+    }
+
+    updateCanvas(playerName:string, canvas:string) { // Receives playerName and canvas-file
+        if(this.sessionHost) {
+            const player = this.sessionHost.playersData.find(player => player.playerName === playerName);
+            if (player) {
+                player.canvas = canvas;
+            }
+        }
+    }
+
+    updateVoting() { // Update model with voting results
 
     }
 
-    updateCanvas() { // Receives playerName and canvas-file
+    startGamePlayer() { // Update model with prompt and role
+        if(!this.host) {
 
+        }
     }
 
-    updateVoting() {
-
-    }
-
-    startGameHost() {
-        
-    }
-
-    startGamePlayer() {
-
-    }
-
-    endVoting() {
+    endVoting() { //
 
     }
 }

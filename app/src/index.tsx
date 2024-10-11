@@ -5,14 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './global.css';
 import { UserModel } from './userModel';
-import { initSockets } from './components/socket-client';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 const model = new UserModel();
-initSockets(model);
 
 root.render(
   <React.StrictMode>
