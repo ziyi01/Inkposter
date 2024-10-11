@@ -1,5 +1,5 @@
 export type playerSession = {
-    sessionID: string;
+    playerName: string;
     prompt: string;
     role: string;
     canvas?: string; // Base64 encoded image
