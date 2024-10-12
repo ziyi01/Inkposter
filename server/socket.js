@@ -68,7 +68,7 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('close-game', (data) => { // Host disconnect server
-        io.sockets.clients(data.roomId).forEach(function(s){
+        io.sockets.adapter.rooms[data.roomId].forEach(function(s){
             s.leave(data.roomId);
         });
         delete roomData[data.roomId];
