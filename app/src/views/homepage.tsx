@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="home-page min-h-screen bg-gray-800 relative">
+    <div className="home-page min-h-screen bg-blue-300 relative">
       {/* Profile Button */}
       <div className="absolute top-4 left-4">
         <Link to="/profile" className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 transition">
