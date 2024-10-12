@@ -17,7 +17,7 @@
  * @param {string} avatar 
  * @returns string, confirmation
  */
-async function createUserDB(userID, username, avatar) {
+async function loginUserDB(userID, username="", avatar="") {
     const request = new Request("/api/user", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -203,7 +203,7 @@ async function getGeneratedSessionParams() {
 
 // Export db functions
 exports.getUserDB = getUserDB;
-exports.createUserDB = createUserDB;
+exports.loginUserDB = loginUserDB;
 exports.getUserStatsDB = getUserStatsDB;
 exports.updateUsernameDB = updateUsernameDB;
 exports.updateAvatarDB = updateAvatarDB;

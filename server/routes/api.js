@@ -10,7 +10,7 @@ var debug = require('debug')('server:api');
 
 // --- CREATE ----
 
-// Create and persist user with unique userID
+// Create and persist user with unique userID. If user exists, simply return a confirmation.
 router.post('/user', async function (req, res, next) { 
   var userID = req.body.userID; 
   const username = req.body.username;
@@ -21,8 +21,12 @@ router.post('/user', async function (req, res, next) {
   }
 
   try {
-    await db.createUser(userID, username, avatar);
-    res.status(200).send('200 | User created.');
+    if (await db.getUser(userID)) {
+      res.status(200).send('200 | User exists in database.');
+    } else {
+      await db.createUser(userID, username, avatar);
+      res.status(200).send('200 | User created.');
+    }
   } catch (err) {
     res.status(500).send('500 | ' + err);
   }
