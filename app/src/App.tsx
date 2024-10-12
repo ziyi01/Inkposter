@@ -78,7 +78,7 @@ const App: React.FC<AppProps> = ({model}) => {
           />
           <Route path="/player-voting" element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />}
           />
-          <Route path="/player-results" element={isAuthenticated ? <PlayerEnd/> : <Navigate to="/login" />}
+          <Route path="/player-results" element={isAuthenticated ? <PlayerEnd model={model}/> : <Navigate to="/login" />}
           />
 
           <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}

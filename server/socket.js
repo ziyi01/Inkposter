@@ -1,5 +1,5 @@
-var debug = require('debug')('server:socket');
-var roomData = {};
+const debug = require('debug')('server:socket');
+let roomData = {};
 
 module.exports.initSockets = function(socket, io){
     
@@ -68,9 +68,17 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('close-game', (data) => { // Host disconnect server
-        io.sockets.adapter.rooms[data.roomId].forEach(function(s){
-            s.leave(data.roomId);
-        });
-        delete roomData[data.roomId];
+        try {     
+            const c = io.sockets.adapter.rooms.get(data.roomId);
+            c.forEach(function(s){
+                const clientSocket = io.sockets.sockets.get(s);
+                clientSocket.emit('game-closed');
+                clientSocket.leave(data.roomId);
+                console.log(clientSocket)
+            });
+            delete roomData[data.roomId];
+        } catch (err) {
+            debug(err + ' error when deleting room ' + data.roomId);
+        }
     });
 }
