@@ -43,7 +43,7 @@ export class UserModel {
     }
 
     createHostSession(room:string) {
-        if(this.roomId != '') {
+        if(this.roomId !== '') {
             closeGame(this.roomId);
         }
 
@@ -87,7 +87,7 @@ export class UserModel {
             this.sessionPlayer = {
                 playerName: this.name,
                 prompt: prompt,
-                role: prompt != '' ? "Innocent" : "Inkposter"
+                role: prompt !== '' ? "Innocent" : "Inkposter"
             }
         }
     }
