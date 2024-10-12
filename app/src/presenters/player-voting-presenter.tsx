@@ -17,7 +17,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
 
     useEffect(() => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
-            model.setResult(data.result); // TODO: Implement setResult in UserModel for player-end
+            // model.setResult(data.result); // TODO: Implement setResult in UserModel for player-end
         });
     }, []);
 
@@ -26,7 +26,9 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
         setVoted(true);
     }
 
-    return <PlayerVotingView onVote={onVote}/> // TODO: Implement onVote in view
+    return <div>
+        {/* <PlayerVotingView /> */}
+    </div> // TODO: Implement onVote in view
 }
 
 export default PlayerVoting;

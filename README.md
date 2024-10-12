@@ -9,14 +9,15 @@ A web browser-based multiplayer party game for 3-9 players based on skribbl.io, 
     <li>
       <a href="#description">Description</a>
       <ul>
-        <li><a href="#play-the-game">Play the game</a></li>
+        <li><a href="#design-and-demo">Design and Demo</a></li>
       </ul>
     </li>
     <li><a href="#setup">Setup</a></li>
       <ul>
         <li><a href="#built-with">Built with</a></li>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#api-endpoints">API Endpoints</a></li>
+        <li><a href="#api-endpoints">API endpoints</a></li>
+        <li><a href="#socket-communication">Socket communication</a></li>
       </ul>
     <li><a href="#workflows">Workflows</a></li>
       <ul>
@@ -34,9 +35,15 @@ A web browser-based multiplayer party game for 3-9 players based on skribbl.io, 
 </details>
 
 ## Description
-How to play
+### How to play
+The game requires one host device where everything shared is displayed and 3-9 player devices where you see your personal prompts and drawings.
 
-### Play the game
+At the start of the game everyone receives a prompt that relates to a theme, except 1 player who is an `Inkposter`. No one knows what the theme is and no one knows who the imposter is. The `Inkposter` needs to observe the other drawings to blend in with the rest. The innocent players need to also pay attention to who might be late to draw without revealing too much information about the theme. Everyone draws on their personal devices and can see everyone else's drawings on the host device's screen.
+
+When the timer runs out voting begins. The players vote what they suspect the theme is and who they think the `Inkposter` is. If the majority of players vote for the `Inkposter` then they're caught!
+
+### Design and Demo
+The layout is designed in Figma following: https://www.figma.com/design/V4OLczauxQRw13nV0fefb7/Inkposter-Design?node-id=2407-292&node-type=frame&t=S5xK8qXW5BX97cNm-0
 
 A demo is deployed on Heroku: https://inkposter-917d97c7bb64.herokuapp.com.
 
@@ -85,7 +92,7 @@ $ npm run dev-build
 $ npm start
 ```
 
-### API Endpoints
+### API endpoints
 | **Method**   | **URL**                            | **Description**   |
 |--------------|------------------------------------|-------------------|
 | `POST`       | `/user`                            |                   |
@@ -104,7 +111,7 @@ Socket.io is used for real-time communication with the server and clients during
 
 Below shows the events emitted and what each role does in the communication chain:
 
-![communication-graph](.github/Socket.drawio.png)
+<img src=".github/Socket.drawio.png" alt="socket-communication" width="70%"/>
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 

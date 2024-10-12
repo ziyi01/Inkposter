@@ -17,32 +17,32 @@ export function hostRoom() {
     socket.emit('host-room');
 }
 
-export function startGame(roomId, players) {
+export function startGame(roomId:string, players: {playerName: string, prompt: string}[]) {
     // A player has {playerName, prompt}, prompt is '' or "inkposter" if evil
     socket.emit('start-game', {roomId: roomId, players: players});
 }
 
-export function votingEnded(roomId, result) {
+export function votingEnded(roomId:string, result:string) {
     socket.emit('end-voting', {roomId: roomId, result: result});
 }
 
-export function endGame(roomId) {
+export function endGame(roomId:string) {
     socket.emit('end-game', {roomId: roomId});
 }
 
-export function closeGame(roomId) {
+export function closeGame(roomId:string) {
     socket.emit('close-game', {roomId: roomId});
 }
 
 // Player-side
-export function joinRoom(roomId, playerName) {
+export function joinRoom(roomId:string, playerName:string) {
     socket.emit('join-room', {roomId: roomId, playerName: playerName});
 }
 
-export function sendCanvas(roomId, playerName, canvas) {
+export function sendCanvas(roomId:string, playerName:string, canvas:string) {
     socket.emit('send-canvas', {roomId: roomId, playerName: playerName, canvas: canvas});
 }
 
-export function sendVoting(roomId, playerName, vote, themeVote) {
+export function sendVoting(roomId:string, playerName:string, vote:string, themeVote:string) {
     socket.emit('send-voting', {roomId: roomId, playerName: playerName, vote: vote, themeVote: themeVote});
 }

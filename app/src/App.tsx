@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-
-// import presenters
-import LoginPage from './views/login-page';
-import HomePage from './views/homepage';
-import ProfilePage from './views/profile';
-import SettingsPage from './views/host-game'; 
-import HostWaiting from './presenters/host-waiting-presenter';
-import HostGame from './presenters/host-game-presenter';
-import HostVote from './presenters/host-voting-presenter';
-import HostEnd from './presenters/host-end-presenter';
-import PlayerWaiting from './presenters/player-waiting-presenter';
-import PlayerGame from './presenters/player-game-presenter';
-import PlayerVote from './presenters/player-voting-presenter';
-import PlayerEnd from './presenters/player-end-presenter';
-
 import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
+
+// import presenters
+import Loading from './views/loading';
+const LoginPage = React.lazy(() => import('./views/login-page'));
+const HomePage = React.lazy(() => import('./views/homepage'));
+const ProfilePage = React.lazy(() => import('./views/profile'));
+const SettingsPage = React.lazy(() => import('./views/profile'));
+const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
+const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
+const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
+const HostEnd = React.lazy(() => import('./presenters/host-end-presenter'));
+const PlayerWaiting = React.lazy(() => import('./presenters/player-waiting-presenter'));
+const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter-real'));
+const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
+const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
 
 interface AppProps {
   model: UserModel;
@@ -42,47 +42,48 @@ const App: React.FC<AppProps> = ({model}) => {
     }
   };
   
-  // TODO: Pass model to components and link to presenters
   return (
     <Router>
-      <Routes>
-        <Route 
-          path="/login" 
-          element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage onLogin={handleLogin} />} 
-        />
-        <Route 
-          path="/homepage" 
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/profile" 
-          element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} 
-        />
-        <Route 
-          path="/settings" 
-          element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} 
-        />
-        <Route path="/host-game" element={isAuthenticated ? <HostWaiting model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/host-ingame" element={isAuthenticated ? <HostGame model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/host-voting" element={isAuthenticated ? <HostVote model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/host-results" element={isAuthenticated ? <HostEnd model={model}/> : <Navigate to="/login" />}
-        />
-        
-        <Route path="/player-game" element={isAuthenticated ? <PlayerWaiting model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/player-ingame" element={isAuthenticated ? <PlayerGame model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/player-voting" element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />}
-        />
-        <Route path="/player-results" element={isAuthenticated ? <PlayerEnd model={model}/> : <Navigate to="/login" />}
-        />
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route 
+            path="/login" 
+            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage onLogin={handleLogin} />} 
+          />
+          <Route 
+            path="/homepage" 
+            element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/profile" 
+            element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/settings" 
+            element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} 
+          />
+          <Route path="/host-game" element={isAuthenticated ? <HostWaiting model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/host-ingame" element={isAuthenticated ? <HostGame model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/host-voting" element={isAuthenticated ? <HostVote model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/host-results" element={isAuthenticated ? <HostEnd model={model}/> : <Navigate to="/login" />}
+          />
+          
+          <Route path="/player-game" element={isAuthenticated ? <PlayerWaiting model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/player-ingame" element={isAuthenticated ? <PlayerGame model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/player-voting" element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />}
+          />
+          <Route path="/player-results" element={isAuthenticated ? <PlayerEnd/> : <Navigate to="/login" />}
+          />
 
-        <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
 
-      </Routes>
+        </Routes>
+      </Suspense>
     </Router>
   );
 };

@@ -21,16 +21,16 @@ export class UserModel {
     name: string;
     host: boolean;
     roomId: string;
-    sessionHost: hostSession | undefined;
-    sessionPlayer: playerSession | undefined;
+    sessionHost: hostSession;
+    sessionPlayer: playerSession;
 
     constructor(id=undefined, name='', host: boolean=false) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = undefined;
-        this.sessionPlayer = undefined; 
+        this.sessionHost = {players: [], playersData: [], theme: ""};
+        this.sessionPlayer = {playerName: "", prompt: "", role: ""}; 
     }
 
     login(id: number, playerName: string) {

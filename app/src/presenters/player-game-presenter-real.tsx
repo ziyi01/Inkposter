@@ -25,7 +25,7 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
     }
 
     return <div>
-        <PlayerGameView />
+        {/* Merge with other presenter and view */}
     </div>
 }
 

@@ -20,7 +20,9 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({model}) => {
     }
 
     return (
-        <HostEndView />
+        <div>
+            {/* Display HostEndView */}
+        </div>
     );
 }
 
