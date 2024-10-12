@@ -43,8 +43,6 @@ async function createUser(userID, username, avatar) {
     debug("An error occured: ", err);
     throw new Error(err);
   }
-
-    
   }
 
 // --- READ ---
@@ -68,7 +66,7 @@ async function updateAvatar(userID, avatar) {
   return await client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$set: {avatar: avatar}});
 }
 
-async function addPreviousTheme(userID, currentTheme) {
+async function updatePreviousThemes(userID, currentTheme) {
   return await  client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$push: {previousThemes: currentTheme}});
 }
 
@@ -94,6 +92,6 @@ exports.getUser = getUser;
 exports.getUserStats = getUserStats;
 exports.updateUsername = updateUsername;
 exports.updateAvatar = updateAvatar;
-exports.addPreviousTheme = addPreviousTheme;
+exports.updatePreviousThemes = updatePreviousThemes;
 exports.addSessionResults = addSessionResults;
 exports.deleteUserProfile = deleteUserProfile;

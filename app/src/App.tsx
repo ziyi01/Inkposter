@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
+import runTests from './server-requests-tests';
 
 // import presenters
 import Loading from './views/loading';
