@@ -50,7 +50,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     }
 
     return <div>
-        <HostWaitingView roomId={roomCode} players={[]} onStartGame={startGameHost} />;
+        <HostWaitingView code={roomCode} players={[]} handleStartGame={startGameHost} />;
     </div>
 }
 
