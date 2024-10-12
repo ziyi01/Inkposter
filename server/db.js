@@ -1,3 +1,4 @@
+var openai = require('./openai');
 var debug = require('debug')('server:db');
 
 // setup connection to mongodb
@@ -35,6 +36,12 @@ async function disconnectFromMongoDB() {
 // --- CREATE ---
 
 async function createUser(userID, username, avatar) {
+  try {
+    username = await openai.generateUsername();
+  } catch (err) {
+    debug("Could not generate username");
+  }
+
   try {
     await client.db("dh2643_inkposter").collection('users').insertOne({_id : userID, username, avatar, previousThemes: []});
     await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: []});

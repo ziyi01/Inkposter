@@ -13,8 +13,8 @@ var debug = require('debug')('server:api');
 // Create and persist user with unique userID. If user exists, simply return a confirmation.
 router.post('/user', async function (req, res, next) { 
   var userID = req.body.userID; 
-  const username = req.body.username;
-  const avatar = req.body.avatar;
+  var username = req.body.username;
+  var avatar = req.body.avatar;
 
   if (typeof (userID) !== 'string') {
     userID = userID.toString();

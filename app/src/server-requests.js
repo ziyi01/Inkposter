@@ -17,7 +17,7 @@
  * @param {string} avatar 
  * @returns string, confirmation
  */
-async function loginUserDB(userID, username="", avatar="") {
+async function loginUserDB(userID, username="new_user", avatar="") {
     const request = new Request("/api/user", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
