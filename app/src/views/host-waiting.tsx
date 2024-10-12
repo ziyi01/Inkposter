@@ -11,7 +11,7 @@ interface HostWaitingProps {
   handleStartGame: () => void;
 }
 
-const HostWaiting: React.FC<HostWaitingProps> = ({ code, players, handleStartGame }) => {
+const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStartGame }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white text-center">
       <h1 className="animate-pulse text-2xl font-bold">Waiting for more players to join...</h1>
@@ -42,6 +42,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({ code, players, handleStartGam
       </button>
     </div>
   );
-};
 
-export default HostWaiting;
+}
+
+export default HostWaitingView;

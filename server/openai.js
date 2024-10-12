@@ -59,7 +59,7 @@ async function generateUsername() {
             ],
         });
 
-        var generated_username = JSON.parse(completion.choices[0].message.content);
+        var generated_username = completion.choices[0].message.content;
         debug("Generated username: ", generated_username);
         return generated_username;
 

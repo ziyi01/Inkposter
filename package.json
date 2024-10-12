@@ -51,6 +51,7 @@
     "react": "^18.3.1"
   },
   "dependencies": {
+    "socket.io-client": "^4.8.0",
     "supertest": "^7.0.0"
   },
   "jest": {

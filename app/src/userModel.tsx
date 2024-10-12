@@ -1,13 +1,15 @@
+import { closeGame } from "./components/socket-client";
+
 export type playerSession = {
-    sessionID: string;
+    playerName: string;
     prompt: string;
     role: string;
     canvas?: string; // Base64 encoded image
 }
 
 export type hostSession = {
-    sessionID: string;
-    players: playerSession[];
+    players: string[];
+    playersData: playerSession[];
     theme: string;
 };
 
@@ -16,17 +18,19 @@ export type hostSession = {
  */
 export class UserModel {
     id: number | undefined;
-    name: string | undefined;
+    name: string;
     host: boolean;
-    sessionHost: hostSession | undefined;
-    sessionPlayer: playerSession | undefined;
+    roomId: string;
+    sessionHost: hostSession;
+    sessionPlayer: playerSession;
 
-    constructor(id=undefined, name=undefined, host: boolean=false) {
+    constructor(id=undefined, name='', host: boolean=false) {
         this.id = id;
         this.name = name;
         this.host = host;
-        this.sessionHost = undefined;
-        this.sessionPlayer = undefined; 
+        this.roomId = ''; 
+        this.sessionHost = {players: [], playersData: [], theme: ""};
+        this.sessionPlayer = {playerName: "", prompt: "", role: ""}; 
     }
 
     login(id: number, playerName: string) {
@@ -34,7 +38,57 @@ export class UserModel {
         this.name = playerName;
     }
     
-    /**
-     * TODO: Create functions to add sessions for host and player
-     */
+    setRoomId(roomId:string) {
+        this.roomId = roomId;
+    }
+
+    createHostSession(room:string) {
+        if(this.roomId !== '') {
+            closeGame(this.roomId);
+        }
+
+        this.host = true;
+        this.roomId = room
+        this.sessionHost = {
+            players: [],
+            playersData: [],
+            theme: ""
+        };
+    }
+
+    addPlayer(playerName:string) {
+        if(this.sessionHost) {
+            this.sessionHost.players.push(playerName);
+        }
+    }
+
+    updateGame(theme:string, playerData:[]) { // Update host model theme and players
+        if(this.sessionHost) {
+            this.sessionHost.theme = theme;
+            this.sessionHost.playersData = playerData;
+        }
+    }
+
+    updateCanvas(playerName:string, canvas:string) { // Receives playerName and canvas-file
+        if(this.sessionHost) {
+            const player = this.sessionHost.playersData.find(player => player.playerName === playerName);
+            if (player) {
+                player.canvas = canvas;
+            }
+        }
+    }
+
+    updateVoting(playerName:string, vote:string, themeVote:string) { // Update model with voting results
+        // TODO: Implement
+    }
+
+    startGamePlayer(prompt:string) { // Update model with prompt and role
+        if(!this.host) { 
+            this.sessionPlayer = {
+                playerName: this.name,
+                prompt: prompt,
+                role: prompt !== '' ? "Innocent" : "Inkposter"
+            }
+        }
+    }
 }

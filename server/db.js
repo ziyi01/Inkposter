@@ -1,3 +1,4 @@
+var openai = require('./openai');
 var debug = require('debug')('server:db');
 
 // setup connection to mongodb
@@ -36,6 +37,12 @@ async function disconnectFromMongoDB() {
 
 async function createUser(userID, username, avatar) {
   try {
+    username = await openai.generateUsername();
+  } catch (err) {
+    debug("Could not generate username");
+  }
+
+  try {
     await client.db("dh2643_inkposter").collection('users').insertOne({_id : userID, username, avatar, previousThemes: []});
     await client.db("dh2643_inkposter").collection('user_stats').insertOne({ _id: userID, innocent: {wins : 0, losses: 0}, inkposter: {wins : 0, losses: 0}, gallery: []});
   
@@ -43,8 +50,6 @@ async function createUser(userID, username, avatar) {
     debug("An error occured: ", err);
     throw new Error(err);
   }
-
-    
   }
 
 // --- READ ---
@@ -68,7 +73,7 @@ async function updateAvatar(userID, avatar) {
   return await client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$set: {avatar: avatar}});
 }
 
-async function addPreviousTheme(userID, currentTheme) {
+async function updatePreviousThemes(userID, currentTheme) {
   return await  client.db("dh2643_inkposter").collection('users').updateOne({_id: userID }, {$push: {previousThemes: currentTheme}});
 }
 
@@ -94,6 +99,6 @@ exports.getUser = getUser;
 exports.getUserStats = getUserStats;
 exports.updateUsername = updateUsername;
 exports.updateAvatar = updateAvatar;
-exports.addPreviousTheme = addPreviousTheme;
+exports.updatePreviousThemes = updatePreviousThemes;
 exports.addSessionResults = addSessionResults;
 exports.deleteUserProfile = deleteUserProfile;
