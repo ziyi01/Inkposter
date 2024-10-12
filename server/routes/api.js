@@ -199,9 +199,11 @@ router.get('/openai/username', async function (req, res, next) {
 });
 
 // Return json object with theme and prompts for both innocents and inkposter
-router.get('/openai/sessionParams', async function (req, res, next) {
+router.patch('/openai/sessionParams', async function (req, res, next) {
+  const previousThemes = req.body.previousThemes;
+
   try {
-    var sessionParams = await openai.generateSessionParams();
+    var sessionParams = await openai.generateSessionParams(previousThemes);
     if (sessionParams != null) {
         res.status(200).send(sessionParams);
     } else {

@@ -191,8 +191,14 @@ async function getGeneratedUsername() {
  * 
  * @returns json, generated session paramn
  */
-async function getGeneratedSessionParams() {
-    var response = await fetch("/api/openai/sessionParams");
+async function getGeneratedSessionParams(previousThemes) {
+    const request = new Request(`/api/openai/sessionParams`, {
+        method: "PATCH",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({previousThemes})
+    });
+
+    var response = await fetch(request);
     if (response.status === 200) {
         return response.json();
     } else {
