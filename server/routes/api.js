@@ -194,7 +194,7 @@ router.get('/openai/username', async function (req, res, next) {
       res.status(500).send('500 | Something went wrong.');
     }
   } catch (err) {
-    res.status(502).send('502 | Bad gateway.');
+    res.status(500).send('500 | Something went wrong.');
   }
 });
 
@@ -208,7 +208,7 @@ router.get('/openai/sessionParams', async function (req, res, next) {
       res.status(500).send('500 | Something went wrong.');
     }
   } catch (err) {
-    res.status(502).send('502 | Bad gateway.');
+    res.status(500).send('500 | Something went wrong.');
   }
 });
 
