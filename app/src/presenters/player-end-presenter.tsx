@@ -1,12 +1,11 @@
 import React from 'react';
 
-const Loading: React.FC = () => {
+const PlayerEnd: React.FC = () => {
   return (
     <div>
       {/* Component logic will go here */}
-      Loading...
     </div>
   );
 }
 
-export default Loading;
+export default PlayerEnd;
