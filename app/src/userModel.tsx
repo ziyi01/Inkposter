@@ -43,10 +43,6 @@ export class UserModel {
     }
 
     createHostSession(room:string) {
-        if(this.roomId !== '') {
-            closeGame(this.roomId);
-        }
-
         this.host = true;
         this.roomId = room
         this.sessionHost = {
