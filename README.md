@@ -19,6 +19,9 @@ A web browser-based multiplayer party game for 3-9 players based on skribbl.io, 
         <li><a href="#api-endpoints">API Endpoints</a></li>
       </ul>
     <li><a href="#workflows">Workflows</a></li>
+      <ul>
+        <li><a href="#tests">Tests</a></li>
+      </ul>
     <li>
       <a href="#file-structure">File structure</a>
       <ul>
@@ -96,6 +99,15 @@ $ npm start
 | `GET`        | `/openai/username`                 |                   |
 | `GET`        | `/openai/sessionPrompts`           |                   |
 
+### Socket communication
+Socket.io is used for real-time communication with the server and clients during the game. The clients are divided into `host` (the client whose display is used to show all drawings and triggers start of the game) and `players` (usually on a phone, where they draw and can see their role and prompt). 
+
+Below shows the events emitted and what each role does in the communication chain:
+
+![communication-graph](.github/Socket.drawio.png)
+
+<p align="right">(<a href="#readme-top">Back to Top</a>)</p>
+
 ## Workflows
 | **File**        | **Workflow**                       | **Description**                       | **On**                              |
 |-----------------|------------------------------------|---------------------------------------|-------------------------------------|
@@ -120,6 +132,8 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 | `route.test.js`      | `/api/user/10000 return 404`                   | REST API test       |
 | `route.test.js`      | `/api/openai/username should return 200`       | REST API test       |
 | `route.test.js`      | `/api/openai/sessionPrompts should return 200` | REST API test       |
+
+<p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
 ## File structure
 ### Front-end
