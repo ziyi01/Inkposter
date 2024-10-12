@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactSketchCanvas } from 'react-sketch-canvas';
 import Toolbar from '../components/toolbar';
-import { useGamePresenter } from '../presenters/player-game-presenter';
+import { gamePresenter } from '../presenters/player-game-presenter';
 
 const PlayerGame: React.FC = () => {
   const {
@@ -18,7 +18,7 @@ const PlayerGame: React.FC = () => {
     handleStrokeWidthChange,
     handleEraserWidthChange,
     handleStrokeColorChange,
-  } = useGamePresenter();
+  } = gamePresenter();
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-black text-white p-8">
