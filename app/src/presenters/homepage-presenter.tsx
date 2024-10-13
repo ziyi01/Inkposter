@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import HomePageView from '../views/homepage';
 import { UserModel } from '../userModel';
+import ProfileNavBar from '../components/navbar';
 
 import { joinRoom } from '../components/socket-client';
 
@@ -30,14 +31,17 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
   };
 
   return (
-    <HomePageView
-      model={model}
-      isJoinInputVisible={isJoinInputVisible}
-      onJoinClick={handleJoinClick}
-      joinCode={joinCode}
-      onInputChange={handleInputChange}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <ProfileNavBar />
+      <HomePageView
+        model={model}
+        isJoinInputVisible={isJoinInputVisible}
+        onJoinClick={handleJoinClick}
+        joinCode={joinCode}
+        onInputChange={handleInputChange}
+        onSubmit={handleSubmit}
+      />
+    </>
   );
 };
 
