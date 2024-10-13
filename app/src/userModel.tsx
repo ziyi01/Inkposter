@@ -11,6 +11,7 @@ export type hostSession = {
     players: string[];
     playersData: playerSession[];
     theme: string;
+    fake_themes: string[];
 };
 
 /**
@@ -29,7 +30,7 @@ export class UserModel {
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: ""};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
         this.sessionPlayer = {playerName: "", prompt: "", role: ""}; 
     }
 
@@ -52,7 +53,8 @@ export class UserModel {
         this.sessionHost = {
             players: [],
             playersData: [],
-            theme: ""
+            theme: "",
+            fake_themes: []
         };
     }
 
@@ -62,9 +64,10 @@ export class UserModel {
         }
     }
 
-    updateGame(theme:string, playerData:[]) { // Update host model theme and players
+    updateGame(theme:string, fake_themes:string[], playerData:playerSession[]) { // Update host model theme and players
         if(this.sessionHost) {
             this.sessionHost.theme = theme;
+            this.sessionHost.fake_themes = fake_themes;
             this.sessionHost.playersData = playerData;
         }
     }
