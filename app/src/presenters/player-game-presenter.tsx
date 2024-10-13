@@ -1,62 +1,55 @@
-// källa: https://vinoth.info/react-sketch-canvas/examples/
+import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useState, useRef } from "react";
-import { ReactSketchCanvasRef } from "react-sketch-canvas";
+// import components
+import PlayerGameView from '../views/player-game';
+import { UserModel } from '../userModel';
+import { sendCanvas, socket } from '../components/socket-client';
+import Canvas from '../components/canvas';
+import Popup from '../components/popup';
+var debug = require('debug')('app:player-game-presenter');
 
-export const gamePresenter = () => {
-  const canvasRef = useRef<ReactSketchCanvasRef>(null);
-  const [eraseMode, setEraseMode] = useState(false);
-  const [strokeWidth, setStrokeWidth] = useState(5);
-  const [eraserWidth, setEraserWidth] = useState(10);
-  const [strokeColor, setStrokeColor] = useState("#000000");
+interface PlayerGameProps {
+    model: UserModel;
+}
 
-  const handleEraserClick = () => {
-    setEraseMode(true);
-    canvasRef.current?.eraseMode(true);
-  };
+const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
+    const navigate = useNavigate();
+    useEffect(() => {
+        socket.on('game-ended', () => { // Receive signal from server/host that game ended
+            navigate('/player-voting');
+        });
+    }, []); 
+    
+    // Popup
+    const popupRef = useRef<any>(null);
 
-  const handlePenClick = () => {
-    setEraseMode(false);
-    canvasRef.current?.eraseMode(false);
-  };
+    const handleLeaveClick = () => {
+      if (popupRef.current) {
+        popupRef.current.openPopup();
+      }
+    };
 
-  const handleUndoClick = () => {
-    canvasRef.current?.undo();
-  };
+    const handleConfirmLeave = () => {
+      console.log('Player has confirmed to leave the game.');
+      navigate('/homepage')
+      // Perform leave action, such as navigating or notifying the server
+    };
 
-  const handleRedoClick = () => {
-    canvasRef.current?.redo();
-  };
+    // TODO: Implement sendCanvas function to pass to sketch-canvas in view
+    function onDraw(canvasDataURL:string) {
+        sendCanvas(model.roomId, model.name, canvasDataURL);
+    }
 
-  const handleClearClick = () => {
-    canvasRef.current?.clearCanvas();
-  };
+    return <div>
+        <PlayerGameView canvas={<Canvas onDraw={onDraw}/>} onLeaveClick={handleLeaveClick}/>
+        <Popup
+        ref={popupRef}
+        title="Leave Game?"
+        message="Are you sure you want to leave the game? This action cannot be undone."
+        onConfirm={handleConfirmLeave}
+      />
+    </div>
+}
 
-  const handleStrokeWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrokeWidth(+event.target.value);
-  };
-
-  const handleEraserWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEraserWidth(+event.target.value);
-  };
-
-  const handleStrokeColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrokeColor(event.target.value);
-  };
-
-  return {
-    canvasRef,
-    eraseMode,
-    strokeWidth,
-    eraserWidth,
-    strokeColor,
-    handleEraserClick,
-    handlePenClick,
-    handleUndoClick,
-    handleRedoClick,
-    handleClearClick,
-    handleStrokeWidthChange,
-    handleEraserWidthChange,
-    handleStrokeColorChange,
-  };
-};
+export default PlayerGame;

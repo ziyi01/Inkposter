@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface Player {
-  id: string;
-  name: string;
-}
+import { Player } from '../presenters/host-waiting-presenter';
 
 interface HostWaitingProps {
   code: string;
@@ -23,7 +19,7 @@ const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStar
       <div className="flex justify-center gap-6 my-8">
         {players.length > 0 ? (
           players.map((player) => (
-            <div key={player.id} className="flex flex-col items-center">
+            <div key={player.playerId} className="flex flex-col items-center">
               <div className="w-24 h-24 bg-sky-400 rounded-lg"></div>
               <h4 className="mt-2 text-lg">{player.name}</h4>
             </div>

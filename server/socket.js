@@ -27,12 +27,15 @@ module.exports.initSockets = function(socket, io){
             socket.emit('room-not-found', {roomId: data.roomId});
             return;
         }
+
+        debug('Player joined: ' + data.playerId);
         socket.join(data.roomId);
         roomData[data.roomId].playerCount++;
-        roomData[data.roomId].playerSocket.push({socket: socket, playerName: data.playerName});
-        roomData[data.roomId].host.emit('player-joined', {playerName: data.playerName});
+        roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
+        roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
 
-        debug(data.playerName, "joined with socket", socket.id);
+        debug(data.playerId, "joined with socket", socket.playerId);
+
     });
 
     socket.on('start-game', (data) => { // Host start game  
@@ -52,13 +55,13 @@ module.exports.initSockets = function(socket, io){
         for(let i = 0; i < data.players.length; i++){
             const player = roomData[data.roomId].playerSocket[i]; //playerSocket[i]; <-- playerSocket is not defined
             player.socket.emit(
-                'game-started', {prompt: data.players.find((e) => e.playerName == player.playerName).prompt});
+                'game-started', {prompt: data.players.find((e) => e.playerId == player.playerId).prompt});
                 //'game-started', {prompt: "test"});
         }
     });
 
     socket.on('send-canvas', (data) => { // Player send canvas
-        roomData[data.roomId].host.emit('receive-canvas', {playerName: data.playerName, canvas: data.canvas});
+        roomData[data.roomId].host.emit('receive-canvas', {playerId: data.playerId, canvas: data.canvas});
     });
 
     socket.on('end-game', (data) => { // Host end game
@@ -66,7 +69,7 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('send-voting', (data) => { // Player send votes
-        roomData[data.roomId].host.emit('receive-voting', {playerName: data.playerName, vote: data.vote, themeVote: data.themeVote});
+        roomData[data.roomId].host.emit('receive-voting', {playerId: data.playerId, vote: data.vote, themeVote: data.themeVote});
     });
 
     socket.on('end-voting', (data) => { // Host end voting

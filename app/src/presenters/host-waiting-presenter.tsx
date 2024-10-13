@@ -9,6 +9,10 @@ import server from '../server-requests';
 import PlayerSessionEnd from '../views/player-session-end';
 var debug = require('debug')('app:host-waiting-presenter');
 
+export interface Player {
+    playerId: string;
+    name: string;
+  }
 
 interface HostWaitingProps {
     model: UserModel;
@@ -16,9 +20,12 @@ interface HostWaitingProps {
 
 const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     const navigate = useNavigate();
-    const [roomCode, setRoomCode] = useState('');
-    const [playerCount, setPlayerCount] = useState(0);
-
+    const [players, setPlayers]  = useState<Player[]>([]);
+    const [roomCode, setRoomCode] = useState<string>('');
+    
+    debug("Playercount:", model.sessionHost.players.length);
+    debug("Players:", players);
+    
     useEffect(() => {
         // Host-side listeners
         socket.on('room-created', (data) => {   // Server answer with roomID
@@ -26,14 +33,15 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             setRoomCode(data.roomId);
             model.roomId = data.roomId;
         }); 
-        socket.on('player-joined', (data) => {  // Player joined room
+        socket.on('player-joined', async (data) => {  // Player joined room
+            await model.addPlayer(data.playerId, data.playerName);
+            setPlayers([...model.sessionHost.players]);
             debug('Player joined: ' + data.playerName);
-            model.addPlayer(data.playerName);
-            setPlayerCount(playerCount + 1);
         });
         socket.on('player-count-error', (data) => { 
             debug('Player count error, player count at: ' + data.playerCount);
         });
+
         hostRoom();
         model.createHostSession(model.roomId);
     }, []);
@@ -62,7 +70,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         var playerData = [];
         var real_prompt_count = 0;
         for (let i = 0; i < model.sessionHost.players.length ; i++) {
-            var playerName = model.sessionHost.players[i];
+            var playerId = model.sessionHost.players[i].playerId;
             var role;
             var prompt;
 
@@ -75,11 +83,12 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
                 real_prompt_count++;
             }
 
-            playerData.push({playerName, prompt, role});
+            playerData.push({playerId, prompt, role});
         }
 
         model.updateGame(sessionParams.real_theme, sessionParams.fake_themes, playerData);
         startGame(roomCode, model.sessionHost?.playersData); 
+
         navigate('/host-ingame'); // Redirect to host-game
     }
 
@@ -94,7 +103,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     }
 
     return <div>
-        <HostWaitingView code={roomCode} players={[]} handleStartGame={startGameHost} />;
+        <HostWaitingView code={roomCode} players={players} handleStartGame={startGameHost} />;
     </div>
 }
 
