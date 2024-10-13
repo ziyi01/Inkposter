@@ -2,7 +2,7 @@ const debug = require('debug')('server:socket');
 let roomData = {};
 
 module.exports.initSockets = function(socket, io){
-    
+  
     // ------------------------------
     // Server-side socket listeners
     // ------------------------------
@@ -30,7 +30,7 @@ module.exports.initSockets = function(socket, io){
         socket.join(data.roomId);
         roomData[data.roomId].playerCount++;
         roomData[data.roomId].playerSocket.push({socket: socket, playerName: data.playerName});
-        roomData.host.emit('player-joined', {playerName: data.playerName});
+        roomData[data.roomId].host.emit('player-joined', {playerName: data.playerName});
     });
 
     socket.on('start-game', (data) => { // Host start game  

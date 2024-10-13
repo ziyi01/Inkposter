@@ -2,14 +2,11 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
-import runTests from './server-requests-tests';
-
-// import presenters
 import Loading from './views/loading';
+import HomePagePresenter from './presenters/homepage-presenter';
 const LoginPage = React.lazy(() => import('./views/login-page'));
 const HomePage = React.lazy(() => import('./views/homepage'));
 const ProfilePage = React.lazy(() => import('./views/profile'));
-const SettingsPage = React.lazy(() => import('./views/profile'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
@@ -19,70 +16,78 @@ const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter-r
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
 
+// GitHub OAuth Callback Component
+const GitHubCallback: React.FC = () => {
+  
+  return <div>Loading...</div>;
+};
+
 interface AppProps {
   model: UserModel;
 }
 
-const App: React.FC<AppProps> = ({model}) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+const App: React.FC<AppProps> = ({ model }) => {
+  const isAuthenticated = true; // Set to true to bypass the login system
 
   useEffect(() => {
     return () => {
       closeConnection();
-    }
+    };
   }, []);
 
-  const handleLogin = (username: string, password: string): boolean => {
-    // Mock login
-    if (username === 'admin' && password === 'password') {
-      setIsAuthenticated(true);
-      return true; 
-    } else {
-      alert('Invalid credentials!');
-      return false; 
-    }
+  const handleLogout = () => {
+    console.log('User has logged out');
   };
-  
+
   return (
     <Router>
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route 
             path="/login" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage onLogin={handleLogin} />} 
+            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage />} 
           />
           <Route 
             path="/homepage" 
-            element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
+            element={<HomePagePresenter model={model} />} 
+          />
+          <Route
+            path="/profile"
+            element={<ProfilePage handleLogout={handleLogout} />} 
           />
           <Route 
-            path="/profile" 
-            element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} 
+            path="/host-game" 
+            element={<HostWaiting model={model} />} 
           />
           <Route 
-            path="/settings" 
-            element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} 
+            path="/host-ingame" 
+            element={<HostGame model={model} />} 
           />
-          <Route path="/host-game" element={isAuthenticated ? <HostWaiting model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/host-voting" 
+            element={<HostVote model={model} />} 
           />
-          <Route path="/host-ingame" element={isAuthenticated ? <HostGame model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/host-results" 
+            element={<HostEnd model={model} />} 
           />
-          <Route path="/host-voting" element={isAuthenticated ? <HostVote model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-game" 
+            element={<PlayerWaiting model={model} />} 
           />
-          <Route path="/host-results" element={isAuthenticated ? <HostEnd model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-ingame" 
+            element={<PlayerGame model={model} />} 
           />
-          
-          <Route path="/player-game" element={isAuthenticated ? <PlayerWaiting model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-voting" 
+            element={<PlayerVote model={model} />} 
           />
-          <Route path="/player-ingame" element={isAuthenticated ? <PlayerGame model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-results" 
+            element={<PlayerEnd model={model} />} 
           />
-          <Route path="/player-voting" element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />}
-          />
-          <Route path="/player-results" element={isAuthenticated ? <PlayerEnd model={model}/> : <Navigate to="/login" />}
-          />
-
-          <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
-
+          <Route path="*" element={<Navigate to="/homepage" />} /> {/* Redirect all unknown routes to homepage */}
         </Routes>
       </Suspense>
     </Router>
