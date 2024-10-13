@@ -2,7 +2,7 @@ import React from 'react';
 
 interface HostGameViewProps {
   playerCanvas: {} // Change in presenter to fit Player[]
-  timer: number; // Timer passed from the presenter
+  timer: React.ReactNode; // Timer passed from the presenter
 }
 
 const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
@@ -10,9 +10,7 @@ const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
       {/* Timer */}
       <div className="absolute top-4 right-4 text-2xl font-bold">
-        {timer > 0 
-          ? `${Math.floor(timer / 60)}:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}`
-          : '0:00'}
+        {timer}
       </div>
 
       {/* Title */}
