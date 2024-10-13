@@ -15,6 +15,7 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
     const navigate = useNavigate();
     useEffect(() => {
         socket.on('game-started', (data) => {   // Player game started
+            debug("Recieved prompt:", data.prompt);
             model.startGamePlayer(data.prompt);
             navigate('/player-game');
         });

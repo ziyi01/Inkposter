@@ -33,12 +33,19 @@ module.exports.initSockets = function(socket, io){
         roomData[data.roomId].playerCount++;
         roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
         roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
+
+        debug(data.playerId, "joined with socket", socket.playerId);
+
     });
 
     socket.on('start-game', (data) => { // Host start game  
+
+        // ??? this caused playerSocket to be wiped out, I don't understand the purpose
+        /* 
         roomData[data.roomId] = {
             players: data.players
         }
+        */
 
         if(roomData[data.roomId].playerCount < 3){
             roomData[data.roomId].host.emit('player-count-error', {playerCount: roomData[data.roomId].playerCount});
@@ -46,10 +53,10 @@ module.exports.initSockets = function(socket, io){
         }
 
         for(let i = 0; i < data.players.length; i++){
-            const player = playerSocket[i];
-            roomData[data.roomId].player.socket.emit(
-                'game-started', {prompt: data.players[i].find((e) => e.id == player.id).prompt
-                });
+            const player = roomData[data.roomId].playerSocket[i]; //playerSocket[i]; <-- playerSocket is not defined
+            player.socket.emit(
+                'game-started', {prompt: data.players.find((e) => e.playerId == player.playerId).prompt});
+                //'game-started', {prompt: "test"});
         }
     });
 

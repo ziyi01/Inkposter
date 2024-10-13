@@ -1,12 +1,12 @@
 import { closeGame } from "./components/socket-client";
 
 export type Player = {
-    id: string;
+    playerId: string;
     name: string;
 }
 
 export type playerSession = {
-    id: string;
+    playerId: string;
     prompt: string;
     role: string;
     canvas?: string; // Base64 encoded image
@@ -16,31 +16,32 @@ export type hostSession = {
     players: Player[];
     playersData: playerSession[];
     theme: string;
+    fake_themes: string[];
 };
 
 /**
  * Model in the MVP pattern for the application
  */
 export class UserModel {
-    id: string;
+    playerId: string;
     name: string;
     host: boolean;
     roomId: string;
     sessionHost: hostSession;
     sessionPlayer: playerSession;
 
-    constructor(id='', name='', host: boolean=false) {
-        this.id = id;
+    constructor(playerId='', name='', host: boolean=false) {
+        this.playerId= playerId;
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: ""};
-        this.sessionPlayer = {id: "", prompt: "", role: ""}; 
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionPlayer = {playerId: "", prompt: "", role: ""}; 
     }
 
     // General functions
-    login(id: string, playerName: string) {
-        this.id = id;
+    login(playerId: string, playerName: string) {
+        this.playerId = playerId;
         this.name = playerName;
     }
     
@@ -59,26 +60,28 @@ export class UserModel {
         this.sessionHost = {
             players: [],
             playersData: [],
-            theme: ""
+            theme: "",
+            fake_themes: []
         };
     }
 
     addPlayer(playerId:string, playerName:string) {
         if(this.sessionHost) {
-            this.sessionHost.players.push({"id": playerId, "name": playerName});
+            this.sessionHost.players.push({"playerId": playerId, "name": playerName});
         }
     }
 
+    // or we could just add it as a part of host-session and add it at param-generation? 
     getPlayerPrompts() {
         if(!this.host) {
             return [];
         }
-        return this.sessionHost.playersData.map(player => {return {"playerId": player.id, "prompt": player.prompt}});
+        return this.sessionHost.playersData.map(player => {return {"playerId": player.playerId, "prompt": player.prompt}});
     }
 
-    getPlayer(id:string):string {
+    getPlayer(playerId:string):string {
         if(this.sessionHost) {
-            const player = this.sessionHost.players.find(player => player.id === id);
+            const player = this.sessionHost.players.find(player => player.playerId === playerId);
             if(player) {
                 return player.name
             }
@@ -86,16 +89,17 @@ export class UserModel {
         return "None";
     }
 
-    updateGame(theme:string, playerData:[]) { // Update host model theme and players
+    updateGame(theme:string, fake_themes:string[], playerData:playerSession[]) { // Update host model theme and players
         if(this.sessionHost) {
             this.sessionHost.theme = theme;
+            this.sessionHost.fake_themes = fake_themes;
             this.sessionHost.playersData = playerData;
         }
     }
 
     updateCanvas(playerId:string, canvas:string) { // Receives playerName and canvas-file
         if(this.sessionHost) {
-            const player = this.sessionHost.playersData.find(player => player.id === playerId);
+            const player = this.sessionHost.playersData.find(player => player.playerId === playerId);
             if (player) {
                 player.canvas = canvas;
             }
@@ -114,7 +118,7 @@ export class UserModel {
     startGamePlayer(prompt:string) { // Update model with prompt and role
         if(!this.host) { 
             this.sessionPlayer = {
-                id: this.id,
+                playerId: this.playerId,
                 prompt: prompt,
                 role: prompt !== '' ? "Innocent" : "Inkposter"
             }

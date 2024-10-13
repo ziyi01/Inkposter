@@ -12,7 +12,7 @@ const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
 const HostEnd = React.lazy(() => import('./presenters/host-end-presenter'));
 const PlayerWaiting = React.lazy(() => import('./presenters/player-waiting-presenter'));
-const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter-real'));
+const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter'));
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
 

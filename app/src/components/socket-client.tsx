@@ -17,7 +17,7 @@ export function hostRoom() {
     socket.emit('host-room');
 }
 
-export function startGame(roomId:string, players: {playerId: string, prompt: string}[]) {
+export function startGame(roomId:string, players: {playerId: string, prompt: string, role: string}[]) {
     // A player has {playerId, prompt}, prompt is '' or "inkposter" if evil
     socket.emit('start-game', {roomId: roomId, players: players});
 }
