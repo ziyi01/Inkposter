@@ -7,10 +7,10 @@ import Cookies from 'js-cookie';
 
 // import presenters
 import Loading from './views/loading';
+import HomePagePresenter from './presenters/homepage-presenter';
 const LoginPage = React.lazy(() => import('./views/login-page'));
 const HomePage = React.lazy(() => import('./views/homepage'));
 const ProfilePage = React.lazy(() => import('./views/profile'));
-const SettingsPage = React.lazy(() => import('./views/profile'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
@@ -19,6 +19,7 @@ const PlayerWaiting = React.lazy(() => import('./presenters/player-waiting-prese
 const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter-real'));
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
+//const SettingsPage = React.lazy(() => import('./views/profile'));
 
 // GitHub OAuth Callback Component
 const GitHubCallback: React.FC = () => {
@@ -93,7 +94,7 @@ const App: React.FC<AppProps> = ({model}) => {
           />
           <Route 
             path="/homepage" 
-            element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
+            element={isAuthenticated ? <HomePagePresenter model={model} /> : <Navigate to="/login" />}
           />
           <Route
             path="/profile"
