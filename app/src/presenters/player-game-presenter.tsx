@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // import components
@@ -6,6 +6,7 @@ import PlayerGameView from '../views/player-game';
 import { UserModel } from '../userModel';
 import { sendCanvas, socket } from '../components/socket-client';
 import Canvas from '../components/canvas';
+import Popup from '../components/popup';
 var debug = require('debug')('app:player-game-presenter');
 
 interface PlayerGameProps {
@@ -19,6 +20,21 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
             navigate('/player-voting');
         });
     }, []); 
+    
+    // Popup
+    const popupRef = useRef<any>(null);
+
+    const handleLeaveClick = () => {
+      if (popupRef.current) {
+        popupRef.current.openPopup();
+      }
+    };
+
+    const handleConfirmLeave = () => {
+      console.log('Player has confirmed to leave the game.');
+      navigate('/homepage')
+      // Perform leave action, such as navigating or notifying the server
+    };
 
     // TODO: Implement sendCanvas function to pass to sketch-canvas in view
     function onDraw(canvasDataURL:string) {
@@ -26,7 +42,13 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
     }
 
     return <div>
-        <PlayerGameView canvas={<Canvas onDraw={onDraw}/>}/>
+        <PlayerGameView canvas={<Canvas onDraw={onDraw}/>} onLeaveClick={handleLeaveClick}/>
+        <Popup
+        ref={popupRef}
+        title="Leave Game?"
+        message="Are you sure you want to leave the game? This action cannot be undone."
+        onConfirm={handleConfirmLeave}
+      />
     </div>
 }
 
