@@ -89,40 +89,49 @@ const App: React.FC<AppProps> = ({model}) => {
         <Routes>
           <Route 
             path="/login" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage onLogin={handleLogin} />} 
+            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage />} 
           />
           <Route 
             path="/homepage" 
             element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
           />
-          <Route 
-            path="/profile" 
-            element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} 
+          <Route
+            path="/profile"
+            element={isAuthenticated ? <ProfilePage handleLogout={handleLogout} /> : <Navigate to="/login" />}
           />
           <Route 
-            path="/settings" 
-            element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} 
+            path="/host-game" 
+            element={isAuthenticated ? <HostWaiting model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/host-game" element={isAuthenticated ? <HostWaiting model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/host-ingame" 
+            element={isAuthenticated ? <HostGame model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/host-ingame" element={isAuthenticated ? <HostGame model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/host-voting" 
+            element={isAuthenticated ? <HostVote model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/host-voting" element={isAuthenticated ? <HostVote model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/host-results" 
+            element={isAuthenticated ? <HostEnd model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/host-results" element={isAuthenticated ? <HostEnd model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-game" 
+            element={isAuthenticated ? <PlayerWaiting model={model}/> : <Navigate to="/login" />} 
           />
-          
-          <Route path="/player-game" element={isAuthenticated ? <PlayerWaiting model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-ingame" 
+            element={isAuthenticated ? <PlayerGame model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/player-ingame" element={isAuthenticated ? <PlayerGame model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-voting" 
+            element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/player-voting" element={isAuthenticated ? <PlayerVote model={model}/> : <Navigate to="/login" />}
+          <Route 
+            path="/player-results" 
+            element={isAuthenticated ? <PlayerEnd model={model}/> : <Navigate to="/login" />} 
           />
-          <Route path="/player-results" element={isAuthenticated ? <PlayerEnd model={model}/> : <Navigate to="/login" />}
-          />
-
           <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
-
         </Routes>
       </Suspense>
     </Router>
