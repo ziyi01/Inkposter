@@ -11,6 +11,7 @@ interface HomePageProps {
 }
 
 const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
+  const navigate = useNavigate();
   const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
@@ -26,7 +27,10 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     e.preventDefault(); // Prevents page refresh
     console.log('Join Code:', joinCode);
     setIsJoinInputVisible(false);
+
     //game logic
+    joinRoom(joinCode, "me");
+    navigate('/player-waiting');
   };
 
   return (

@@ -72,8 +72,12 @@ const App: React.FC<AppProps> = ({ model }) => {
             element={<HostEnd model={model} />} 
           />
           <Route 
-            path="/player-game" 
+            path="/player-waiting" 
             element={<PlayerWaiting model={model} />} 
+          />
+          <Route 
+            path="/player-game" 
+            element={<PlayerGame model={model} />} 
           />
           <Route 
             path="/player-ingame" 
