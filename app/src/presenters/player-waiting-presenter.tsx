@@ -25,7 +25,6 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
             navigate('/homepage');
         });
 
-        joinRoom(model.roomId, model.name);
     },[]);
 
     return <div>

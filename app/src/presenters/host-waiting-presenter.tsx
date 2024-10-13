@@ -27,6 +27,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             debug('Player joined: ' + data.playerName);
             model.addPlayer(data.playerName);
             setPlayerCount(playerCount + 1);
+            debug("playercount:", playerCount);
         });
         socket.on('player-count-error', (data) => { 
             debug('Player count error, player count at: ' + data.playerCount);
@@ -37,7 +38,8 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
 
     async function startGameHost() { // Callback called when host presses start game
         // Validate player count
-        if(playerCount < 3) {
+        
+        if(model.sessionHost.players.length < 3) {
             alert('Need at least 3 players to start game!');
             return;
         }
