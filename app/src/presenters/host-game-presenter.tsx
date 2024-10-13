@@ -20,13 +20,13 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
    const navigate = useNavigate();
    const [playerCanvas, setCanvas] = useState({}); // Filled with base64-encoded images 
 
-  useEffect(() => {
+   useEffect(() => {
     // Update when model.updateCanvas is called from player
     socket.on('receive-canvas', (data) => { // Receive a player's canvas
-      model.updateCanvas(data.playerName, data.canvas);
-      setCanvas({playerCanvas, [data.playerName]: data.canvas});
-    });
-  }, [model]);
+      model.updateCanvas(data.playerId, data.canvas); 
+      setCanvas({playerCanvas, [model.getPlayer(data.playerId)]: data.canvas});
+     });
+    }, []);
 
   // Navigate to the voting screen when the timer ends
   const handleTimerEnd = useCallback(() => {

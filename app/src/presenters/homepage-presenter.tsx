@@ -29,7 +29,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     setIsJoinInputVisible(false);
 
     //game logic
-    joinRoom(joinCode, "me");
+    joinRoom(joinCode, "userid", "me");
     navigate('/player-waiting');
   };
 
