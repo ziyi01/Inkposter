@@ -63,6 +63,7 @@
   },
   "jest": {
     "projects": [
+      "app/jest.config.js",
       "server/jest.config.js"
     ]
   }
