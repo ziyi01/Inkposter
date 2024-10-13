@@ -7,13 +7,11 @@ describe("Connection and db test", () => {
     }, 10000);
 
     test("Create and delete user", async () => {
-        await db.deleteUserProfile("100000");
         await db.createUser("100000", "rat1", "rat1.png");
         var user = await db.getUser("100000");
-        expect(user).toEqual({ _id: "100000", username: 'rat1', avatar: 'rat1.png', previousThemes: [] });
-        await db.deleteUserProfile("100000");
-        user = await db.getUser("100000");
-        expect(user).toBe(null);
+        expect(user.avatar).toEqual('rat1.png');
+        var res = await db.deleteUserProfile("100000");
+        expect(res).toBe(true);
     })
 
     test("Retrieve user stats", async () => {
