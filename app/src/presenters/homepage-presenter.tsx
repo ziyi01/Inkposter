@@ -4,18 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import HomePageView from '../views/homepage';
 import { UserModel } from '../userModel';
 
-// import socket fns
 import { joinRoom } from '../components/socket-client';
+
 interface HomePageProps {
-   model: UserModel;
+  model: UserModel;
 }
 
 const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
-
   const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
-  const handleJoinClick = () => { 
+  const handleJoinClick = () => {
     setIsJoinInputVisible(true);
   };
 
@@ -23,25 +22,23 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     setJoinCode(e.target.value);
   };
 
-  const handleInputBlur = () => {
-    setIsJoinInputVisible(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevents page refresh
     console.log('Join Code:', joinCode);
-    //game logic here
-
+    setIsJoinInputVisible(false);
+    //game logic
   };
 
   return (
     <HomePageView
-        model={model}
-        isJoinInputVisible={isJoinInputVisible}
-        onJoinClick={handleJoinClick}
-        joinCode={joinCode}
-        onInputChange={handleInputChange}
-        onInputBlur={handleInputBlur}
+      model={model}
+      isJoinInputVisible={isJoinInputVisible}
+      onJoinClick={handleJoinClick}
+      joinCode={joinCode}
+      onInputChange={handleInputChange}
+      onSubmit={handleSubmit}
     />
   );
-
 };
 
 export default HomePagePresenter;
-
