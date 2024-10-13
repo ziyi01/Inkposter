@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 import LoginPage from './views/login-page';
 import HomePage from './views/homepage';
 import ProfilePage from './views/profile';
 import HostGamePage from './views/host-game';
 
-// Create a new callback component to handle GitHub redirect
+// GitHub OAuth Callback Component
 const GitHubCallback: React.FC = () => {
   useEffect(() => {
     const handleGitHubResponse = async () => {
@@ -14,7 +15,6 @@ const GitHubCallback: React.FC = () => {
       const code = params.get('code');
 
       if (code) {
-        // Replace this URL with your backend endpoint for handling GitHub OAuth
         const response = await fetch('YOUR_BACKEND_URL/oauth/github', {
           method: 'POST',
           headers: {
@@ -25,13 +25,11 @@ const GitHubCallback: React.FC = () => {
 
         if (response.ok) {
           const data = await response.json();
-          // Assuming the backend returns a unique identifier
-          localStorage.setItem('isAuthenticated', 'true'); // Update your authentication status
-          localStorage.setItem('uniqueId', data.uniqueId); // Store unique ID if returned
+          Cookies.set('uniqueId', data.uniqueId, { expires: 7 }); // Store unique ID in a cookie for 7 days
           window.location.href = '/homepage'; // Redirect to homepage
         } else {
-          console.error('Error during GitHub login');
-          // Handle error appropriately, e.g., show a message
+          console.error('GitHub login failed');
+          // Handle login failure HERE
         }
       }
     };
@@ -39,48 +37,51 @@ const GitHubCallback: React.FC = () => {
     handleGitHubResponse();
   }, []);
 
-  return <div>Loading...</div>; // Display a loading state
+  return <div>Loading...</div>;
 };
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  // Check if the unique ID cookie exists on page load
   useEffect(() => {
-    const storedAuth = localStorage.getItem('isAuthenticated');
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true);
+    const uniqueId = Cookies.get('uniqueId');
+    if (uniqueId) {
+      setIsAuthenticated(true); // User is authenticated if unique ID exists
     }
   }, []);
 
   const handleLogout = () => {
+    Cookies.remove('uniqueId'); // Clear cookie on logout
     setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated'); // Clear authentication status
-    localStorage.removeItem('uniqueId'); // Clear unique ID if needed
-    console.log("user has logged out")
-
+    console.log('User has logged out');
   };
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>; // Show loading state while checking authentication
+  }
 
   return (
     <Router>
       <Routes>
-        <Route 
-          path="/login" 
-          element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage />} 
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage />}
         />
-        <Route 
-          path="/homepage" 
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} 
+        <Route
+          path="/homepage"
+          element={isAuthenticated ? <HomePage /> : <Navigate to="/HomePage" />}
         />
-        <Route 
-          path="/profile" 
-          element={isAuthenticated ? <ProfilePage handleLogout={handleLogout} /> : <Navigate to="/login" />} 
+        <Route
+          path="/profile"
+          element={isAuthenticated ? <ProfilePage handleLogout={handleLogout} /> : <Navigate to="/login" />}
         />
-        <Route 
-          path="/host-game" 
-          element={isAuthenticated ? <HostGamePage /> : <Navigate to="/login" />} 
+        <Route
+          path="/host-game"
+          element={isAuthenticated ? <HostGamePage /> : <Navigate to="/login" />}
         />
         <Route path="/auth/github/callback" element={<GitHubCallback />} />
-        <Route path="*" element={<Navigate to="/login" />} />  {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );

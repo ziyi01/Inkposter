@@ -10,7 +10,6 @@ const LoginPage: React.FC = () => {
     const redirectUri = 'http://localhost:3000/auth/github/callback'; // Connected to Oliver's Github account
     const scope = 'user:email';
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-    navigate('/homepage');
   };
 
   return (
