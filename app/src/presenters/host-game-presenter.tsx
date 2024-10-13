@@ -19,7 +19,7 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
     */
    const navigate = useNavigate();
    const [playerCanvas, setCanvas] = useState({}); // Filled with base64-encoded images 
-   const [timer, setTimer] = useState(60); // TODO: Update timer and add to view
+   const [timer, setTimer] = useState(60);
 
     useEffect(() => {
         // Update when model.updateCanvas is called from player
@@ -27,16 +27,36 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
             model.updateCanvas(data.playerName, data.canvas);
             setCanvas({playerCanvas, [data.playerName]: data.canvas});
         });
-    }, []);
 
-    function onTimerEnd() {
-        endGame(model.roomId);
-        navigate('/host-voting');
-    }
+    // Timer logic to decrement every second
+    const timerInterval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(timerInterval);
+          onTimerEnd(); // Call when timer reaches 0
+          return 0;
+        }
+      });
+    }, 1000); // Run this every second (1000 ms)
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(timerInterval);
+      socket.off('receive-canvas');
+    };
+  }, [model]);
+
+  // Navigate to the voting screen when the timer ends
+  const onTimerEnd = () => {
+    endGame(model.roomId);
+    navigate('/host-voting');
+  };
 
     return (
         <div>
-            <HostGameView playerCanvas={playerCanvas}/>
+            <HostGameView playerCanvas={playerCanvas} timer={timer}/>
             Socket: {socket.id}
             Canvas: {playerCanvas.toString()}
         </div>
