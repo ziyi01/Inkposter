@@ -36,7 +36,6 @@ const App: React.FC<AppProps> = ({ model }) => {
   }, []);
 
   const handleLogout = () => {
-    // Add logout functionality if needed
     console.log('User has logged out');
   };
 
