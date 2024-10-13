@@ -24,8 +24,8 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
     useEffect(() => {
         // Update when model.updateCanvas is called from player
         socket.on('receive-canvas', (data) => { // Receive a player's canvas
-            model.updateCanvas(data.playerName, data.canvas);
-            setCanvas({playerCanvas, [data.playerName]: data.canvas});
+            model.updateCanvas(data.playerId, data.canvas); 
+            setCanvas({playerCanvas, [model.getPlayer(data.playerId)]: data.canvas});
         });
     }, []);
 

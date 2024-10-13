@@ -7,15 +7,23 @@ import { UserModel } from '../userModel';
 import { hostRoom, startGame, socket } from '../components/socket-client';
 var debug = require('debug')('app:host-waiting-presenter');
 
+export interface Player {
+    id: string;
+    name: string;
+  }
+
 interface HostWaitingProps {
     model: UserModel;
 }
 
 const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     const navigate = useNavigate();
-    const [roomCode, setRoomCode] = useState('');
-    const [playerCount, setPlayerCount] = useState(0);
-
+    const [players, setPlayers]  = useState<Player[]>([]);
+    const [roomCode, setRoomCode] = useState<string>('');
+    
+    debug("Playercount:", model.sessionHost.players.length);
+    debug("Players:", players);
+    
     useEffect(() => {
         // Host-side listeners
         socket.on('room-created', (data) => {   // Server answer with roomID
@@ -23,15 +31,15 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             setRoomCode(data.roomId);
             model.roomId = data.roomId;
         }); 
-        socket.on('player-joined', (data) => {  // Player joined room
+        socket.on('player-joined', async (data) => {  // Player joined room
+            await model.addPlayer(data.playerId, data.playerName);
+            setPlayers([...model.sessionHost.players]);
             debug('Player joined: ' + data.playerName);
-            model.addPlayer(data.playerName);
-            setPlayerCount(playerCount + 1);
-            debug("playercount:", playerCount);
         });
         socket.on('player-count-error', (data) => { 
             debug('Player count error, player count at: ' + data.playerCount);
         });
+
         hostRoom();
         model.createHostSession(model.roomId);
     }, []);
@@ -47,12 +55,12 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         // Process openAI and update model with theme
         
         model.updateGame("sea", []) // Mock theme
-        startGame(roomCode, model.sessionHost?.playersData); 
+        startGame(roomCode, model.getPlayerPrompts());
         navigate('/host-ingame'); // Redirect to host-game
     }
 
     return <div>
-        <HostWaitingView code={roomCode} players={[]} handleStartGame={startGameHost} />;
+        <HostWaitingView code={roomCode} players={players} handleStartGame={startGameHost} />;
     </div>
 }
 
