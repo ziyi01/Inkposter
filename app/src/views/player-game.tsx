@@ -1,25 +1,10 @@
 import React from 'react';
-import { ReactSketchCanvas } from 'react-sketch-canvas';
-import Toolbar from '../components/toolbar';
-import { gamePresenter } from '../presenters/player-game-presenter';
 
-const PlayerGame: React.FC = () => {
-  const {
-    canvasRef,
-    eraseMode,
-    strokeWidth,
-    eraserWidth,
-    strokeColor,
-    handleEraserClick,
-    handlePenClick,
-    handleUndoClick,
-    handleRedoClick,
-    handleClearClick,
-    handleStrokeWidthChange,
-    handleEraserWidthChange,
-    handleStrokeColorChange,
-  } = gamePresenter();
+interface PlayerGameViewProps {
+  canvas: React.ReactNode;
+}
 
+const PlayerGameView: React.FC<PlayerGameViewProps> = ({ canvas }) => {
   return (
     <div className="flex flex-col items-center min-h-screen bg-black text-white p-8">
       {/* Word */}
@@ -29,37 +14,13 @@ const PlayerGame: React.FC = () => {
       <h2 className="text-lg mb-8">(You are the inkposter?)</h2>
 
       {/* Canvas Section */}
-      <div className="rounded-md mb-6 p-4">
-        <ReactSketchCanvas
-          width="600px"
-          height="400px"
-          strokeColor={strokeColor}
-          ref={canvasRef}
-          strokeWidth={strokeWidth}
-          eraserWidth={eraserWidth}
-          className="rounded-md"
-        />
+      <div>
+        {canvas}
       </div>
-
-      {/* Toolbar below canvas */}
-      <div className="w-full flex justify-center mb-4">
-        <Toolbar
-          eraseMode={eraseMode}
-          handlePenClick={handlePenClick}
-          handleEraserClick={handleEraserClick}
-          handleUndoClick={handleUndoClick}
-          handleRedoClick={handleRedoClick}
-          handleClearClick={handleClearClick}
-          strokeWidth={strokeWidth}
-          handleStrokeWidthChange={handleStrokeWidthChange}
-          eraserWidth={eraserWidth}
-          handleEraserWidthChange={handleEraserWidthChange}
-          strokeColor={strokeColor}
-          handleStrokeColorChange={handleStrokeColorChange}
-        />
-      </div>
+      
     </div>
   );
 };
 
-export default PlayerGame;
+export default PlayerGameView;
+
