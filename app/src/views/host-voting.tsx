@@ -2,7 +2,7 @@ import React from 'react';
 
 const HostVoting: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
       <h1>
         Guess the theme!
       </h1>

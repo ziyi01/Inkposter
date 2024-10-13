@@ -1,0 +1,22 @@
+name: 'Coverage'
+
+env:
+  MONGODB_URI: ${{secrets.MONGODB_URI}}
+  OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+
+on:
+    pull_request:
+        branches:
+            - main
+jobs:
+    coverage:
+        runs-on: ubuntu-latest
+        permissions:
+            actions: read
+            contents: read
+            pull-requests: write
+            checks: write
+        steps:
+            - uses: actions/checkout@v4
+            - run: npm run dev-build --if-present
+            - uses: ArtiomTr/jest-coverage-report-action@v2

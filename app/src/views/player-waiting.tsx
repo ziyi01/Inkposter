@@ -1,11 +1,13 @@
 import React from 'react';
 
-const SomeComponent: React.FC = () => {
+const PlayerWaiting: React.FC = () => {
   return (
-    <div>
-      {/* Component logic will go here */}
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+      <h1 className="text-3xl font-bold animate-pulse">
+        Waiting for host to start game...
+      </h1>
     </div>
   );
-}
+};
 
-export default SomeComponent;
+export default PlayerWaiting;
