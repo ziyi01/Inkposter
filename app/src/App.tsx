@@ -50,15 +50,15 @@ const App: React.FC<AppProps> = ({ model }) => {
             element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="0" />} 
           />
           <Route 
-            path="/login1" 
+            path="/1" 
             element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="1" />} 
           />
           <Route 
-            path="/login2" 
+            path="/2" 
             element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="2"/>} 
           />
           <Route 
-            path="/login3" 
+            path="/3" 
             element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="3"/>} 
           />
           <Route 
