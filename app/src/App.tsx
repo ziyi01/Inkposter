@@ -4,10 +4,9 @@ import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 import ProfileNavBar from './components/navbar';
-import HomePagePresenter from './presenters/homepage-presenter';
 const LoginPage = React.lazy(() => import('./views/login-page'));
-const HomePage = React.lazy(() => import('./views/homepage'));
-const ProfilePage = React.lazy(() => import('./views/profile'));
+const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
+const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
@@ -50,11 +49,11 @@ const App: React.FC<AppProps> = ({ model }) => {
           />
           <Route 
             path="/homepage" 
-            element={<HomePagePresenter model={model} />} 
+            element={<HomePage model={model} />} 
           />
           <Route
             path="/profile"
-            element={<ProfilePage handleLogout={handleLogout} />} 
+            element={<ProfilePage handleLogout={handleLogout} model={model} />} 
           />
           <Route 
             path="/host-game" 
