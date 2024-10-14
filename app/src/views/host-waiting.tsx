@@ -9,7 +9,7 @@ interface HostWaitingProps {
 
 const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStartGame }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white text-center">
+    <div className="flex flex-col items-center justify-center h-screen bg-background text-white text-center">
       <h1 className="animate-pulse text-2xl font-bold">Waiting for more players to join...</h1>
       <h2 className="text-xl mt-2">
         Code to join: <span className="text-sky-400">{code}</span>

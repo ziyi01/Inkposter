@@ -27,7 +27,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black text-white p-8 relative">
+    <div className="flex flex-col items-center min-h-screen bg-background text-white p-8 relative">
 
       {/* Leave Game */}
       <button

@@ -8,7 +8,7 @@ interface HostGameViewProps {
 
 const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+    <div className="flex flex-col items-center justify-center h-screen bg-background text-white">
       {/* Timer */}
       <div className="absolute top-4 right-4 text-2xl font-bold">
         {timer}

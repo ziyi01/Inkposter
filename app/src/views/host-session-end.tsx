@@ -33,7 +33,7 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({
   onEndSession,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-8 py-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-white px-8 py-4">
       {/* Inkposter Section */}
       <h1 className="text-2xl font-bold mb-2">
         <span className="text-red-500">{inkposter.name}</span> was the inkposter.

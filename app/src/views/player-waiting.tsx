@@ -6,7 +6,7 @@ interface PlayerGameViewProps {
 
 const PlayerWaiting: React.FC<PlayerGameViewProps> = ({onLeaveClick}) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white relative">
+    <div className="flex flex-col items-center justify-center h-screen bg-background text-white relative">
 
       {/* Leave Game */}
       <button
