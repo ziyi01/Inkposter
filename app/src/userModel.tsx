@@ -1,5 +1,6 @@
 import { closeGame } from "./components/socket-client";
-import { Player } from "./components/playerInterface";
+import { Player, PlayerCanvas } from "./components/playerInterface";
+import { Session } from "inspector";
 
 var debug = require('debug')('app:userModel');
 
@@ -91,6 +92,10 @@ export class UserModel {
             }
         }
         return "None";
+    }
+
+    getAllPlayers():Player[] {
+        return this.sessionHost.players;
     }
 
     disconnectedPlayer(playerId:string) { // Set disconnected player's connection to false, use mid-game
