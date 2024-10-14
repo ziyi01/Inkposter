@@ -20,7 +20,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     socket.on('room-joined', (data) => {
       debug("Room joined:", data.roomId);
       model.setRoomId(data.roomId);
-      navigate('/player-waiting');
+      navigate('/player/game');
     });
 
     return () => {

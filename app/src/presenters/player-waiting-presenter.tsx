@@ -17,7 +17,11 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
         socket.on('game-started', (data) => {   // Player game started
             debug("Recieved prompt:", data.prompt);
             model.startGamePlayer(data.prompt);
-            navigate('/player-game');
+            navigate('/player/game');
+        });
+        socket.on('host-left', () => {  // Host left room
+            model.reset();
+            navigate('/');
         });
 
         return () => {

@@ -42,7 +42,7 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
   // Navigate to the voting screen when the timer ends
   const handleTimerEnd = useCallback(() => {
     endGame(model.roomId);
-    navigate('/host-voting');
+    navigate('/host/voting');
   }, [model.roomId, navigate]);
 
   return (

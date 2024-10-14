@@ -62,7 +62,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         /*
         model.updateGame("ocean", [], []);
         startGame(roomCode, model.sessionHost?.playersData); 
-        navigate('/host-ingame'); // Redirect to host-game
+        navigate('/host/ingame'); // Redirect to host-game
         */
         server.getGeneratedSessionParams("").then(startGameACB).catch(handleError);
     }
@@ -94,7 +94,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         model.updateGame(sessionParams.real_theme, sessionParams.fake_themes, playerData);
         startGame(roomCode, model.sessionHost?.playersData); 
 
-        navigate('/host-ingame'); // Redirect to host-game
+        navigate('/host/ingame'); // Redirect to host-game
     }
 
     // returns random int, range [0, max)
