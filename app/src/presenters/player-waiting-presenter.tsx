@@ -42,7 +42,7 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
 
     const handleConfirmLeave = () => {
       console.log('Player has confirmed to leave the game.');
-      socket.emit('disconnect'); // Kan behöva ändras, spelaren försvinner inte hos hosten
+      quitGame(model.roomId, model.playerId);
       navigate('/homepage')
     };
 
