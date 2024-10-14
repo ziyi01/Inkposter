@@ -196,7 +196,7 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     ├── global.css
     ├── index.css
     ├── index.tsx
-    ├── server-requests.tsx
+    ├── server-requests.ts
     ├── userModel.tsx
     └── logo.svg
 ```
