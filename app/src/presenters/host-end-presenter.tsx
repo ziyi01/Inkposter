@@ -16,7 +16,7 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({model}) => {
 
     function onEndGame() {
         closeGame(model.roomId); // Close the socket room if the host ends the game
-        model.resetHost(); // TODO: Reset the model
+        model.reset();
         navigate('/homepage'); // Navigate to the homepage
     }
 

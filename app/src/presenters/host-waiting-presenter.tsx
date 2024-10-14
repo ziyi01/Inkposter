@@ -5,14 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import HostWaitingView from '../views/host-waiting';
 import { UserModel, playerSession } from '../userModel';
 import { hostRoom, startGame, socket } from '../components/socket-client';
+import { Player } from '../components/playerInterface';
 import server from '../server-requests';
-import PlayerSessionEnd from '../views/player-session-end';
-var debug = require('debug')('app:host-waiting-presenter');
 
-export interface Player {
-    playerId: string;
-    name: string;
-  }
+var debug = require('debug')('app:host-waiting-presenter');
 
 interface HostWaitingProps {
     model: UserModel;
@@ -22,9 +18,6 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     const navigate = useNavigate();
     const [players, setPlayers]  = useState<Player[]>([]);
     const [roomCode, setRoomCode] = useState<string>('');
-    
-    debug("Playercount:", model.sessionHost.players.length);
-    debug("Players:", players);
     
     useEffect(() => {
         // Host-side listeners
@@ -38,12 +31,24 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             setPlayers([...model.sessionHost.players]);
             debug('Player joined: ' + data.playerName);
         });
-        socket.on('player-count-error', (data) => { 
+        socket.on('player-left', async (data) => {  // Player left room
+            model.removePlayer(data.playerId); // Should just be removed if player left
+            setPlayers([...model.sessionHost.players]);
+            debug("Player left: " + data.playerId);
+        });
+        socket.on('player-count-error', (data) => { // Player count error from server 
             debug('Player count error, player count at: ' + data.playerCount);
         });
 
         hostRoom();
         model.createHostSession(model.roomId);
+
+        return () => {
+            socket.off('room-created');
+            socket.off('player-joined');
+            socket.off('player-count-error');
+            socket.off('player-left');
+        };
     }, []);
 
     async function startGameHost() { // Callback called when host presses start game
@@ -57,7 +62,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         /*
         model.updateGame("ocean", [], []);
         startGame(roomCode, model.sessionHost?.playersData); 
-        navigate('/host-ingame'); // Redirect to host-game
+        navigate('/host/ingame'); // Redirect to host-game
         */
         server.getGeneratedSessionParams("").then(startGameACB).catch(handleError);
     }
@@ -82,14 +87,14 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
                 prompt = sessionParams.real_prompts[real_prompt_count];
                 real_prompt_count++;
             }
-
-            playerData.push({playerId, prompt, role});
+        
+            playerData.push({playerId: playerId, prompt: prompt, role: role, connection: true});
         }
 
         model.updateGame(sessionParams.real_theme, sessionParams.fake_themes, playerData);
         startGame(roomCode, model.sessionHost?.playersData); 
 
-        navigate('/host-ingame'); // Redirect to host-game
+        navigate('/host/ingame'); // Redirect to host-game
     }
 
     // returns random int, range [0, max)

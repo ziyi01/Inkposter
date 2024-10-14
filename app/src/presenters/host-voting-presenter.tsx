@@ -21,6 +21,10 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
                 votingEnded(model.roomId, "results"); // TODO: Process results
             }
         });
+
+        return () => {
+            socket.off('receive-voting');
+        }
     }, []);
     /*
     */

@@ -55,42 +55,42 @@ const App: React.FC<AppProps> = ({ model }) => {
             path="/profile"
             element={<ProfilePage handleLogout={handleLogout} />} 
           />
-          <Route 
-            path="/host-game" 
-            element={<HostWaiting model={model} />} 
-          />
-          <Route 
-            path="/host-ingame" 
-            element={<HostGame model={model} />} 
-          />
-          <Route 
-            path="/host-voting" 
-            element={<HostVote model={model} />} 
-          />
-          <Route 
-            path="/host-results" 
-            element={<HostEnd model={model} />} 
-          />
-          <Route 
-            path="/player-waiting" 
-            element={<PlayerWaiting model={model} />} 
-          />
-          <Route 
-            path="/player-game" 
-            element={<PlayerGame model={model} />} 
-          />
-          <Route 
-            path="/player-ingame" 
-            element={<PlayerGame model={model} />} 
-          />
-          <Route 
-            path="/player-voting" 
-            element={<PlayerVote model={model} />} 
-          />
-          <Route 
-            path="/player-results" 
-            element={<PlayerEnd model={model} />} 
-          />
+          <Route path="/host">
+            <Route 
+              path="game" 
+              element={<HostWaiting model={model} />} 
+            />
+            <Route 
+              path="ingame" 
+              element={<HostGame model={model} />} 
+            />
+            <Route 
+              path="voting" 
+              element={<HostVote model={model} />} 
+            />
+            <Route 
+              path="results" 
+              element={<HostEnd model={model} />} 
+            />
+          </Route>
+          <Route path="/player">
+            <Route 
+              path="game" 
+              element={<PlayerWaiting model={model} />} 
+            />
+            <Route 
+              path="ingame" 
+              element={<PlayerGame model={model} />} 
+            />
+            <Route 
+              path="voting" 
+              element={<PlayerVote model={model} />} 
+            />
+            <Route 
+              path="results" 
+              element={<PlayerEnd model={model} />} 
+            />
+          </Route>
           <Route path="*" element={<Navigate to="/homepage" />} /> {/* Redirect all unknown routes to homepage */}
         </Routes>
       </Suspense>

@@ -1,9 +1,5 @@
 import { closeGame } from "./components/socket-client";
-
-export type Player = {
-    playerId: string;
-    name: string;
-}
+import { Player }  from "./components/playerInterface";
 
 export type playerSession = {
     playerId: string;
@@ -57,17 +53,21 @@ export class UserModel {
 
         this.host = true;
         this.roomId = room
-        this.sessionHost = {
-            players: [],
-            playersData: [],
-            theme: "",
-            fake_themes: []
-        };
+        this.reset();
     }
 
-    addPlayer(playerId:string, playerName:string) {
+    addPlayer(playerId:string, playerName:string) { // Add player to host session
         if(this.sessionHost) {
-            this.sessionHost.players.push({"playerId": playerId, "name": playerName});
+            this.sessionHost.players.push({"playerId": playerId, "name": playerName, "connection": true});
+        }
+    }
+
+    removePlayer(playerId:string) { // Remove player from host session
+        if(this.sessionHost) {
+            const playerIndex = this.sessionHost.players.findIndex(player => player.playerId === playerId);
+            if(playerIndex !== -1) {
+                this.sessionHost.players.splice(playerIndex, 1);
+            }
         }
     }
 
@@ -87,6 +87,15 @@ export class UserModel {
             }
         }
         return "None";
+    }
+
+    disconnectedPlayer(playerId:string) { // Set disconnected player's connection to false, use mid-game
+        if(this.sessionHost) {
+            const player = this.sessionHost.players.find(player => player.playerId === playerId);
+            if(player) {
+                player["connection"] = false;
+            }
+        }
     }
 
     updateGame(theme:string, fake_themes:string[], playerData:playerSession[]) { // Update host model theme and players
@@ -110,8 +119,10 @@ export class UserModel {
         // TODO: Implement
     }
 
-    resetHost() {
+    reset() {
         this.host = false;
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionPlayer = {playerId: "", prompt: "", role: ""};
     }
 
     // Player
