@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import HomePageView from '../views/homepage';
 import { UserModel } from '../userModel';
 import ProfileNavBar from '../components/navbar';
-import Popup from '../components/Popup';
 
 import { joinRoom } from '../components/socket-client';
 
