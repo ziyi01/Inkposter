@@ -1,5 +1,7 @@
 import { closeGame } from "./components/socket-client";
-import { Player }  from "./components/playerInterface";
+import { Player } from "./components/playerInterface";
+
+var debug = require('debug')('app:userModel');
 
 export type playerSession = {
     playerId: string;
@@ -39,6 +41,7 @@ export class UserModel {
     login(playerId: string, playerName: string) {
         this.playerId = playerId;
         this.name = playerName;
+        debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
     }
     
     setRoomId(roomId:string) {
