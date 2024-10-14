@@ -162,12 +162,15 @@ The front-end application uses a MVP-architecture. The code is divided into fold
 ```
 └── app/src/
     ├── components/
+    │   ├── button.tsx
+    │   ├── canvas.tsx
     │   ├── githubCallback.tsx
     │   ├── layout.tsx
-    │   ├── popup.js
+    │   ├── playerInterface.ts
+    │   ├── popup.tsx
+    │   ├── server-requests.ts
     │   ├── timer.tsx
-    │   ├── socket-client.tsx
-    │   └── canvas.tsx
+    │   └── socket-client.tsx
     ├── presenters/
     │   ├── homepage-presenter.tsx
     │   ├── host-end-presenter.tsx
@@ -186,6 +189,7 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     │   ├── host-waiting.tsx
     │   ├── loading.tsx
     │   ├── login-page.tsx
+    │   ├── mock-login.tsx
     │   ├── player-game.tsx
     │   ├── player-session-end.tsx
     │   ├── player-voting.tsx
@@ -196,7 +200,6 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     ├── global.css
     ├── index.css
     ├── index.tsx
-    ├── server-requests.ts
     ├── userModel.tsx
     └── logo.svg
 ```
