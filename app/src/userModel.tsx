@@ -135,13 +135,17 @@ export class UserModel {
     }
 
     // Player
-    startGamePlayer(prompt:string, inkposter:boolean) { // Update model with prompt and role
+    startGamePlayer(prompt:string, inkposter:boolean, players:Player[], theme:string, fake_themes:string[]) { // Update model with prompt and role
         if(!this.host) { 
             this.sessionPlayer = {
                 playerId: this.playerId,
                 prompt: prompt,
                 inkposter: inkposter
             }
+
+            this.sessionHost.players = players;
+            this.sessionHost.theme = theme;
+            this.sessionHost.fake_themes = fake_themes;
         }
     }
 }

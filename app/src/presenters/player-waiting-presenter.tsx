@@ -16,8 +16,8 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
     const navigate = useNavigate();
     useEffect(() => {
         socket.on('game-started', (data) => {   // Player game started
-            debug("Recieved prompt:", data.prompt, "Inkposter:", data.inkposter);
-            model.startGamePlayer(data.prompt, data.inkposter);
+            debug("Recieved prompt:", data.prompt, "Inkposter:", data.inkposter, "Params:",  data.players, data.theme, data.fake_themes);
+            model.startGamePlayer(data.prompt, data.inkposter, data.players, data.theme, data.fake_themes);
             navigate('/player/ingame');
         });
         socket.on('host-left', () => {  // Host left room

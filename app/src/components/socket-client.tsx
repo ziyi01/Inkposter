@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import { Player, PlayerCanvas } from "./playerInterface";
 var debug = require('debug')('app:socket');
 
 export const socket = io();
@@ -17,9 +18,8 @@ export function hostRoom() {
     socket.emit('host-room');
 }
 
-export function startGame(roomId:string, players: {playerId: string, prompt: string, inkposter: boolean}[]) {
-    // A player has {playerId, prompt}, prompt is '' or "inkposter" if evil
-    socket.emit('start-game', {roomId: roomId, players: players});
+export function startGame(roomId:string, players: {playerId: string, prompt: string, inkposter: boolean}[], playersToClient:Player[], theme:string, fake_themes:string[]) {
+    socket.emit('start-game', {roomId: roomId, players: players, playersToClient: playersToClient, theme:theme, fake_themes:fake_themes});
 }
 
 export function votingEnded(roomId:string, result:string) {

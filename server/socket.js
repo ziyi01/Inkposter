@@ -53,7 +53,7 @@ module.exports.initSockets = function(socket, io){
 
             if (playerData) {
                 debug("Emit game-started to", player.playerId);
-                player.socket.emit('game-started', {prompt: playerData.prompt, inkposter:playerData.inkposter});
+                player.socket.emit('game-started', {prompt: playerData.prompt, inkposter:playerData.inkposter,  players:data.playersToClient, theme:data.theme, fake_themes:data.fake_themes});
             } else {
                 debug("Failed to emit game-started to", player.playerId);
             }

@@ -96,7 +96,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         }
 
         model.updateGame(sessionParams.real_theme, sessionParams.fake_themes, playerData);
-        startGame(roomCode, model.sessionHost?.playersData); 
+        startGame(roomCode, model.sessionHost?.playersData, model.sessionHost.players, model.sessionHost.theme, model.sessionHost.fake_themes); 
 
         navigate('/host/ingame'); // Redirect to host-game
     }
