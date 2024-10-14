@@ -25,13 +25,13 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
     // Update when model.updateCanvas is called from player
     socket.on('receive-canvas', (data) => { // Receive a player's canvas
       model.updateCanvas(data.playerId, data.canvas); 
-      setCanvas([...playerCanvas, {playerName: model.getPlayer(data.playerId), "canvas": data.canvas, "connection": true}]);
+      setCanvas([...playerCanvas, {"playerId": data.playerId, playerName: model.getPlayer(data.playerId), "canvas": data.canvas, "connection": true}]);
     });
      socket.on('player-left', async (data) => {  // Player left room
       model.disconnectedPlayer(data.playerId);
       debug("Player left mid-game: " + data.playerId);
       const index = playerCanvas.findIndex(player => player.playerName === model.getPlayer(data.playerId));
-      setCanvas([...playerCanvas.splice(index, 1, {playerName: model.getPlayer(data.playerId), "canvas": "", "connection": false})]);
+      setCanvas([...playerCanvas.splice(index, 1, {"playerId": data.playerId, playerName: model.getPlayer(data.playerId), "canvas": "", "connection": false})]);
     });
 
     return () => {

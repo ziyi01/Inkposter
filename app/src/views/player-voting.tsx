@@ -1,18 +1,20 @@
 // props needed: themes, players, onSubmitGuess (handler, send theme and player guess)
 import React, { useState } from 'react';
+import Button from '../components/button';
 
 interface Player {
   name: string;
-  profilePicture: string;
+  //profilePicture: string;
 }
 
 interface PlayerVotingProps {
   themes: string[];  // Array of six themes
   players: Player[]; // Array of players
-  onSubmitGuess: (selectedTheme: string, selectedInkposter: string) => void; // Submission handler
+  onLeaveClick: () => void;
+  onSubmitGuess: (selectedInkposter: string, selectedTheme: string) => void; // Submission handler
 }
 
-const PlayerVoting: React.FC<PlayerVotingProps> = ({ themes, players, onSubmitGuess }) => {
+const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeaveClick, onSubmitGuess }) => {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);   // Track the selected theme
   const [selectedInkposter, setSelectedInkposter] = useState<string | null>(null); // Track the selected player (Inkposter)
 
@@ -26,7 +28,16 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({ themes, players, onSubmitGu
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black text-white p-8">
+    <div className="flex flex-col items-center min-h-screen bg-background text-white p-8 relative">
+
+      {/* Leave Game */}
+      <button
+        className="bg-red-500 text-white py-1 px-2 rounded absolute top-4 left-4"
+        onClick={onLeaveClick}
+      >
+        Leave Game
+      </button>
+
       {/* Guess the Theme Section */}
       <div className="mb-10">
         <h1 className="text-2xl font-bold mb-4">Guess the Theme</h1>
@@ -55,7 +66,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({ themes, players, onSubmitGu
               style={{ cursor: 'pointer' }}
             >
               <img
-                src={player.profilePicture}
+                /*src={/player.profilePicture}*/
                 alt={`${player.name}'s profile`}
                 className="w-24 h-24 rounded-md mb-2 bg-blue-400"
               />
@@ -66,17 +77,16 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({ themes, players, onSubmitGu
       </div>
 
       {/* Submit Button */}
-      <button
+      <Button
         type="button"
         onClick={handleSubmit}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md"
       >
         Submit Guess
-      </button>
+      </Button>
     </div>
   );
 };
 
-export default PlayerVoting;
+export default PlayerVotingView;
 
 

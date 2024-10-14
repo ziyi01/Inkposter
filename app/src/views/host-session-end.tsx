@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../components/button';
 
 interface Player {
   name: string;
@@ -33,7 +34,7 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({
   onEndSession,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-8 py-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-white px-8 py-4">
       {/* Inkposter Section */}
       <h1 className="text-2xl font-bold mb-2">
         <span className="text-red-500">{inkposter.name}</span> was the inkposter.
@@ -82,18 +83,16 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({
 
       {/* Buttons */}
       <div className="flex gap-4 mt-6">
-        <button
+        <Button
           onClick={onPlayAgain}
-          className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
         >
           Play again
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onEndSession}
-          className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
         >
           End Session
-        </button>
+        </Button>
       </div>
     </div>
   );

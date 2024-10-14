@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../components/button';
 import { Player } from '../components/playerInterface';
 
 interface HostWaitingProps {
@@ -9,7 +10,7 @@ interface HostWaitingProps {
 
 const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStartGame }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white text-center">
+    <div className="flex flex-col items-center justify-center h-screen bg-background text-white text-center">
       <h1 className="animate-pulse text-2xl font-bold">Waiting for more players to join...</h1>
       <h2 className="text-xl mt-2">
         Code to join: <span className="text-sky-400">{code}</span>
@@ -30,12 +31,11 @@ const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStar
       </div>
 
       {/* Start Game Button */}
-      <button
+      <Button
         onClick={handleStartGame}
-        className="bg-sky-400 text-white rounded-full py-3 px-8 text-lg"
       >
         Start Game
-      </button>
+      </Button>
     </div>
   );
 

@@ -15,7 +15,7 @@ const Button = forwardRef<Ref, ButtonProps>((props, ref) => {
   return (
     <button
       ref={ref}
-      className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-purple-800 hover:text-white"
+      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md"
       {...rest}
     >
       {children}
