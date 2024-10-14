@@ -52,22 +52,24 @@
     "react": "^18.3.1"
   },
   "dependencies": {
-    "socket.io-client": "^4.8.0",
-    "supertest": "^7.0.0"
-  },
-  "jest": {
-    "projects": [
-      "app/jest.config.js",
-      "server/jest.config.js"
-    ]
-  },
-  "dependencies": {
     "axios": "^1.7.7",
     "cookie-parser": "^1.4.7",
     "express": "^4.21.1",
     "js-cookie": "^3.0.5",
     "next-auth": "^4.24.8",
     "njs": "^0.0.2",
-    "react-images-uploading": "^3.1.7"
+    "openai": "^4.67.3",
+    "react-bootstrap": "^2.10.5",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-images-uploading": "^3.1.7",
+    "react-toggle-dark-mode": "^1.1.1",
+    "www": "^0.0.0"
+  },
+  "jest": {
+    "projects": [
+      "app/jest.config.js",
+      "server/jest.config.js"
+    ]
   }
 }
