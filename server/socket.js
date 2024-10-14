@@ -16,35 +16,33 @@ module.exports.initSockets = function(socket, io){
             playerSocket: []
         };
         debug('Room created: ' + roomId);
-        debug('Host: ' + socket.id);
+        debug('Host: ' + roomData[roomId].host.toString());
         
         socket.join(roomId);
         socket.emit('room-created', {roomId: roomId});
     });
     
     socket.on('join-room', (data) => {  // Player join room
-        if(roomData[data.roomId] === undefined){
+        if(io.sockets.adapter.rooms.get(data.roomId) === undefined){
             socket.emit('room-not-found', {roomId: data.roomId});
             return;
         }
 
         debug('Player joined: ' + data.playerId);
         socket.join(data.roomId);
+        socket.emit('room-joined', {roomId: data.roomId});
         roomData[data.roomId].playerCount++;
         roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
         roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
 
-        debug(data.playerId, "joined with socket", socket.playerId);
-
+        debug(data.playerId, "joined with socket", socket.id);
     });
 
     socket.on('start-game', (data) => { // Host start game  
 
         // ??? this caused playerSocket to be wiped out, I don't understand the purpose
         /* 
-        roomData[data.roomId] = {
-            players: data.players
-        }
+        roomData[data.roomId][players] = data.players
         */
 
         if(roomData[data.roomId].playerCount < 3){
@@ -61,15 +59,12 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('send-canvas', (data) => { // Player send canvas
+        debug("Room data" + roomData[data.roomId].toString());
         roomData[data.roomId].host.emit('receive-canvas', {playerId: data.playerId, canvas: data.canvas});
     });
 
     socket.on('end-game', (data) => { // Host end game
         io.to(data.roomId).emit('game-ended');
-    });
-
-    socket.on('send-voting', (data) => { // Player send votes
-        roomData[data.roomId].host.emit('receive-voting', {playerId: data.playerId, vote: data.vote, themeVote: data.themeVote});
     });
 
     socket.on('end-voting', (data) => { // Host end voting
@@ -88,6 +83,23 @@ module.exports.initSockets = function(socket, io){
             delete roomData[data.roomId];
         } catch (err) {
             debug(err + ' error when deleting room ' + data.roomId);
+        }
+    });
+
+    socket.on('disconnect', () => { // Player disconnect
+        for(const room in roomData){
+            const player = roomData[room].playerSocket.find((e) => e.socket.id == socket.id);
+            if(player){
+                roomData[room].playerCount--;
+                roomData[room].playerSocket.splice(roomData[room].playerSocket.indexOf(player), 1); // delete player
+                roomData[room].host.emit('player-left', {playerId: player.playerId});
+                debug(player.playerId, "left room", room);
+                break;
+            } else {
+                io.to(room).emit('host-left');
+                debug("Host left room", room);
+                break;
+            }
         }
     });
 }

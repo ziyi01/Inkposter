@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import HomePageView from '../views/homepage';
 import { UserModel } from '../userModel';
 
-import { joinRoom } from '../components/socket-client';
+import { joinRoom, socket } from '../components/socket-client';
+const debug = require('debug')('app:homepage-presenter');
 
 interface HomePageProps {
   model: UserModel;
@@ -14,6 +15,18 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
   const navigate = useNavigate();
   const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+
+  useEffect(() => {
+    socket.on('room-joined', (data) => {
+      debug("Room joined:", data.roomId);
+      model.setRoomId(data.roomId);
+      navigate('/player-waiting');
+    });
+
+    return () => {
+      socket.off('room-joined');
+    }
+  }, []);
 
   const handleJoinClick = () => {
     setIsJoinInputVisible(true);
@@ -30,7 +43,6 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
 
     //game logic
     joinRoom(joinCode, "userid", "me");
-    navigate('/player-waiting');
   };
 
   return (
