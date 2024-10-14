@@ -5,6 +5,7 @@ export interface Player {
 }
 
 export interface PlayerCanvas {
+    playerId: string;
     playerName: string;
     canvas: string;
     connection: boolean;

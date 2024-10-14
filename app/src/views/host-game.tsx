@@ -8,7 +8,7 @@ interface HostGameViewProps {
 
 const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+    <div className="flex flex-col items-center justify-center h-screen bg-background text-white">
       {/* Timer */}
       <div className="absolute top-4 right-4 text-2xl font-bold">
         {timer}
@@ -20,7 +20,7 @@ const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
       {/* Player Canvases */}
       <div className="flex gap-6">
         {playerCanvas.map(canvasData => (
-          <div key={canvasData.playerName} className="flex flex-col items-center">
+          <div key={canvasData.playerId} className="flex flex-col items-center">
             <div
               className="w-64 h-40 bg-sky-400 rounded-lg mb-2"
               style={{ 
