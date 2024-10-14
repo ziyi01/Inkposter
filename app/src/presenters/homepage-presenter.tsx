@@ -8,18 +8,18 @@ import ProfileNavBar from '../components/navbar';
 import { joinRoom } from '../components/socket-client';
 
 interface HomePageProps {
-  model: UserModel;
+    model: UserModel;
 }
 
 const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
-  const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
-  const [joinCode, setJoinCode] = useState('');
+    const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
+    const [joinCode, setJoinCode] = useState('');
 
-  const handleJoinClick = () => {
+    const handleJoinClick = () => {
     setIsJoinInputVisible(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setJoinCode(e.target.value);
   };
 
@@ -32,16 +32,17 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
 
   return (
     <>
-      <ProfileNavBar />
-      <HomePageView
+    <ProfileNavBar/>
+        <HomePageView
         model={model}
         isJoinInputVisible={isJoinInputVisible}
         onJoinClick={handleJoinClick}
         joinCode={joinCode}
         onInputChange={handleInputChange}
         onSubmit={handleSubmit}
-      />
+        />
     </>
+
   );
 };
 

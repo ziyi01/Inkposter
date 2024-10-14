@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
 import Loading from './views/loading';
+import ProfileNavBar from './components/navbar';
 import HomePagePresenter from './presenters/homepage-presenter';
 const LoginPage = React.lazy(() => import('./views/login-page'));
 const HomePage = React.lazy(() => import('./views/homepage'));

@@ -1,23 +1,29 @@
-//Source: https://react-bootstrap.netlify.app/docs/components/navbar/#home
-import React, { useRef } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { useState } from "react";
 
 
 
+interface NavBarProps {
+  imageSrcPath?: string;
 
-const ProfileNavbar: React.FC = () => {
+}
+
+function ProfileNavBar() {
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">Brand</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#link">Link</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-  );
-};
+    <nav className="bg-white dark:bg-black shadow-md p-4">
+      <div className="container mx-auto flex justify-start space-x-4">
+        <button className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-blue-600">
+          profile
+        </button>
+        <button className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-green-600"> 
+          Button 2
+        </button>
+      </div>
+      <div className="container mx-auto flex justify-end space-x-6">
 
-export default ProfileNavbar;
+      </div>
+    </nav>
+  );
+}
+
+
+export default ProfileNavBar;
