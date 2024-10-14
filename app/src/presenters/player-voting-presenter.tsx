@@ -16,9 +16,6 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     const [voted, setVoted] = useState(false);
     const navigate = useNavigate();
 
-    const players = model.sessionHost.players;  // Array of { playerId, name }
-    const themes = [model.sessionHost.theme, ...model.sessionHost.fake_themes]; // Combine real theme and fake themes
-
     useEffect(() => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
             // model.setResult(data.result); // TODO: Implement setResult in UserModel for player-end
@@ -55,8 +52,9 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
 
     return <div>
         <PlayerVotingView
-            themes={themes}
-            players={players}
+            name={model.name}
+            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes]}
+            players={model.sessionHost.players}
             onLeaveClick={handleLeaveClick}
             onSubmitGuess={onVote}
         />

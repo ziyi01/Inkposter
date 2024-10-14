@@ -4,9 +4,10 @@ interface PlayerGameViewProps {
   canvas: React.ReactNode;
   onLeaveClick: () => void;
   prompt: string;
+  name: string;
 }
 
-const PlayerGameView: React.FC<PlayerGameViewProps> = ({ canvas, onLeaveClick, prompt }) => {
+const PlayerGameView: React.FC<PlayerGameViewProps> = ({ canvas, onLeaveClick, prompt, name }) => {
   return (
     <div className="flex flex-col items-center min-h-screen bg-background text-white p-8 relative">
       
@@ -20,7 +21,7 @@ const PlayerGameView: React.FC<PlayerGameViewProps> = ({ canvas, onLeaveClick, p
 
       {/* Word */}
       <h1 className="text-3xl font-bold mb-4">
-        Your word is <span className="text-red-500">{prompt}</span>
+        {name}, your word is <span className="text-red-500">{prompt}</span>
       </h1>
       <h2 className="text-lg mb-8">(You are the inkposter?)</h2>
 

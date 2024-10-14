@@ -1,20 +1,17 @@
 // props needed: themes, players, onSubmitGuess (handler, send theme and player guess)
 import React, { useState } from 'react';
 import Button from '../components/button';
-
-interface Player {
-  name: string;
-  //profilePicture: string;
-}
+import { Player } from '../components/playerInterface';
 
 interface PlayerVotingProps {
+  name: string;
   themes: string[];  // Array of six themes
   players: Player[]; // Array of players
   onLeaveClick: () => void;
   onSubmitGuess: (selectedInkposter: string, selectedTheme: string) => void; // Submission handler
 }
 
-const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeaveClick, onSubmitGuess }) => {
+const PlayerVotingView: React.FC<PlayerVotingProps> = ({ name, themes, players, onLeaveClick, onSubmitGuess }) => {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);   // Track the selected theme
   const [selectedInkposter, setSelectedInkposter] = useState<string | null>(null); // Track the selected player (Inkposter)
 
@@ -58,9 +55,9 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
       <div className="mb-10">
         <h1 className="text-2xl font-bold mb-4">Vote for the Inkposter</h1>
         <div className="flex gap-8 justify-center">
-          {players.map((player, index) => (
+          {players.map((player, playerId) => (
             <div
-              key={index}
+              key={playerId}
               className={`flex flex-col items-center ${selectedInkposter === player.name ? 'scale-110' : 'transition-all duration-300 hover:scale-110'}`}
               onClick={() => setSelectedInkposter(player.name)}  // Set the selected Inkposter
               style={{ cursor: 'pointer' }}
@@ -70,7 +67,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
                 alt={`${player.name}'s profile`}
                 className="w-24 h-24 rounded-md mb-2 bg-blue-400"
               />
-              <p>{player.name}</p>
+              <p>{player.name === name ? `${player.name} (You)` : player.name}</p>
             </div>
           ))}
         </div>
