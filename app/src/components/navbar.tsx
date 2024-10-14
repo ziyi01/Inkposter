@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Modal from "react-modal";
+import Button from "../components/button";
 
 // Accessibility: Bind the modal to the app root element
 Modal.setAppElement("#root");
@@ -9,7 +10,7 @@ function ProfileNavBar() {
   const [isHowToPlayModalOpen, setHowToPlayModalOpen] = useState(false);
 
   return (
-    <nav className="bg-white dark:bg-black shadow-md p-4">
+    <nav className="bg-white dark:bg-black shadow-md p-4 fixed top-0 left-0">
       <div className="container flex justify-start">
         {/* Game Title */}
         <h1
@@ -20,12 +21,12 @@ function ProfileNavBar() {
 
         {/* Navigation Buttons */}
         <div className="flex space-x-10">
-          <button
-            className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-purple-800 hover:text-white"
+          <Button
+           
             onClick={() => setProfileModalOpen(true)}
           >
             My profile
-          </button>
+          </Button>
 
           <button
             className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-purple-800 hover:text-white"
