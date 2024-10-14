@@ -1,7 +1,7 @@
-import server from './server-requests';
+import {getUserDB } from './server-requests';
 
 function runTests() {
-    server.getUserDB(0).then(printRes).catch(handleError);
+    getUserDB("0").then(printRes).catch(handleError);
     /*
     server.createUserDB(10, "newest_user", "pic.png").then(printRes).catch(handleError);
     server.getUserStatsDB(0).then(printRes).catch(handleError);

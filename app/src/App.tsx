@@ -4,7 +4,9 @@ import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 import HomePagePresenter from './presenters/homepage-presenter';
+
 const LoginPage = React.lazy(() => import('./views/login-page'));
+const MockLoginPage = React.lazy(() => import('./views/mock-login'));
 const HomePage = React.lazy(() => import('./views/homepage'));
 const ProfilePage = React.lazy(() => import('./views/profile'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
@@ -27,7 +29,7 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ model }) => {
-  const isAuthenticated = true; // Set to true to bypass the login system
+  const isAuthenticated = false; // Set to true to bypass the login system
 
   useEffect(() => {
     return () => {
@@ -45,7 +47,7 @@ const App: React.FC<AppProps> = ({ model }) => {
         <Routes>
           <Route 
             path="/login" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <LoginPage />} 
+            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} />} 
           />
           <Route 
             path="/homepage" 

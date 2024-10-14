@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 // import components
 import HostWaitingView from '../views/host-waiting';
-import { UserModel, playerSession } from '../userModel';
+import { UserModel } from '../userModel';
 import { hostRoom, startGame, socket } from '../components/socket-client';
 import { Player } from '../components/playerInterface';
-import server from '../server-requests';
+import { getGeneratedSessionParams } from '../server-requests';
+import LoadingScreen from '../views/loading';
 
 var debug = require('debug')('app:host-waiting-presenter');
 
@@ -18,6 +19,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     const navigate = useNavigate();
     const [players, setPlayers]  = useState<Player[]>([]);
     const [roomCode, setRoomCode] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
     
     useEffect(() => {
         // Host-side listeners
@@ -26,8 +28,8 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             setRoomCode(data.roomId);
             model.roomId = data.roomId;
         }); 
-        socket.on('player-joined', async (data) => {  // Player joined room
-            await model.addPlayer(data.playerId, data.playerName);
+        socket.on('player-joined', (data) => {  // Player joined room
+            model.addPlayer(data.playerId, data.playerName);
             setPlayers([...model.sessionHost.players]);
             debug('Player joined: ' + data.playerName);
         });
@@ -64,7 +66,9 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         startGame(roomCode, model.sessionHost?.playersData); 
         navigate('/host/ingame'); // Redirect to host-game
         */
-        server.getGeneratedSessionParams("").then(startGameACB).catch(handleError);
+        setLoading(true);
+        await getGeneratedSessionParams([""]).then(startGameACB).catch(handleError);
+        setLoading(false);
     }
 
     function startGameACB(sessionParams :{real_theme:string, fake_themes:string[], real_prompts:string[], imposter_prompt:string}) {
@@ -108,7 +112,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
     }
 
     return <div>
-        <HostWaitingView code={roomCode} players={players} handleStartGame={startGameHost} />;
+        {loading ? <LoadingScreen /> : <HostWaitingView code={roomCode} players={players} handleStartGame={startGameHost} />}
     </div>
 }
 
