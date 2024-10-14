@@ -16,7 +16,7 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
     useEffect(() => {
         socket.on('game-started', (data) => {   // Player game started
             model.startGamePlayer(data.prompt);
-            navigate('/player-game');
+            navigate('/player/ingame');
         });
         
         // Error handling, redirect to homepage
