@@ -20,23 +20,65 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
   */
    const navigate = useNavigate();
    const [playerCanvas, setCanvas] = useState<PlayerCanvas[]>([]); // Filled with base64-encoded images 
+  
+  // Initialize the playerCanvas array with all player IDs
+  useEffect(() => {
+    setCanvas(model.getAllPlayers().map((player) => {
+      return {
+        playerId: player.playerId,
+        playerName: player.name,
+        canvas: "",
+        connection:true
+      }
+    }));
+    }, []);
+  
+  // Init socket to listen for canvas-updates and disconnected player
+    useEffect(() => {
+      socket.on('receive-canvas', (data) => { 
+        model.updateCanvas(data.playerId, data.canvas); 
+    
+        setCanvas(prevCanvases => { // functional version of set, makes sure prevCanvas is newest value
+          // Find players canvas
+          const index = prevCanvases.findIndex(canvas => canvas.playerId === data.playerId);
+  
+          // Set canvas to recieved data, connection to true
+          const updatedCanvases = [...prevCanvases];
+          updatedCanvases[index] = { 
+            playerId: updatedCanvases[index].playerId, 
+            playerName: updatedCanvases[index].playerName, 
+            canvas: data.canvas, 
+            connection: true 
+          };
+          return updatedCanvases;
+        });
+      });
 
-   useEffect(() => {
-    // Update when model.updateCanvas is called from player
-    socket.on('receive-canvas', (data) => { // Receive a player's canvas
-      model.updateCanvas(data.playerId, data.canvas); 
-      setCanvas([...playerCanvas, {"playerId": data.playerId, playerName: model.getPlayer(data.playerId), "canvas": data.canvas, "connection": true}]);
-    });
-     socket.on('player-left', async (data) => {  // Player left room
-      model.disconnectedPlayer(data.playerId);
-      debug("Player left mid-game: " + data.playerId);
-      const index = playerCanvas.findIndex(player => player.playerName === model.getPlayer(data.playerId));
-      setCanvas([...playerCanvas.splice(index, 1, {"playerId": data.playerId, playerName: model.getPlayer(data.playerId), "canvas": "", "connection": false})]);
-    });
+      socket.on('player-left', async (data) => {  // Player left room
+        model.disconnectedPlayer(data.playerId);
+        debug("Player left mid-game: " + data.playerId);
 
-    return () => {
-      socket.off('receive-canvas');
-    }
+        setCanvas(prevCanvases => {
+          // Find player canvas
+          const index = prevCanvases.findIndex(player => player.playerId === data.playerId);
+
+          // Set connection to false
+          const updatedCanvases = [...prevCanvases];
+          updatedCanvases[index] = {
+            playerId: updatedCanvases[index].playerId, 
+            playerName: updatedCanvases[index].playerName, 
+            canvas: updatedCanvases[index].canvas, 
+            connection: false 
+          }
+        
+          return updatedCanvases;
+        });
+      });
+    
+      return () => {
+        socket.off('receive-canvas');
+        socket.off('player-left');
+      };
     }, []);
 
   // Navigate to the voting screen when the timer ends

@@ -45,11 +45,19 @@ module.exports.initSockets = function(socket, io){
             return
         }
 
-        for(let i = 0; i < data.players.length; i++){
-            const player = roomData[data.roomId].playerSocket[i]; //playerSocket[i]; <-- playerSocket is not defined
-            player.socket.emit(
-                'game-started', {prompt: data.players.find((e) => e.playerId == player.playerId).prompt});
-                //'game-started', {prompt: "test"});
+        for (let i = 0; i < data.players.length; i++){
+            const player = roomData[data.roomId].playerSocket[i];
+            const playerData = data.players.find((e) => e.playerId == player.playerId);
+
+            debug("Attempting to connect", player.playerId);
+
+            if (playerData) {
+                debug("Emit game-started to", player.playerId);
+                player.socket.emit('game-started', {prompt: playerData.prompt, inkposter:playerData.inkposter});
+            } else {
+                debug("Failed to emit game-started to", player.playerId);
+            }
+            
         }
     });
 
@@ -73,7 +81,6 @@ module.exports.initSockets = function(socket, io){
                 const clientSocket = io.sockets.sockets.get(s);
                 clientSocket.emit('game-closed');
                 clientSocket.leave(data.roomId);
-                console.log(clientSocket)
             });
             delete roomData[data.roomId];
         } catch (err) {
@@ -90,7 +97,7 @@ module.exports.initSockets = function(socket, io){
                 roomData[room].host.emit('player-left', {playerId: player.playerId});
                 debug(player.playerId, "left room", room);
                 break;
-            } else {
+            } else { // TODO this also catches players not a part of the room that disconnect (logged in but havent joined the game)
                 io.to(room).emit('host-left');
                 debug("Host left room", room);
                 break;

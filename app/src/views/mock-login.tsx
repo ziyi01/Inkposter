@@ -4,18 +4,24 @@ import { UserModel } from '../userModel';
 
 interface LoginPageProps {
     model: UserModel;
+    user: string;
 }
 
-const MockLoginPage: React.FC<LoginPageProps> = ({ model }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+const MockLoginPage: React.FC<LoginPageProps> = ({ model, user }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    
+    if (user !== "0") {
+        model.login(user, "User" + user);
+        navigate('/homepage'); 
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    model.login(password, username);
-    navigate('/homepage'); 
-  };
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        model.login(password, username);
+        navigate('/homepage'); 
+    };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">

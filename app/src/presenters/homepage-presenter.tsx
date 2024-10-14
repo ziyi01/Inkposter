@@ -42,7 +42,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     setIsJoinInputVisible(false);
 
     //game logic
-    joinRoom(joinCode, "userid", "me");
+    joinRoom(joinCode, model.playerId, model.name);
   };
 
   return (
