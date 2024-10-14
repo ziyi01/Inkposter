@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../components/button';
 import { Player } from '../components/playerInterface';
 
 interface HostWaitingProps {
@@ -30,12 +31,11 @@ const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStar
       </div>
 
       {/* Start Game Button */}
-      <button
+      <Button
         onClick={handleStartGame}
-        className="bg-sky-400 text-white rounded-full py-3 px-8 text-lg"
       >
         Start Game
-      </button>
+      </Button>
     </div>
   );
 

@@ -1,5 +1,6 @@
 // props needed: themes, players, onSubmitGuess (handler, send theme and player guess)
 import React, { useState } from 'react';
+import Button from '../components/button';
 
 interface Player {
   name: string;
@@ -76,13 +77,12 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
       </div>
 
       {/* Submit Button */}
-      <button
+      <Button
         type="button"
         onClick={handleSubmit}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md"
       >
         Submit Guess
-      </button>
+      </Button>
     </div>
   );
 };

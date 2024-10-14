@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../components/button';
 
 interface PlayerSessionEndProps {
   handleQuit: () => void; // Function to handle the quit button
@@ -16,12 +17,11 @@ const PlayerSessionEndView: React.FC<PlayerSessionEndProps> = ({
       <p className="text-lg mb-8 animate-pulse">Waiting for the host to start a new game...</p>
 
       {/* Quit Button */}
-      <button
+      <Button
         onClick={handleQuit}
-        className="bg-sky-400 text-white rounded-full py-3 px-8 text-lg"
       >
         Quit
-      </button>
+      </Button>
     </div>
   );
 };
