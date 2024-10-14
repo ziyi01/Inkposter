@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
-import { socket } from '../components/socket-client';
+import React, { useEffect, useRef } from 'react';
+import { socket, quitGame } from '../components/socket-client';
 import { useNavigate } from 'react-router-dom';
 import { UserModel } from '../userModel';
+import PlayerSessionEndView from '../views/player-session-end';
 
 interface PlayerEndProps {
-  model: UserModel
+  model: UserModel;
 }
 
-const PlayerEnd: React.FC<PlayerEndProps> = (model) => {
+const PlayerEnd: React.FC<PlayerEndProps> = ({model}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,10 +22,15 @@ const PlayerEnd: React.FC<PlayerEndProps> = (model) => {
     });
   }, []); 
 
+  const handleConfirmLeave = () => {
+    console.log('Player has confirmed to leave the game.');
+    quitGame(model.roomId, model.playerId);
+    navigate('/homepage')
+  };
 
   return (
     <div>
-      {/* Component logic will go here */}
+      <PlayerSessionEndView handleQuit={handleConfirmLeave}/>
     </div>
   );
 }

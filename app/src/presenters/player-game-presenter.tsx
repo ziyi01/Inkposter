@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // import components
 import PlayerGameView from '../views/player-game';
 import { UserModel } from '../userModel';
-import { sendCanvas, socket } from '../components/socket-client';
+import { sendCanvas, quitGame, socket } from '../components/socket-client';
 import Canvas from '../components/canvas';
 import Popup from '../components/popup';
 var debug = require('debug')('app:player-game-presenter');
@@ -40,23 +40,27 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
 
     const handleConfirmLeave = () => {
       console.log('Player has confirmed to leave the game.');
+      quitGame(model.roomId, model.playerId);
       navigate('/homepage')
-      // Perform leave action, such as navigating or notifying the server
     };
 
     // TODO: Implement sendCanvas function to pass to sketch-canvas in view
     function onDraw(canvasDataURL:string) {
-        sendCanvas(model.roomId, model.name, canvasDataURL);
+        sendCanvas(model.roomId, model.playerId, canvasDataURL);
     }
 
     return <div>
-        <PlayerGameView canvas={<Canvas onDraw={onDraw}/>} onLeaveClick={handleLeaveClick}/>
+        <PlayerGameView
+            canvas={<Canvas onDraw={onDraw}/>}
+            onLeaveClick={handleLeaveClick}
+            prompt={model.sessionPlayer.prompt}
+        />
         <Popup
-        ref={popupRef}
-        title="Leave Game?"
-        message="Are you sure you want to leave the game? This action cannot be undone."
-        onConfirm={handleConfirmLeave}
-      />
+            ref={popupRef}
+            title="Leave Game?"
+            message="Are you sure you want to leave the game? This action cannot be undone."
+            onConfirm={handleConfirmLeave}
+        />
     </div>
 }
 

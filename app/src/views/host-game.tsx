@@ -20,7 +20,7 @@ const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
       {/* Player Canvases */}
       <div className="flex gap-6">
         {playerCanvas.map(canvasData => (
-          <div key={canvasData.playerName} className="flex flex-col items-center">
+          <div key={canvasData.playerId} className="flex flex-col items-center">
             <div
               className="w-64 h-40 bg-sky-400 rounded-lg mb-2"
               style={{ 
