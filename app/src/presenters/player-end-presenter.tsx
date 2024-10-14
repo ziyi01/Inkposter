@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { socket, quitGame } from '../components/socket-client';
 import { useNavigate } from 'react-router-dom';
 import { UserModel } from '../userModel';

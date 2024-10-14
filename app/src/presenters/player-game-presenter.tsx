@@ -7,7 +7,6 @@ import { UserModel } from '../userModel';
 import { sendCanvas, quitGame, socket } from '../components/socket-client';
 import Canvas from '../components/canvas';
 import Popup from '../components/popup';
-import { disconnect } from 'process';
 var debug = require('debug')('app:player-game-presenter');
 
 interface PlayerGameProps {

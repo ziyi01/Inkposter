@@ -1,13 +1,12 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { UserModel } from './userModel';
-import { socket, closeConnection } from './components/socket-client';
+import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
-import HomePagePresenter from './presenters/homepage-presenter';
 
-const LoginPage = React.lazy(() => import('./views/login-page'));
+// const LoginPage = React.lazy(() => import('./views/login-page'));
 const MockLoginPage = React.lazy(() => import('./views/mock-login'));
-const HomePage = React.lazy(() => import('./views/homepage'));
+const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
 const ProfilePage = React.lazy(() => import('./views/profile'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
@@ -19,10 +18,12 @@ const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
 
 // GitHub OAuth Callback Component
+/* TODO: Add back
 const GitHubCallback: React.FC = () => {
   
   return <div>Loading...</div>;
 };
+*/
 
 interface AppProps {
   model: UserModel;
@@ -63,7 +64,7 @@ const App: React.FC<AppProps> = ({ model }) => {
           />
           <Route 
             path="/homepage" 
-            element={<HomePagePresenter model={model} />} 
+            element={<HomePage model={model} />} 
           />
           <Route
             path="/profile"
