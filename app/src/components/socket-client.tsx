@@ -46,3 +46,7 @@ export function sendCanvas(roomId:string, playerId:string, canvas:string) {
 export function sendVoting(roomId:string, playerId:string, vote:string, themeVote:string) {
     socket.emit('send-voting', {roomId: roomId, playerId: playerId, vote: vote, themeVote: themeVote});
 }
+
+export function quitGame(roomId:string, playerId:string) {
+    socket.emit('quit-game', {roomId: roomId, playerId: playerId});
+}

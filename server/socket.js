@@ -40,11 +40,6 @@ module.exports.initSockets = function(socket, io){
 
     socket.on('start-game', (data) => { // Host start game  
 
-        // ??? this caused playerSocket to be wiped out, I don't understand the purpose
-        /* 
-        roomData[data.roomId][players] = data.players
-        */
-
         if(roomData[data.roomId].playerCount < 3){
             roomData[data.roomId].host.emit('player-count-error', {playerCount: roomData[data.roomId].playerCount});
             return
@@ -86,7 +81,7 @@ module.exports.initSockets = function(socket, io){
         }
     });
 
-    socket.on('disconnect', () => { // Player disconnect
+    socket.on('disconnect', () => { // Player closes 
         for(const room in roomData){
             const player = roomData[room].playerSocket.find((e) => e.socket.id == socket.id);
             if(player){
@@ -102,4 +97,10 @@ module.exports.initSockets = function(socket, io){
             }
         }
     });
+
+    socket.on('quit-game', (data) => {
+        roomData[room].host.emit('player-left', {playerId: data.playerId});
+        socket.leave(data.roomId);
+    });
+    
 }
