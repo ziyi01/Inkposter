@@ -80,19 +80,19 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         var real_prompt_count = 0;
         for (let i = 0; i < model.sessionHost.players.length ; i++) {
             var playerId = model.sessionHost.players[i].playerId;
-            var role;
+            var inkposter;
             var prompt;
 
             if (i === imposterIndex) {
-                role = "Inkposter";
+                inkposter = true;
                 prompt = sessionParams.imposter_prompt;
             } else {
-                role = "Innocent";
+                inkposter = false;
                 prompt = sessionParams.real_prompts[real_prompt_count];
                 real_prompt_count++;
             }
         
-            playerData.push({playerId: playerId, prompt: prompt, role: role, connection: true});
+            playerData.push({playerId: playerId, prompt: prompt, inkposter: inkposter, connection: true});
         }
 
         model.updateGame(sessionParams.real_theme, sessionParams.fake_themes, playerData);

@@ -7,6 +7,7 @@ import { UserModel } from '../userModel';
 import { sendCanvas, socket } from '../components/socket-client';
 import Canvas from '../components/canvas';
 import Popup from '../components/popup';
+import { disconnect } from 'process';
 var debug = require('debug')('app:player-game-presenter');
 
 interface PlayerGameProps {
@@ -19,9 +20,10 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
         socket.on('game-ended', () => { // Receive signal from server/host that game ended
             navigate('/player/voting');
         });
-        socket.on('host-left', () => {  // Host left room
-          model.reset();
-          navigate('/');
+      socket.on('host-left', () => {  // Host left room
+        debug("Host left");
+        model.reset();
+        navigate('/');
       });
 
         return () => {

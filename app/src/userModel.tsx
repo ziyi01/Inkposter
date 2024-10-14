@@ -6,7 +6,7 @@ var debug = require('debug')('app:userModel');
 export type playerSession = {
     playerId: string;
     prompt: string;
-    role: string;
+    inkposter: boolean;
     canvas?: string; // Base64 encoded image
 }
 
@@ -34,7 +34,7 @@ export class UserModel {
         this.host = host;
         this.roomId = ''; 
         this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
-        this.sessionPlayer = {playerId: "", prompt: "", role: ""}; 
+        this.sessionPlayer = {playerId: "", prompt: "", inkposter: false}; 
     }
 
     // General functions
@@ -42,6 +42,7 @@ export class UserModel {
         this.playerId = playerId;
         this.name = playerName;
         debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
+        // TODO update to actually make server-requests and update model from response
     }
     
     setRoomId(roomId:string) {
@@ -125,16 +126,16 @@ export class UserModel {
     reset() {
         this.host = false;
         this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
-        this.sessionPlayer = {playerId: "", prompt: "", role: ""};
+        this.sessionPlayer = {playerId: "", prompt: "", inkposter: false};
     }
 
     // Player
-    startGamePlayer(prompt:string) { // Update model with prompt and role
+    startGamePlayer(prompt:string, inkposter:boolean) { // Update model with prompt and role
         if(!this.host) { 
             this.sessionPlayer = {
                 playerId: this.playerId,
                 prompt: prompt,
-                role: prompt !== '' ? "Innocent" : "Inkposter"
+                inkposter: inkposter
             }
         }
     }
