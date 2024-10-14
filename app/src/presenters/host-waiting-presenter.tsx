@@ -6,7 +6,7 @@ import HostWaitingView from '../views/host-waiting';
 import { UserModel } from '../userModel';
 import { hostRoom, startGame, socket } from '../components/socket-client';
 import { Player } from '../components/playerInterface';
-import { getGeneratedSessionParams } from '../server-requests';
+import { getGeneratedSessionParams } from '../components/server-requests';
 import LoadingScreen from '../views/loading';
 
 var debug = require('debug')('app:host-waiting-presenter');

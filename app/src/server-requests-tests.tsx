@@ -1,4 +1,4 @@
-import {getUserDB } from './server-requests';
+import {getUserDB } from './components/server-requests';
 
 function runTests() {
     getUserDB("0").then(printRes).catch(handleError);
