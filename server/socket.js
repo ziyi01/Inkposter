@@ -99,7 +99,7 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('quit-game', (data) => {
-        roomData[room].host.emit('player-left', {playerId: data.playerId});
+        roomData[data.roomId].host.emit('player-left', {playerId: data.playerId});
         socket.leave(data.roomId);
     });
     
