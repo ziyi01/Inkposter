@@ -19,6 +19,14 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
             // model.setResult(data.result); // TODO: Implement setResult in UserModel for player-end
         });
+        socket.on('host-left', () => {  // Host left room
+            model.reset();
+            navigate('/');
+        });
+
+        return () => {
+            socket.off('voting-ended');
+        }
     }, []);
 
     function onVote(votePlayer: string, voteTheme: string) {

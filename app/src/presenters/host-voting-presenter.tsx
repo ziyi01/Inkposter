@@ -15,12 +15,16 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
 
     useEffect(() => {
         socket.on('receive-voting', (data) => { // Receive player vote
-            model.updateVoting(data.playerName, data.vote, data.themeVote);
+            model.updateVoting(data.playerId, data.vote, data.themeVote);
             setVoteCount(voteCount + 1);
             if(voteCount === model.sessionHost?.playersData.length) {
                 votingEnded(model.roomId, "results"); // TODO: Process results
             }
         });
+
+        return () => {
+            socket.off('receive-voting');
+        }
     }, []);
     /*
     */
