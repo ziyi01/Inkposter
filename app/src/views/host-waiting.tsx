@@ -1,5 +1,5 @@
 import React from 'react';
-import { Player } from '../presenters/host-waiting-presenter';
+import { Player } from '../components/playerInterface';
 
 interface HostWaitingProps {
   code: string;

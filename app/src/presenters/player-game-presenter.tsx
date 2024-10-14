@@ -17,8 +17,16 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
     const navigate = useNavigate();
     useEffect(() => {
         socket.on('game-ended', () => { // Receive signal from server/host that game ended
-            navigate('/player-voting');
+            navigate('/player/voting');
         });
+        socket.on('host-left', () => {  // Host left room
+          model.reset();
+          navigate('/');
+      });
+
+        return () => {
+            socket.off('game-ended');
+        }
     }, []); 
     
     // Popup

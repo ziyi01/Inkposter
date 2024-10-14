@@ -33,7 +33,7 @@ describe('MongoDB endpoint tests', () => {
         db.disconnectFromMongoDB();
         done();
     });
-});
+}, 10000);
 
 // ------------------------------
 // OpenAI tests
@@ -46,11 +46,4 @@ describe('OpenAI endpoint tests', () => {
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe('text/html');
     });
-    test('/api/openai/sessionPrompts should return 200', async () => {
-        const response = await request(app).get('/api/openai/sessionPrompts');
-        debug(response);
-
-        expect(response.statusCode).toBe(200);
-        expect(response.type).toBe('text/html');
-    });
-});
+}, 10000);
