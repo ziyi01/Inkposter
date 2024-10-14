@@ -35,7 +35,7 @@ const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       <div className="absolute bottom-4 left-4 flex space-x-4">
-        <Link to="/host-game" className="text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition">
+        <Link to="/host/game" className="text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition">
           Host Game
         </Link>
         {!isJoinInputVisible ? (

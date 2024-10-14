@@ -1,40 +1,43 @@
 import { closeGame } from "./components/socket-client";
+import { Player }  from "./components/playerInterface";
 
 export type playerSession = {
-    playerName: string;
+    playerId: string;
     prompt: string;
     role: string;
     canvas?: string; // Base64 encoded image
 }
 
 export type hostSession = {
-    players: string[];
+    players: Player[];
     playersData: playerSession[];
     theme: string;
+    fake_themes: string[];
 };
 
 /**
  * Model in the MVP pattern for the application
  */
 export class UserModel {
-    id: number | undefined;
+    playerId: string;
     name: string;
     host: boolean;
     roomId: string;
     sessionHost: hostSession;
     sessionPlayer: playerSession;
 
-    constructor(id=undefined, name='', host: boolean=false) {
-        this.id = id;
+    constructor(playerId='', name='', host: boolean=false) {
+        this.playerId= playerId;
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: ""};
-        this.sessionPlayer = {playerName: "", prompt: "", role: ""}; 
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionPlayer = {playerId: "", prompt: "", role: ""}; 
     }
 
-    login(id: number, playerName: string) {
-        this.id = id;
+    // General functions
+    login(playerId: string, playerName: string) {
+        this.playerId = playerId;
         this.name = playerName;
     }
     
@@ -42,6 +45,7 @@ export class UserModel {
         this.roomId = roomId;
     }
 
+    // Host
     createHostSession(room:string) {
         if(this.roomId !== '') {
             closeGame(this.roomId);
@@ -49,43 +53,83 @@ export class UserModel {
 
         this.host = true;
         this.roomId = room
-        this.sessionHost = {
-            players: [],
-            playersData: [],
-            theme: ""
-        };
+        this.reset();
     }
 
-    addPlayer(playerName:string) {
+    addPlayer(playerId:string, playerName:string) { // Add player to host session
         if(this.sessionHost) {
-            this.sessionHost.players.push(playerName);
+            this.sessionHost.players.push({"playerId": playerId, "name": playerName, "connection": true});
         }
     }
 
-    updateGame(theme:string, playerData:[]) { // Update host model theme and players
+    removePlayer(playerId:string) { // Remove player from host session
+        if(this.sessionHost) {
+            const playerIndex = this.sessionHost.players.findIndex(player => player.playerId === playerId);
+            if(playerIndex !== -1) {
+                this.sessionHost.players.splice(playerIndex, 1);
+            }
+        }
+    }
+
+    // or we could just add it as a part of host-session and add it at param-generation? 
+    getPlayerPrompts() {
+        if(!this.host) {
+            return [];
+        }
+        return this.sessionHost.playersData.map(player => {return {"playerId": player.playerId, "prompt": player.prompt}});
+    }
+
+    getPlayer(playerId:string):string {
+        if(this.sessionHost) {
+            const player = this.sessionHost.players.find(player => player.playerId === playerId);
+            if(player) {
+                return player.name
+            }
+        }
+        return "None";
+    }
+
+    disconnectedPlayer(playerId:string) { // Set disconnected player's connection to false, use mid-game
+        if(this.sessionHost) {
+            const player = this.sessionHost.players.find(player => player.playerId === playerId);
+            if(player) {
+                player["connection"] = false;
+            }
+        }
+    }
+
+    updateGame(theme:string, fake_themes:string[], playerData:playerSession[]) { // Update host model theme and players
         if(this.sessionHost) {
             this.sessionHost.theme = theme;
+            this.sessionHost.fake_themes = fake_themes;
             this.sessionHost.playersData = playerData;
         }
     }
 
-    updateCanvas(playerName:string, canvas:string) { // Receives playerName and canvas-file
+    updateCanvas(playerId:string, canvas:string) { // Receives playerName and canvas-file
         if(this.sessionHost) {
-            const player = this.sessionHost.playersData.find(player => player.playerName === playerName);
+            const player = this.sessionHost.playersData.find(player => player.playerId === playerId);
             if (player) {
                 player.canvas = canvas;
             }
         }
     }
 
-    updateVoting(playerName:string, vote:string, themeVote:string) { // Update model with voting results
+    updateVoting(playerId:string, vote:string, themeVote:string) { // Update model with voting results
         // TODO: Implement
     }
 
+    reset() {
+        this.host = false;
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionPlayer = {playerId: "", prompt: "", role: ""};
+    }
+
+    // Player
     startGamePlayer(prompt:string) { // Update model with prompt and role
         if(!this.host) { 
             this.sessionPlayer = {
-                playerName: this.name,
+                playerId: this.playerId,
                 prompt: prompt,
                 role: prompt !== '' ? "Innocent" : "Inkposter"
             }

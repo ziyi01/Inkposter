@@ -14,6 +14,10 @@ const PlayerEnd: React.FC<PlayerEndProps> = (model) => {
     socket.on('game-closed', () => { // Receive signal from server/host that game ended
       // TODO: User feedback that host has ended the game
       navigate('/homepage');
+
+      return () => {
+        socket.off('game-closed');
+      }
     });
   }, []); 
 
