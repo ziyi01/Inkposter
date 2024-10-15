@@ -4,10 +4,14 @@ import { UserModel } from './userModel';
 import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 
+import ProfileNavBar from './components/navbar';
+const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
+
+
 // const LoginPage = React.lazy(() => import('./views/login-page'));
 const MockLoginPage = React.lazy(() => import('./views/mock-login'));
 const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
-const ProfilePage = React.lazy(() => import('./views/profile'));
+
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));

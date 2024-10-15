@@ -10,19 +10,6 @@ const GitHubCallback: React.FC = () => {
     const code = urlParams.get('code');
 
     if (code) {
-      // Mock version: Simulate login
-      /*
-      const mockUniqueId = 'mock-unique-id-123'; // Replace this with any string you want
-      localStorage.setItem('userId', mockUniqueId);
-      localStorage.setItem('isAuthenticated', 'true'); // Mark the user as authenticated
-
-      // Redirect to the homepage after successful authentication
-      navigate('/homepage');
-
-      // Uncomment this block
-      */
-
-      // Actual version: sends code to backend for unique identifier
       const fetchAccessToken = async () => {
         try {
           const response = await axios.post('http://your-backend-url/auth/github', { code });
