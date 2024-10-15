@@ -234,7 +234,7 @@ router.post('/github/login', async (req, res) => {
     });
 
     // Check if the access token is returned
-    const { access_token } = response.data;
+    const { access_token } = await response.data;
     if (!access_token) {
       throw new Error('No access token received');
     }
@@ -259,5 +259,9 @@ router.post('/github/login', async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
+
+
+
+
 
 module.exports = router;

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { UserModel } from '../userModel';
 
-const GitHubCallback: React.FC = () => {
+interface GithubProps {
+  model: UserModel;
+}
+
+const GitHubCallback: React.FC<GithubProps> = ({model}) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
