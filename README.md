@@ -42,6 +42,8 @@ At the start of the game everyone receives a prompt that relates to a theme, exc
 
 When the timer runs out voting begins. The players vote what they suspect the theme is and who they think the `Inkposter` is. If the majority of players vote for the `Inkposter` then they're caught!
 
+It is recommended to play the game using your phone and host on a big screen (e.g. TV, computer screen, livestream).
+
 ### Design and Demo
 The layout is designed in Figma following: https://www.figma.com/design/V4OLczauxQRw13nV0fefb7/Inkposter-Design?node-id=2407-292&node-type=frame&t=S5xK8qXW5BX97cNm-0 (Also see: [Code architecture](#code-architecture)).
 
@@ -60,6 +62,8 @@ Prerequisites:
 - MongoDB
 - Socket.io
 - TailwindCSS
+
+ <a href="https://www.flaticon.com/free-icons/ink-cartridge" title="ink cartridge icons">Favicon created by smalllikeart - Flaticon</a> and <a href="https://github.com/vinothpandian/react-sketch-canvas" title="react-sketch-canvas">react-sketch-canvas</a> package by Vinoth Pandian.
 
 ### Installation
 To start the REST API server and the client application:
