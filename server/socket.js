@@ -76,7 +76,8 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('end-voting', (data) => { // Host end voting
-        socket.broadcast.to(data.roomId).emit('voting-ended', {result: data.result});
+        debug("Emit end-voting");
+        socket.broadcast.to(data.roomId).emit('voting-ended', {inkposterVotedOut: data.inkposterVotedOut});
     });
 
     socket.on('close-game', (data) => { // Host disconnect server

@@ -15,7 +15,9 @@ export type hostSession = {
     playersData: playerSession[];
     theme: string;
     fake_themes: string[];
-    voteResults: {playerId:string, voteCount:number, themeGuess:string}[];
+    inkposterId: string;
+    voteResults: { playerId: string, voteCount: number, themeGuess: string }[];
+    inkposterVotedOut: boolean;
 };
 
 /**
@@ -35,7 +37,7 @@ export class UserModel {
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], voteResults: []};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], inkposterId:"", voteResults: [], inkposterVotedOut: false};
         this.sessionPlayer = { playerId: "", prompt: "", inkposter: false }; 
         this.previousThemes = [];
     }
@@ -162,9 +164,41 @@ export class UserModel {
         debug("Results after ", playerId, "'s vote: ", this.sessionHost.voteResults);
     }
 
+    calculateFinalResult() {
+        var highestVoteCount = 0;
+        var inkposterVotedOut;
+        
+        // find highest voteCountt
+        this.sessionHost.voteResults.forEach(player => {
+            if (player.voteCount > highestVoteCount) {
+                highestVoteCount = player.voteCount;
+            }
+        });
+
+        // find all players with that voteCount
+        const highestVoteCounts = this.sessionHost.voteResults.filter(player => player.voteCount === highestVoteCount);
+
+        if (highestVoteCounts.length > 1) { 
+            inkposterVotedOut = false
+            debug("Several players have the same highest vote: ", highestVoteCount);
+
+        } else if (highestVoteCounts[0].playerId !== this.sessionHost.inkposterId) {
+            inkposterVotedOut = false; 
+            debug("Player ", highestVoteCounts[0].playerId, " with highest vote ", highestVoteCount, " not inkposter");
+
+        } else {
+            inkposterVotedOut = true;
+            debug("Player ", highestVoteCounts[0].playerId, " with highest vote ", highestVoteCount, " was inkposter");
+        }
+        
+        debug("Inkposter voted out: ", inkposterVotedOut);
+        this.sessionHost.inkposterVotedOut = inkposterVotedOut;
+        return inkposterVotedOut;
+    }
+
     reset() {
         this.host = false;
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], voteResults: []};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], inkposterId: "", voteResults: [], inkposterVotedOut: false};
         this.sessionPlayer = {playerId: "", prompt: "", inkposter: false};
     }
 

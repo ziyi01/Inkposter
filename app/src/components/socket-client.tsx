@@ -22,8 +22,8 @@ export function startGame(roomId:string, players: {playerId: string, prompt: str
     socket.emit('start-game', {roomId: roomId, players: players, playersToClient: playersToClient, theme:theme, fake_themes:fake_themes});
 }
 
-export function votingEnded(roomId:string, result:string) {
-    socket.emit('end-voting', {roomId: roomId, result: result});
+export function votingEnded(roomId:string, inkposterVotedOut:boolean) {
+    socket.emit('end-voting', {roomId: roomId, inkposterVotedOut: inkposterVotedOut});
 }
 
 export function endGame(roomId:string) {
