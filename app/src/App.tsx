@@ -44,6 +44,7 @@ const App: React.FC<AppProps> = ({ model }) => {
     console.log('User has logged out');
     Cookies.remove('isAuthenticated'); // clear the auth cookie
     Cookies.remove('userId'); // Clear the user ID cookie
+    window.location.reload();
   };
 
   return (
