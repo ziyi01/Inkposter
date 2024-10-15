@@ -40,7 +40,7 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
     };
 
     const handleConfirmLeave = () => {
-      console.log('Player has confirmed to leave the game.');
+      debug('Player has confirmed to leave the game.');
       quitGame(model.roomId, model.playerId);
       navigate('/homepage')
     };
