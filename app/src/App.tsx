@@ -7,7 +7,7 @@ import ProfileNavBar from './components/navbar';
 import HomePagePresenter from './presenters/homepage-presenter';
 const LoginPage = React.lazy(() => import('./views/login-page'));
 const HomePage = React.lazy(() => import('./views/homepage'));
-const ProfilePage = React.lazy(() => import('./views/profile'));
+const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
