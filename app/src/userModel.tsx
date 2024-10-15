@@ -55,10 +55,10 @@ export class UserModel {
         if(this.roomId !== '') {
             closeGame(this.roomId);
         }
-
+        
+        this.reset();
         this.host = true;
         this.roomId = room
-        this.reset();
     }
 
     addPlayer(playerId:string, playerName:string) { // Add player to host session
