@@ -246,8 +246,8 @@ router.post('/github/login', async (req, res) => {
       },
     });
 
-    const userId = userResponse.data.id; // Or any other unique identifier
-    const uniqueId = await loginUserDB(userId); // Presumably a function that stores userId in DB
+    const userId = userResponse.data.id; 
+    const uniqueId = await loginUserDB(userId);
     const cookies = new Cookies(req, res);
     cookies.set('userId', uniqueId);
     cookies.set('isAuthenticated', 'true');

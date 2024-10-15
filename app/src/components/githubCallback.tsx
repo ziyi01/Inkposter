@@ -27,7 +27,12 @@ const GitHubCallback: React.FC = () => {
             throw new Error('Login failed');
           }
 
+
           const data = await response.json();
+          //const uniqueId = await loginUserDB(userId);
+          //const cookies = new Cookies(req, res); 
+          //cookies.set('userId', uniqueId); 
+          //cookies.set('isAuthenticated', 'true');
           console.log('User ID:', data.userId);
 
           // Store userId in a cookie if needed
