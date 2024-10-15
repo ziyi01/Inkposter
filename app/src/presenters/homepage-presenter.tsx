@@ -38,7 +38,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents page refresh
-    console.log('Join Code:', joinCode);
+    debug('Join Code:', joinCode);
     setIsJoinInputVisible(false);
 
     //game logic

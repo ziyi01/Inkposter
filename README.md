@@ -42,6 +42,8 @@ At the start of the game everyone receives a prompt that relates to a theme, exc
 
 When the timer runs out voting begins. The players vote what they suspect the theme is and who they think the `Inkposter` is. If the majority of players vote for the `Inkposter` then they're caught!
 
+It is recommended to play the game using your phone and host on a big screen (e.g. TV, computer screen, livestream).
+
 ### Design and Demo
 The layout is designed in Figma following: https://www.figma.com/design/V4OLczauxQRw13nV0fefb7/Inkposter-Design?node-id=2407-292&node-type=frame&t=S5xK8qXW5BX97cNm-0 (Also see: [Code architecture](#code-architecture)).
 
@@ -60,6 +62,8 @@ Prerequisites:
 - MongoDB
 - Socket.io
 - TailwindCSS
+
+ <a href="https://www.flaticon.com/free-icons/ink-cartridge" title="ink cartridge icons">Favicon created by smalllikeart - Flaticon</a> and <a href="https://github.com/vinothpandian/react-sketch-canvas" title="react-sketch-canvas">react-sketch-canvas</a> package by Vinoth Pandian.
 
 ### Installation
 To start the REST API server and the client application:
@@ -139,9 +143,10 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 
 | **File**             | **Test**                                       | **Type**            |
 |----------------------|------------------------------------------------|---------------------|
-| `App.test.tsx`       | `App renders login page properly`              | UI test             |
-| `App.test.tsx`       | `Login button fires off callback`              | UI test             |
-| `App.test.tsx`       | `Redirect to /login when app rendered`         | UI test             |
+| `App.test.tsx`       | `Login page has login button`                  | UI test             |
+| `App.test.tsx`       | `Homepage has join game button`                | UI test             |
+| `App.test.tsx`       | `Profile has log out button`                   | UI test             |
+| `App.test.tsx`       | `Redirect to /login when rendered`             | UI test             |
 | `db.test.js`         | `Create and delete user`                       | Database test       |
 | `db.test.js`         | `Retrieve user stats`                          | Database test       |
 | `db.test.js`         | `Update username and retrieve user`            | Database test       |
@@ -162,12 +167,15 @@ The front-end application uses a MVP-architecture. The code is divided into fold
 ```
 └── app/src/
     ├── components/
+    │   ├── button.tsx
+    │   ├── canvas.tsx
     │   ├── githubCallback.tsx
     │   ├── layout.tsx
-    │   ├── popup.js
+    │   ├── playerInterface.ts
+    │   ├── popup.tsx
+    │   ├── server-requests.ts
     │   ├── timer.tsx
-    │   ├── socket-client.tsx
-    │   └── canvas.tsx
+    │   └── socket-client.tsx
     ├── presenters/
     │   ├── homepage-presenter.tsx
     │   ├── host-end-presenter.tsx
@@ -186,6 +194,7 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     │   ├── host-waiting.tsx
     │   ├── loading.tsx
     │   ├── login-page.tsx
+    │   ├── mock-login.tsx
     │   ├── player-game.tsx
     │   ├── player-session-end.tsx
     │   ├── player-voting.tsx
@@ -196,7 +205,6 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     ├── global.css
     ├── index.css
     ├── index.tsx
-    ├── server-requests.ts
     ├── userModel.tsx
     └── logo.svg
 ```

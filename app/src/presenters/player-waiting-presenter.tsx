@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // import components
@@ -41,7 +41,7 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
     };
 
     const handleConfirmLeave = () => {
-      console.log('Player has confirmed to leave the game.');
+      debug('Player has confirmed to leave the game.');
       quitGame(model.roomId, model.playerId);
       navigate('/homepage')
     };

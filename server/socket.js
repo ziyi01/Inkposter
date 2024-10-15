@@ -62,8 +62,13 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('send-canvas', (data) => { // Player send canvas
-        debug("Room data" + roomData[data.roomId].toString());
+        debug("Canvas recieved from" + data.playerId);
         roomData[data.roomId].host.emit('receive-canvas', {playerId: data.playerId, canvas: data.canvas});
+    });
+
+    socket.on('send-voting', (data) => { // Player send canvas
+        debug("Vote recieved from" + data.playerId);
+        roomData[data.roomId].host.emit('receive-voting', {playerId: data.playerId, votePlayer: data.votePlayer, voteTheme: data.voteTheme});
     });
 
     socket.on('end-game', (data) => { // Host end game
@@ -71,7 +76,8 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('end-voting', (data) => { // Host end voting
-        socket.broadcast.to(data.roomId).emit('voting-ended', {result: data.result});
+        debug("Emit end-voting");
+        socket.broadcast.to(data.roomId).emit('voting-ended', {inkposterVotedOut: data.inkposterVotedOut});
     });
 
     socket.on('close-game', (data) => { // Host disconnect server

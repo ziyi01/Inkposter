@@ -22,8 +22,8 @@ export function startGame(roomId:string, players: {playerId: string, prompt: str
     socket.emit('start-game', {roomId: roomId, players: players, playersToClient: playersToClient, theme:theme, fake_themes:fake_themes});
 }
 
-export function votingEnded(roomId:string, result:string) {
-    socket.emit('end-voting', {roomId: roomId, result: result});
+export function votingEnded(roomId:string, inkposterVotedOut:boolean) {
+    socket.emit('end-voting', {roomId: roomId, inkposterVotedOut: inkposterVotedOut});
 }
 
 export function endGame(roomId:string) {
@@ -43,8 +43,8 @@ export function sendCanvas(roomId:string, playerId:string, canvas:string) {
     socket.emit('send-canvas', {roomId: roomId, playerId: playerId, canvas: canvas});
 }
 
-export function sendVoting(roomId:string, playerId:string, vote:string, themeVote:string) {
-    socket.emit('send-voting', {roomId: roomId, playerId: playerId, vote: vote, themeVote: themeVote});
+export function sendVoting(roomId:string, playerId:string, votePlayer:string, voteTheme:string) {
+    socket.emit('send-voting', {roomId: roomId, playerId: playerId, votePlayer: votePlayer, voteTheme: voteTheme});
 }
 
 export function quitGame(roomId:string, playerId:string) {

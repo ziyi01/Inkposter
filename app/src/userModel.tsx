@@ -1,6 +1,5 @@
 import { closeGame } from "./components/socket-client";
-import { Player, PlayerCanvas } from "./components/playerInterface";
-import { Session } from "inspector";
+import { Player } from "./components/playerInterface";
 
 var debug = require('debug')('app:userModel');
 
@@ -16,6 +15,9 @@ export type hostSession = {
     playersData: playerSession[];
     theme: string;
     fake_themes: string[];
+    inkposterId: string;
+    voteResults: { playerId: string, voteCount: number, themeGuess: string }[];
+    inkposterVotedOut: boolean;
 };
 
 /**
@@ -28,14 +30,16 @@ export class UserModel {
     roomId: string;
     sessionHost: hostSession;
     sessionPlayer: playerSession;
+    previousThemes: string[];
 
     constructor(playerId='', name='', host: boolean=false) {
         this.playerId= playerId;
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
-        this.sessionPlayer = {playerId: "", prompt: "", inkposter: false}; 
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], inkposterId:"", voteResults: [], inkposterVotedOut: false};
+        this.sessionPlayer = { playerId: "", prompt: "", inkposter: false }; 
+        this.previousThemes = [];
     }
 
     // General functions
@@ -44,6 +48,7 @@ export class UserModel {
         this.name = playerName;
         debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
         // TODO update to actually make server-requests and update model from response
+
     }
     
     setRoomId(roomId:string) {
@@ -112,6 +117,8 @@ export class UserModel {
             this.sessionHost.theme = theme;
             this.sessionHost.fake_themes = fake_themes;
             this.sessionHost.playersData = playerData;
+
+            this.previousThemes.push(theme);
         }
     }
 
@@ -124,13 +131,74 @@ export class UserModel {
         }
     }
 
-    updateVoting(playerId:string, vote:string, themeVote:string) { // Update model with voting results
-        // TODO: Implement
+    initVoting() {
+        this.sessionHost.voteResults = this.getAllPlayers().map((player) => {
+            return {
+              playerId: player.playerId,
+              voteCount: 0,
+              themeGuess: ""
+            }
+        });
+
+        debug("Init sessionHost.voteResult as: ", this.sessionHost.voteResults);
+    }
+
+    updateVoting(playerId:string, votePlayer:string, voteTheme:string) { // Update model with voting results
+        const voterIndex = this.sessionHost.voteResults.findIndex(player => player.playerId === playerId);
+        const votedForIndex = this.sessionHost.voteResults.findIndex(player => player.playerId === votePlayer);
+
+        // update own guess
+        this.sessionHost.voteResults[voterIndex] = { 
+            playerId: this.sessionHost.voteResults[voterIndex].playerId, 
+            voteCount: this.sessionHost.voteResults[voterIndex].voteCount, 
+            themeGuess: voteTheme, 
+        };
+        
+        // update voteCount for the player that this player voted for
+        this.sessionHost.voteResults[votedForIndex] = { 
+            playerId: this.sessionHost.voteResults[votedForIndex].playerId, 
+            voteCount: this.sessionHost.voteResults[votedForIndex].voteCount + 1, 
+            themeGuess: this.sessionHost.voteResults[votedForIndex].themeGuess 
+        };
+
+        debug("Results after ", playerId, "'s vote: ", this.sessionHost.voteResults);
+    }
+
+    calculateFinalResult() {
+        var highestVoteCount = 0;
+        var inkposterVotedOut;
+        
+        // find highest voteCountt
+        this.sessionHost.voteResults.forEach(player => {
+            if (player.voteCount > highestVoteCount) {
+                highestVoteCount = player.voteCount;
+            }
+        });
+
+        // find all players with that voteCount
+        const highestVoteCounts = this.sessionHost.voteResults.filter(player => player.voteCount === highestVoteCount);
+
+        if (highestVoteCounts.length > 1) { 
+            inkposterVotedOut = false
+            debug("Several players have the same highest vote: ", highestVoteCount);
+
+        } else if (highestVoteCounts[0].playerId !== this.sessionHost.inkposterId) {
+            inkposterVotedOut = false; 
+            debug("Player ", highestVoteCounts[0].playerId, " with highest vote ", highestVoteCount, " not inkposter");
+
+        } else {
+            inkposterVotedOut = true;
+            debug("Player ", highestVoteCounts[0].playerId, " with highest vote ", highestVoteCount, " was inkposter");
+        }
+        
+        debug("Inkposter voted out: ", inkposterVotedOut);
+        this.sessionHost.inkposterVotedOut = inkposterVotedOut;
+        return inkposterVotedOut;
     }
 
     reset() {
         this.host = false;
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], inkposterId: "", voteResults: [], inkposterVotedOut: false};
         this.sessionPlayer = {playerId: "", prompt: "", inkposter: false};
     }
 

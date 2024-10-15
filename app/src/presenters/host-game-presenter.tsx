@@ -93,7 +93,7 @@ const HostGame: React.FC<HostGameProps> = ({model}) => {
         playerCanvas={playerCanvas}
         timer={
           <Timer
-            initialTime={120}
+            initialTime={10}
             onTimerEnd={handleTimerEnd}
           />
         }

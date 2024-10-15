@@ -67,7 +67,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         navigate('/host/ingame'); // Redirect to host-game
         */
         setLoading(true);
-        await getGeneratedSessionParams([""]).then(startGameACB).catch(handleError);
+        await getGeneratedSessionParams(model.previousThemes).then(startGameACB).catch(handleError);
         setLoading(false);
     }
 
@@ -86,6 +86,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             if (i === imposterIndex) {
                 inkposter = true;
                 prompt = sessionParams.imposter_prompt;
+                model.sessionHost.inkposterId = playerId;
             } else {
                 inkposter = false;
                 prompt = sessionParams.real_prompts[real_prompt_count];
