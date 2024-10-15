@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { loginUserDB } from '../server-requests';
+import Cookies from 'js-cookie';
+import { UserModel } from '../userModel';
+import { FaCode } from 'react-icons/fa';
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -10,47 +13,44 @@ const GitHubCallback: React.FC = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    console.log(code)
 
     if (code) {
-      const fetchAccessToken = async () => {
+      const handleLogin = async () => {
         try {
-          const response = await axios.post('http://your-backend-url/auth/github', { code });
+          // Send the code to backend, receive userID
+          const uniqueId = await loginUserDB(code);
+          console.log(uniqueId); // TA BORT INNAN DEPLOY
 
-          if (response.status === 200 && response.data?.uniqueId) {
-            const { uniqueId } = response.data; 
-            localStorage.setItem('userId', uniqueId); //BYT UT TILL MODELLEN
-            localStorage.setItem('isAuthenticated', 'true');
-            navigate('/homepage'); // Redirect on success
+          // Store the userId in a cookie for persistence
+          Cookies.set('userId', uniqueId, { expires: 7 }); // Expires in 7 days
+          Cookies.set('isAuthenticated', 'true', { expires: 7 });
 
-          } else {
-            setErrorMessage('Authentication failed: Invalid response from the server.'); // Handle unexpected response structure or missing uniqueId
-            console.error('Invalid response data:', response.data);
-          }
+          // Redirect to homepage
+          navigate('/homepage'); 
+
         } catch (error: any) {
-          
-          if (error.response) {// Detect network or server errors
-            console.error('Backend error:', error.response.data);
-            setErrorMessage(`Error: ${error.response.data.message || 'Server error occurred.'}`);
+          console.error('Login failed:', error);
 
-          } else if (error.request) {
-            console.error('No response received:', error.request);
-            setErrorMessage('Error: No response from the server. Please try again.');
-
+          // Handle errors with coresponding messages
+          if (error.cause === 500) {
+            setErrorMessage('Server error occurred. Please try again later.');
+          } else if (error.cause === 400) {
+            setErrorMessage('Invalid request. Please try again.');
           } else {
-            console.error('Request error:', error.message);
-            setErrorMessage('Error: Something went wrong. Please try again.');
+            setErrorMessage('Something went wrong. Please try again.');
           }
 
           navigate('/login'); // Redirect to login on failure
-
         } finally {
           setLoading(false); // End loading state
         }
       };
 
-      fetchAccessToken();
+      handleLogin();
     } else {
-      setErrorMessage('No authorization code found in the URL.'); // If no code is found, show error and redirect to login
+      // If no code is found -> show error and redirect to login
+      setErrorMessage('No authorization code found in the URL.');
       console.error('No code found in URL');
       navigate('/login');
       setLoading(false);
@@ -58,7 +58,7 @@ const GitHubCallback: React.FC = () => {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state. Change to fully white or something else? 
+    return <div>Loading...</div>; // Show loading state
   }
 
   return (
