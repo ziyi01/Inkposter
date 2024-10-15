@@ -220,7 +220,9 @@ router.patch('/openai/sessionParams', async function (req, res, next) {
 // GitHub Login route
 // ---------------
 router.post('/github/login', async (req, res) => {
-  const { code } = req.body;
+  const { code } = req.body; // const { code } = req.body
+  debug("Req.body: ", req.body);
+  debug("req.body.code: ", code);
 
   try {
     const response = await axios.post('https://github.com/login/oauth/access_token', {
@@ -233,11 +235,17 @@ router.post('/github/login', async (req, res) => {
       },
     });
 
+    debug("Try to get accesstoken");
+
     // Check if the access token is returned
-    const { access_token } = response.data;
+    debug("Response thats gonna have token: ", response);
+    const { access_token } = await response.data;
     if (!access_token) {
+      debug("No accesstoken recieved")
       throw new Error('No access token received');
     }
+
+    debug("Got accesstoken: ", access_token);
 
     // Fetch user info with the access token
     const userResponse = await axios.get('https://api.github.com/user', {
@@ -247,15 +255,15 @@ router.post('/github/login', async (req, res) => {
     });
 
     const userId = userResponse.data.id; // Or any other unique identifier
-    const uniqueId = await loginUserDB(userId); // Presumably a function that stores userId in DB
-    const cookies = new Cookies(req, res);
-    cookies.set('userId', uniqueId);
-    cookies.set('isAuthenticated', 'true');
+    //const uniqueId = await loginUserDB(userId); // Presumably a function that stores userId in DB
+    //const cookies = new Cookies(req, res);
+    //cookies.set('userId', uniqueId);
+    //cookies.set('isAuthenticated', 'true');
 
     res.status(200).json({ userId });
   } catch (error) {
     // Log the entire error response for better diagnostics
-    console.error('Error during GitHub login:', error.response ? error.response.data : error.message);
+    debug('Error during GitHub login:', error.response ? error.response.data : error.message);
     res.status(500).json({ error: 'Login failed' });
   }
 });

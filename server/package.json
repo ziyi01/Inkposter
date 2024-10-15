@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "cookies": "^0.9.1",
     "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "dotenv": "^16.4.5",
@@ -16,8 +17,8 @@
     "jade": "~1.11.0",
     "mongodb": "~6.8.1",
     "morgan": "~1.9.1",
-    "socket.io": "^4.8.0",
-    "openai": "^4.67.2"
+    "openai": "^4.67.2",
+    "socket.io": "^4.8.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"

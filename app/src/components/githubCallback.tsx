@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+var debug = require('debug')('app:github-callback');
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const GitHubCallback: React.FC = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    debug("Code: ", code);
 
     if (code) {
       const handleLogin = async () => {
@@ -27,7 +29,11 @@ const GitHubCallback: React.FC = () => {
             throw new Error('Login failed');
           }
 
+          debug("Response ok?: ", response);
+
           const data = await response.json();
+          debug("Response ok?: ", data);
+
           console.log('User ID:', data.userId);
 
           // Store userId in a cookie if needed
@@ -36,7 +42,7 @@ const GitHubCallback: React.FC = () => {
           // Redirect to homepage or dashboard
 
         } catch (error) {
-          console.error('Login error:', error+code);
+          console.error('Login error:', error, " ", code);
           setErrorMessage('Login failed. Please try again.');
         } finally {
           setLoading(false);
