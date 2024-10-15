@@ -50,6 +50,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     function onVote(votePlayer: string, voteTheme: string) {
         debug(model.playerId, "vote:", votePlayer, "guess:", voteTheme);
         sendVoting(model.roomId, model.playerId, votePlayer, voteTheme);
+        model.setOwnVote(voteTheme);
         setVoted(true);
     }
 

@@ -8,6 +8,7 @@ export type playerSession = {
     prompt: string;
     inkposter: boolean;
     canvas?: string; // Base64 encoded image
+    ownVote?: string
 }
 
 export type hostSession = {
@@ -162,6 +163,10 @@ export class UserModel {
         };
 
         debug("Results after ", playerId, "'s vote: ", this.sessionHost.voteResults);
+    }
+
+    setOwnVote(voteTheme: string) {
+        this.sessionPlayer.ownVote = voteTheme;
     }
 
     calculateFinalResult() {
