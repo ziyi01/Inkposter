@@ -17,7 +17,7 @@ const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStar
       </h2>
 
       {/* Player Avatars */}
-      <div className="flex justify-center gap-6 my-8">
+      <div className="grid grid-cols-3 gap-6 my-8">
         {players.length > 0 ? (
           players.map((player) => (
             <div key={player.playerId} className="flex flex-col items-center">
@@ -26,7 +26,7 @@ const HostWaitingView: React.FC<HostWaitingProps> = ({ code, players, handleStar
             </div>
           ))
         ) : (
-          <p>No players joined yet</p>
+          <p className="col-span-3 text-center">No players joined yet</p>
         )}
       </div>
 
