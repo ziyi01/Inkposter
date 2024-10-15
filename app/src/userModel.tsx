@@ -18,7 +18,7 @@ export type hostSession = {
     theme: string;
     fake_themes: string[];
     inkposterId: string;
-    voteResults: { playerId: string, voteCount: number, themeGuess: string }[];
+    voteResults: { playerId: string, playerName:string, voteCount: number, themeGuess: string }[];
     inkposterVotedOut: boolean;
 };
 
@@ -138,9 +138,10 @@ export class UserModel {
     initVoting() {
         this.sessionHost.voteResults = this.getAllPlayers().map((player) => {
             return {
-              playerId: player.playerId,
-              voteCount: 0,
-              themeGuess: ""
+                playerId: player.playerId,
+                playerName: player.name,
+                voteCount: 0,
+                themeGuess: ""
             }
         });
 
@@ -154,6 +155,7 @@ export class UserModel {
         // update own guess
         this.sessionHost.voteResults[voterIndex] = { 
             playerId: this.sessionHost.voteResults[voterIndex].playerId, 
+            playerName: this.sessionHost.voteResults[voterIndex].playerName,
             voteCount: this.sessionHost.voteResults[voterIndex].voteCount, 
             themeGuess: voteTheme, 
         };
@@ -161,6 +163,7 @@ export class UserModel {
         // update voteCount for the player that this player voted for
         this.sessionHost.voteResults[votedForIndex] = { 
             playerId: this.sessionHost.voteResults[votedForIndex].playerId, 
+            playerName: this.sessionHost.voteResults[votedForIndex].playerName,
             voteCount: this.sessionHost.voteResults[votedForIndex].voteCount + 1, 
             themeGuess: this.sessionHost.voteResults[votedForIndex].themeGuess 
         };
