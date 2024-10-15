@@ -18,7 +18,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, playe
   // Handle submission when both a theme and an Inkposter are selected
   const handleSubmit = () => {
     if (selectedTheme && selectedInkposter) {
-      onSubmitGuess(selectedTheme, selectedInkposter);
+      onSubmitGuess(selectedInkposter, selectedTheme);
     } else {
       alert('Please select both a theme and an Inkposter!');
     }

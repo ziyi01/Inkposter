@@ -15,6 +15,7 @@ export type hostSession = {
     playersData: playerSession[];
     theme: string;
     fake_themes: string[];
+    voteResults: {playerId:string, voteCount:number, themeGuess:string}[];
 };
 
 /**
@@ -34,7 +35,7 @@ export class UserModel {
         this.name = name;
         this.host = host;
         this.roomId = ''; 
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], voteResults: []};
         this.sessionPlayer = { playerId: "", prompt: "", inkposter: false }; 
         this.previousThemes = [];
     }
@@ -128,13 +129,42 @@ export class UserModel {
         }
     }
 
-    updateVoting(playerId:string, vote:string, themeVote:string) { // Update model with voting results
-        // TODO: Implement
+    initVoting() {
+        this.sessionHost.voteResults = this.getAllPlayers().map((player) => {
+            return {
+              playerId: player.playerId,
+              voteCount: 0,
+              themeGuess: ""
+            }
+        });
+
+        debug("Init sessionHost.voteResult as: ", this.sessionHost.voteResults);
+    }
+
+    updateVoting(playerId:string, votePlayer:string, voteTheme:string) { // Update model with voting results
+        const voterIndex = this.sessionHost.voteResults.findIndex(player => player.playerId === playerId);
+        const votedForIndex = this.sessionHost.voteResults.findIndex(player => player.playerId === votePlayer);
+
+        // update own guess
+        this.sessionHost.voteResults[voterIndex] = { 
+            playerId: this.sessionHost.voteResults[voterIndex].playerId, 
+            voteCount: this.sessionHost.voteResults[voterIndex].voteCount, 
+            themeGuess: voteTheme, 
+        };
+        
+        // update voteCount for the player that this player voted for
+        this.sessionHost.voteResults[votedForIndex] = { 
+            playerId: this.sessionHost.voteResults[votedForIndex].playerId, 
+            voteCount: this.sessionHost.voteResults[votedForIndex].voteCount + 1, 
+            themeGuess: this.sessionHost.voteResults[votedForIndex].themeGuess 
+        };
+
+        debug("Results after ", playerId, "'s vote: ", this.sessionHost.voteResults);
     }
 
     reset() {
         this.host = false;
-        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
+        this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], voteResults: []};
         this.sessionPlayer = {playerId: "", prompt: "", inkposter: false};
     }
 

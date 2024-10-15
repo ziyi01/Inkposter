@@ -43,8 +43,8 @@ export function sendCanvas(roomId:string, playerId:string, canvas:string) {
     socket.emit('send-canvas', {roomId: roomId, playerId: playerId, canvas: canvas});
 }
 
-export function sendVoting(roomId:string, playerId:string, vote:string, themeVote:string) {
-    socket.emit('send-voting', {roomId: roomId, playerId: playerId, vote: vote, themeVote: themeVote});
+export function sendVoting(roomId:string, playerId:string, votePlayer:string, voteTheme:string) {
+    socket.emit('send-voting', {roomId: roomId, playerId: playerId, votePlayer: votePlayer, voteTheme: voteTheme});
 }
 
 export function quitGame(roomId:string, playerId:string) {
