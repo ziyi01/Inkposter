@@ -16,7 +16,7 @@ const PlayerSessionEndView: React.FC<PlayerSessionEndProps> = ({
       <h1 className="text-2xl font-bold mb-6">{message}</h1>
 
 
-      <p className="text-lg mb-8">You can find you game-stats on your profile.</p>
+      <p className="text-lg mb-8">You can find your game-stats on your profile.</p>
 
       {/* Quit Button */}
       <Button

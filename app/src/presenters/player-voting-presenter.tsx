@@ -73,7 +73,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
             message="Are you sure you want to leave the game? This action cannot be undone."
             onConfirm={handleConfirmLeave}
         />
-    </div> // TODO: Implement onVote in view
+    </div>
 }
 
 export default PlayerVoting;

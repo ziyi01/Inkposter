@@ -47,8 +47,6 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
             socket.off('receive-voting');
         }
     }, []);
-    /*
-    */
 
   const handleTimerEnd = () => {
     debug("Timer ended, navigating to results");
@@ -61,7 +59,7 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
         <HostVotingView playerCanvases={model.sessionHost.playersData}
         playerNames={playerNames}
         timer={<Timer
-              initialTime={10}
+              initialTime={60}
               onTimerEnd={handleTimerEnd}
             />}
         />
