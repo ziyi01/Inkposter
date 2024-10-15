@@ -42,6 +42,9 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     
     return () => {
       socket.off('room-joined');
+      socket.off('room-not-found');
+      socket.off('session-already-started');
+      socket.off('room-full');
     }
   }, []);
 
