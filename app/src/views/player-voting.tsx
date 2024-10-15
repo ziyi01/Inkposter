@@ -37,7 +37,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, playe
 
       {/* Guess the Theme Section */}
       <div className="mb-10">
-        <h1 className="text-2xl font-bold mb-4">Guess the Theme</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Guess the Theme</h1>
         <div className="grid grid-cols-2 gap-4">
           {themes.map((theme, index) => (
             <button
@@ -53,8 +53,8 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, playe
 
       {/* Vote for the Inkposter Section */}
       <div className="mb-10">
-        <h1 className="text-2xl font-bold mb-4">Vote for the Inkposter</h1>
-        <div className="flex gap-8 justify-center">
+        <h1 className="text-2xl font-bold mb-4 text-center">Vote for the Inkposter</h1>
+        <div className="grid grid-cols-4 gap-4">
           {players.map((player, playerId) => (
             <div
               key={playerId}
@@ -75,6 +75,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, playe
 
       {/* Submit Button */}
       <Button
+        className="py-1 px-2 rounded absolute top-4 right-4 bg-blue-500 hover:bg-blue-600"
         type="button"
         onClick={handleSubmit}
       >

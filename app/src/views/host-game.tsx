@@ -2,8 +2,8 @@ import React from 'react';
 import { PlayerCanvas } from '../components/playerInterface';
 
 interface HostGameViewProps {
-  playerCanvas: PlayerCanvas[] // Change in presenter to fit Player[]
-  timer: React.ReactNode; // Timer passed from the presenter
+  playerCanvas: PlayerCanvas[]
+  timer: React.ReactNode;
 }
 
 const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
@@ -18,11 +18,11 @@ const HostGameView: React.FC<HostGameViewProps> = ({ playerCanvas, timer }) => {
       <h1 className="text-3xl font-bold mb-8">Draw!</h1>
 
       {/* Player Canvases */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-4 gap-6">
         {playerCanvas.map(canvasData => (
           <div key={canvasData.playerId} className="flex flex-col items-center">
             <div
-              className="w-32 h-24 bg-sky-400 rounded-lg mb-2 sm:w-40 sm:h-28 md:w-48 md:h-32 lg:w-64 lg:h-40"
+              className="h-64 w-36 bg-sky-400 rounded-lg mb-2"
               style={{ 
                 backgroundImage: `url(${canvasData.canvas})`, 
                 backgroundSize: 'cover', 
