@@ -7,7 +7,7 @@ interface HostSessionEndViewProps {
   inkposter: string;
   inkposterVotedOut: boolean;
   correctTheme: string;
-  voteResults: { playerId: string; name: string; voteCount: number; themeGuess: string; }[];
+  voteResults: { playerId: string; playerName: string; voteCount: number; themeGuess: string; }[];
   onEndSession: () => void; // Callback for when the player clicks "End Session"
 }
 
@@ -47,7 +47,7 @@ const HostSessionEndView: React.FC<HostSessionEndViewProps> = ({
         </div>
         {voteResults.map((player) => (
           <div key={player.playerId} className="grid grid-cols-3 mb-2">
-            <span>{player.name}</span>
+            <span>{player.playerName}</span>
             <span>{player.voteCount}</span>
             <span>{player.themeGuess}</span>
           </div>

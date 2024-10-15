@@ -7,11 +7,12 @@ interface PlayerVotingProps {
   playerId: string;
   themes: string[];
   players: Player[];
+  voted: boolean;
   onLeaveClick: () => void;
   onSubmitGuess: (selectedInkposter: string, selectedTheme: string) => void; // Submission handler
 }
 
-const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, players, onLeaveClick, onSubmitGuess }) => {
+const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, players, voted, onLeaveClick, onSubmitGuess }) => {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);   // Track the selected theme
   const [selectedInkposter, setSelectedInkposter] = useState<string | null>(null); // Track the selected player (Inkposter)
 
@@ -75,9 +76,12 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, playe
 
       {/* Submit Button */}
       <Button
-        className="py-1 px-2 rounded absolute top-4 right-4 bg-blue-500 hover:bg-blue-600"
+        className={`py-1 px-2 rounded absolute top-4 right-4 ${
+          voted ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+        }`}
         type="button"
         onClick={handleSubmit}
+        disabled={voted} // Disable the button if voted is true
       >
         Submit Guess
       </Button>

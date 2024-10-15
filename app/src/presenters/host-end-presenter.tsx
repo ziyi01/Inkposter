@@ -21,7 +21,12 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({model}) => {
 
     return (
         <div>
-            <HostSessionEndView inkposter={model.getPlayer(model.sessionHost.inkposterId)} inkposterVotedOut={model.sessionHost.inkposterVotedOut} correctTheme={model.sessionHost.theme} voteResults={model.sessionHost.voteResults} onEndSession={onEndGame}/>
+            <HostSessionEndView
+                inkposter={model.getPlayer(model.sessionHost.inkposterId)}
+                inkposterVotedOut={model.sessionHost.inkposterVotedOut}
+                correctTheme={model.sessionHost.theme}
+                voteResults={model.sessionHost.voteResults}
+                onEndSession={onEndGame}/>
         </div>
     );
 }

@@ -61,8 +61,9 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     return <div>
         <PlayerVotingView
             playerId={model.playerId}
-            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes]}
+            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes].sort(() => Math.random() - 0.5)}
             players={model.sessionHost.players}
+            voted={voted}
             onLeaveClick={handleLeaveClick}
             onSubmitGuess={onVote}
         />
