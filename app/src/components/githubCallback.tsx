@@ -4,7 +4,7 @@ import { loginUserDB } from '../server-requests';
 import Cookies from 'js-cookie';
 import { UserModel } from '../userModel';
 
-interface YourComponentProps {
+interface AppProps {
   model: UserModel;
 }
 
@@ -19,6 +19,7 @@ const GitHubCallback: React.FC = () => {
     const code = urlParams.get('code');
     console.log(code)
 
+
     if (code) {
       const handleLogin = async () => {
         try {
@@ -29,7 +30,6 @@ const GitHubCallback: React.FC = () => {
           // Store the userId in a cookie for persistence
           Cookies.set('userId', uniqueId, { expires: 7 }); // Expires in 7 days
           Cookies.set('isAuthenticated', 'true', { expires: 7 });
-          model.
 
           // Redirect to homepage
           navigate('/homepage'); 
