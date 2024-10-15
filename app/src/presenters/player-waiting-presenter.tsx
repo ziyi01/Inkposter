@@ -23,11 +23,13 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
         socket.on('host-left', () => {  // Host left room
             model.reset();
             debug("Host left");
+            alert("Host disconnected.");
             navigate('/');
         });
 
         return () => {
             socket.off('game-started');
+            socket.off('host-left');
         };
     },[]);
 

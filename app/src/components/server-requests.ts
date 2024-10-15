@@ -4,6 +4,8 @@
  *  - Content generation (OpenAI)
  */
 
+var debug = require('debug')('app:server-requests');
+
 // -----------------
 // Database requests
 // -----------------
@@ -130,11 +132,13 @@ export async function updatePreviousThemesDB(userID:string, currentTheme:string)
 /**
  * 
  * @param {*} userID 
- * @param {json} scores 
+ * @param {*} scores 
  * @param {string} drawing 
  * @returns string, confirmation
  */
-export async function addSessionResults(userID:string, scores:{}, drawing:string) { // TODO: Hej Jessica!
+export async function addSessionResults(userID:string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}}, drawing:string) {
+    debug("Persist session results: ", scores, drawing);
+
     const request = new Request(`/api/user/${userID}/sessionResults`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},

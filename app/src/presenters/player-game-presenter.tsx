@@ -22,11 +22,13 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
       socket.on('host-left', () => {  // Host left room
         debug("Host left");
         model.reset();
+        alert("Host disconnected.");
         navigate('/');
       });
 
         return () => {
-            socket.off('game-ended');
+          socket.off('game-ended');
+          socket.off('host-left');
         }
     }, []); 
     

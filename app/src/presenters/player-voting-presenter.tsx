@@ -20,15 +20,19 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
             debug("set inkposterVotedOut in model: ", data.inkposterVotedOut);
             model.sessionHost.inkposterVotedOut = (data.inkposterVotedOut);
+            model.setProfileStats(data.inkposterVotedOut);
             navigate('/player/results');
         });
+
         socket.on('host-left', () => {  // Host left room
             model.reset();
+            alert("Host disconnected.");
             navigate('/');
         });
 
         return () => {
             socket.off('voting-ended');
+            socket.off('host-left');
         }
     }, []);
 
