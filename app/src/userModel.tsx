@@ -1,6 +1,6 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
-import { addSessionResults } from "./components/server-requests";
+import { updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
 
 var debug = require('debug')('app:userModel');
 
@@ -123,6 +123,11 @@ export class UserModel {
             this.sessionHost.playersData = playerData;
 
             this.previousThemes.push(theme);
+            updatePreviousThemesDB(this.playerId, theme).catch(handleErr); // not crucial, only to make generated params better
+        }
+
+        function handleErr(err:Error) {
+            debug("Persist failed: ", err);
         }
     }
 
@@ -141,7 +146,7 @@ export class UserModel {
                 playerId: player.playerId,
                 playerName: player.name,
                 voteCount: 0,
-                themeGuess: ""
+                themeGuess: "-"
             }
         });
 
@@ -235,7 +240,7 @@ export class UserModel {
             }
         }
 
-        addSessionResults(this.playerId, this.profileStats, "placeholder.png");
+        addSessionResultsDB(this.playerId, this.profileStats, "placeholder.png");
     }
 
     reset() {

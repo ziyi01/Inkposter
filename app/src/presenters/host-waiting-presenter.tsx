@@ -108,8 +108,8 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
       }
 
     function handleError(e:Error) {
-        // TODO! Alert user that somehting went wrong and they should try again (most probably wrong syntax from openai)
         debug("Something went wrong", e);
+        alert("Something went wrong during theme generation. Please try again!");
     }
 
     return <div>

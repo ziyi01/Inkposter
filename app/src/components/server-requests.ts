@@ -136,7 +136,7 @@ export async function updatePreviousThemesDB(userID:string, currentTheme:string)
  * @param {string} drawing 
  * @returns string, confirmation
  */
-export async function addSessionResults(userID:string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}}, drawing:string) {
+export async function addSessionResultsDB(userID:string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}}, drawing:string) {
     debug("Persist session results: ", scores, drawing);
 
     const request = new Request(`/api/user/${userID}/sessionResults`, {
