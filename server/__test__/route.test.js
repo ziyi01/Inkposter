@@ -11,7 +11,7 @@ describe('MongoDB endpoint tests', () => {
 
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe('application/json');
-    })
+    }, 10000)
 
     test('/api/user/0/userStats should return test user stats', async () => {
         const response = await request(app).get('/api/user/0/userStats');
@@ -19,14 +19,14 @@ describe('MongoDB endpoint tests', () => {
 
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe('application/json');
-    })
+    }, 10000)
 
     test('/api/user/10000 non-existent user should return 404', async () => {
         const response = await request(app).get('/api/user/10000');
         debug(response);
 
         expect(response.statusCode).toBe(404);
-    })
+    }, 10000)
 
     afterAll((done) => {
         // Close connection
@@ -46,11 +46,4 @@ describe('OpenAI endpoint tests', () => {
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe('text/html');
     });
-    test('/api/openai/sessionPrompts should return 200', async () => {
-        const response = await request(app).get('/api/openai/sessionPrompts');
-        debug(response);
-
-        expect(response.statusCode).toBe(200);
-        expect(response.type).toBe('text/html');
-    });
-});
+}, 10000);

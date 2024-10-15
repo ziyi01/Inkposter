@@ -1,16 +1,17 @@
 require('dotenv').config();
 
+const debug = require('debug')('server:app');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 
 var db = require('./db')
 var apiRouter = require('./routes/api');
 var app = express();
 
-app.use(logger('dev'));
+var logger = require('morgan'); // HTTP request logger middleware for node.js
+app.use(logger('dev', { stream: { write: function(msg) { debug(msg); } }}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

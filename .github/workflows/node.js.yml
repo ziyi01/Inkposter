@@ -6,6 +6,7 @@ name: Node.js CI
 env:
   MONGODB_URI: ${{secrets.MONGODB_URI}}
   OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+  CI: false
 
 on:
   pull_request:

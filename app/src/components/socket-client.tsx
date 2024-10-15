@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import { Player, PlayerCanvas } from "./playerInterface";
 var debug = require('debug')('app:socket');
 
 export const socket = io();
@@ -17,13 +18,12 @@ export function hostRoom() {
     socket.emit('host-room');
 }
 
-export function startGame(roomId:string, players: {playerName: string, prompt: string}[]) {
-    // A player has {playerName, prompt}, prompt is '' or "inkposter" if evil
-    socket.emit('start-game', {roomId: roomId, players: players});
+export function startGame(roomId:string, players: {playerId: string, prompt: string, inkposter: boolean}[], playersToClient:Player[], theme:string, fake_themes:string[]) {
+    socket.emit('start-game', {roomId: roomId, players: players, playersToClient: playersToClient, theme:theme, fake_themes:fake_themes});
 }
 
-export function votingEnded(roomId:string, result:string) {
-    socket.emit('end-voting', {roomId: roomId, result: result});
+export function votingEnded(roomId:string, inkposterVotedOut:boolean) {
+    socket.emit('end-voting', {roomId: roomId, inkposterVotedOut: inkposterVotedOut});
 }
 
 export function endGame(roomId:string) {
@@ -35,14 +35,18 @@ export function closeGame(roomId:string) {
 }
 
 // Player-side
-export function joinRoom(roomId:string, playerName:string) {
-    socket.emit('join-room', {roomId: roomId, playerName: playerName});
+export function joinRoom(roomId:string, playerId:string, playerName:string) {
+    socket.emit('join-room', {roomId: roomId, playerId: playerId, playerName: playerName});
 }
 
-export function sendCanvas(roomId:string, playerName:string, canvas:string) {
-    socket.emit('send-canvas', {roomId: roomId, playerName: playerName, canvas: canvas});
+export function sendCanvas(roomId:string, playerId:string, canvas:string) {
+    socket.emit('send-canvas', {roomId: roomId, playerId: playerId, canvas: canvas});
 }
 
-export function sendVoting(roomId:string, playerName:string, vote:string, themeVote:string) {
-    socket.emit('send-voting', {roomId: roomId, playerName: playerName, vote: vote, themeVote: themeVote});
+export function sendVoting(roomId:string, playerId:string, votePlayer:string, voteTheme:string) {
+    socket.emit('send-voting', {roomId: roomId, playerId: playerId, votePlayer: votePlayer, voteTheme: voteTheme});
+}
+
+export function quitGame(roomId:string, playerId:string) {
+    socket.emit('quit-game', {roomId: roomId, playerId: playerId});
 }

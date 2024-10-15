@@ -2,7 +2,7 @@ var debug = require('debug')('server:openai');
 var OpenAI = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function generateSessionParams(previousThemes="", fakeThemeCount=3, playerCount=8) {
+async function generateSessionParams(previousThemes="", fakeThemeCount=3, playerCount=9) {
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -46,11 +46,11 @@ async function generateUsername() {
             
                 {
                     role: "system",
-                    content: "To the point, respond with the requested username and no more. All lowercase. Spaces should be replaced by underscore."
+                    content: "To the point, respond with the requested username and no more. Write with camel-case, no spaces."
                 },
                 {
                     role: 'assistant',
-                    content: 'elegant_zebra'
+                    content: 'ElegantZebra'
                 },
                 {
                     role: "user",

@@ -1,51 +1,32 @@
 import React from 'react';
+import Button from '../components/button';
+import { Player } from '../components/playerInterface';
 
-interface Player {
-  name: string;
-  profilePicture: string;
-  votesAsInkposter: number; // Number of players that voted this player as inkposter
-  guessedTheme: string; // What theme this player guessed
-}
 
-interface HostSessionEndProps {
-  inkposter: Player; // The actual inkposter player
-  majorityVotedInkposter: boolean; // Whether the majority guessed the inkposter
-  playerWon: boolean; // Whether the local player won or not
-  playerIsInkposter: boolean; // Whether the local player was the inkposter
-  correctTheme: string; // The actual correct theme of the game
-  inkposterTheme: string; // The inkposter's theme
-  playerGuessedThemeCorrect: boolean; // Whether the local player guessed the theme correctly
-  players: Player[]; // The list of players, with their votes and guesses
-  onPlayAgain: () => void; // Callback for when the player clicks "Play Again"
+interface HostSessionEndViewProps {
+  inkposter: string;
+  inkposterVotedOut: boolean;
+  correctTheme: string;
+  voteResults: { playerId: string; playerName: string; voteCount: number; themeGuess: string; }[];
   onEndSession: () => void; // Callback for when the player clicks "End Session"
 }
 
-const HostSessionEnd: React.FC<HostSessionEndProps> = ({
+const HostSessionEndView: React.FC<HostSessionEndViewProps> = ({
   inkposter,
-  majorityVotedInkposter,
-  playerIsInkposter,
-  playerWon,
+  inkposterVotedOut,
   correctTheme,
-  inkposterTheme,
-  playerGuessedThemeCorrect,
-  players,
-  onPlayAgain,
+  voteResults,
   onEndSession,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-8 py-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-white px-8 py-4">
+
       {/* Inkposter Section */}
       <h1 className="text-2xl font-bold mb-2">
-        <span className="text-red-500">{inkposter.name}</span> was the inkposter.
+        <span className="text-red-500">{inkposter}</span> was the inkposter.
       </h1>
       <p className="text-lg mb-6">
-        {playerIsInkposter
-          ? playerWon
-            ? "Good job fooling your friends!"
-            : "Better luck next time."
-          : playerWon
-          ? "Good job finding the inkposter!"
-          : "Better luck next time."}
+        {inkposterVotedOut? "Inkposter was voted out!" : "Inkposter won!"}
       </p>
 
       {/* Theme Section */}
@@ -53,14 +34,7 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({
         The theme was <span className="text-red-500">{correctTheme}</span>.
       </h2>
       <p className="text-lg mb-6">
-        {playerGuessedThemeCorrect ? (
-          "Good job!"
-        ) : (
-          <>
-            Seriously? It wasn't that difficult. The inkposter had the theme{" "}
-            <span className="text-red-500">{inkposterTheme}</span>.
-          </>
-        )}
+        It wasn't that difficult.
       </p>
 
       {/* Results Table */}
@@ -71,33 +45,30 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({
           <span className="font-bold">Votes</span>
           <span className="font-bold">Guess</span>
         </div>
-        {players.map((player) => (
-          <div key={player.name} className="grid grid-cols-3 mb-2">
-            <span>{player.name}</span>
-            <span>{player.votesAsInkposter}</span>
-            <span>{player.guessedTheme}</span>
+        {voteResults.map((player) => (
+          <div key={player.playerId} className="grid grid-cols-3 mb-2">
+            <span>{player.playerName}</span>
+            <span>{player.voteCount}</span>
+            <span>{player.themeGuess}</span>
           </div>
         ))}
       </div>
 
       {/* Buttons */}
       <div className="flex gap-4 mt-6">
-        <button
-          onClick={onPlayAgain}
-          className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
-        >
+         {/* 
+        <Button onClick={onPlayAgain}>
           Play again
-        </button>
-        <button
-          onClick={onEndSession}
-          className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
-        >
+        </Button>
+         */}
+        
+        <Button onClick={onEndSession}>
           End Session
-        </button>
+        </Button>
       </div>
     </div>
   );
 };
 
-export default HostSessionEnd;
+export default HostSessionEndView;
 

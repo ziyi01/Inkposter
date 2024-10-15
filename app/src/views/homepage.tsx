@@ -26,12 +26,35 @@ const HomePage: React.FC<HomePageProps> = ({
         <h1 className="text-6xl font-bold text-white mb-4">Color Your Friends Surprised!</h1>
         <h2 className="text-3xl font-semibold text-purple-300 mb-6">PLAY NOW</h2>
 
-        {/* Remove absolute positioning here */}
-        <div className="flex space-x-4 mb-8"> {/* Added margin-bottom for spacing */}
-          <Link to="/host-game" className="text-white bg-orange-500 px-4 py-2 rounded hover:bg-orange-600 transition">
-            Host Game
-          </Link>
-          {!isJoinInputVisible ? (
+
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-white text-center">
+          <h1 className="text-4xl font-bold mb-4">I</h1>
+        </div>
+      </div>
+
+      <div className="absolute bottom-4 left-4 flex space-x-4">
+        <Link to="/host/game" className="text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition">
+          Host Game
+        </Link>
+        {!isJoinInputVisible ? (
+          <button
+            onClick={onJoinClick}
+            className="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition"
+          >
+            Join Game
+          </button>
+        ) : (
+          <form onSubmit={onSubmit} className="flex">
+            <input
+              type="text"
+              value={joinCode}
+              onChange={onInputChange}
+              autoFocus
+              className="px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-yellow-300"
+              placeholder="Enter game code"
+            />
+            
             <button
               onClick={onJoinClick}
               className="text-white bg-purple-500 px-4 py-2 rounded hover:bg-purple-600 transition"

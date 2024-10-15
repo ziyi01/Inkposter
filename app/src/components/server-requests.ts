@@ -1,8 +1,10 @@
 /**
- * Fetch reqeusts to server to deal with
+ * Fetch requests to server to deal with
  *  - Persisted data (MongoDB)
  *  - Content generation (OpenAI)
  */
+
+var debug = require('debug')('app:server-requests');
 
 // -----------------
 // Database requests
@@ -17,7 +19,7 @@
  * @param {string} avatar 
  * @returns string, confirmation
  */
-async function loginUserDB(userID, username="new_user", avatar="") {
+export async function loginUserDB(userID:string, username:string="new_user", avatar:string="") {
     const request = new Request("/api/user", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -39,7 +41,7 @@ async function loginUserDB(userID, username="new_user", avatar="") {
  * @param {number, string} userID 
  * @returns json, user information
  */
-async function getUserDB(userID) {
+export async function getUserDB(userID:string) {
     var response = await fetch(`/api/user/${userID}`);
     if (response.status === 200) {
         return await response.json();
@@ -53,7 +55,7 @@ async function getUserDB(userID) {
  * @param {*} userID 
  * @returns json, user stats
  */
-async function getUserStatsDB(userID) {
+export async function getUserStatsDB(userID:string) {
     var response = await fetch(`/api/user/${userID}/userStats`);
     if (response.status === 200) {
         return await response.json();
@@ -70,7 +72,7 @@ async function getUserStatsDB(userID) {
  * @param {string} username 
  * @returns string, confirmation
  */
-async function updateUsernameDB(userID, username) {
+export async function updateUsernameDB(userID:string, username:string) {
     const request = new Request(`/api/user/${userID}/username`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},
@@ -91,7 +93,7 @@ async function updateUsernameDB(userID, username) {
  * @param {string} avatar 
  * @returns string, confirmation
  */
-async function updateAvatarDB(userID, avatar) {
+export async function updateAvatarDB(userID:string, avatar:string) {
     const request = new Request(`/api/user/${userID}/avatar`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},
@@ -112,7 +114,7 @@ async function updateAvatarDB(userID, avatar) {
  * @param {string} currentTheme 
  * @returns string, confirmation
  */
-async function updatePreviousThemesDB(userID, currentTheme) {
+export async function updatePreviousThemesDB(userID:string, currentTheme:string) {
     const request = new Request(`/api/user/${userID}/previousThemes`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},
@@ -130,11 +132,13 @@ async function updatePreviousThemesDB(userID, currentTheme) {
 /**
  * 
  * @param {*} userID 
- * @param {json} scores 
+ * @param {*} scores 
  * @param {string} drawing 
  * @returns string, confirmation
  */
-async function addSessionResults(userID, scores, drawing) {
+export async function addSessionResultsDB(userID:string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}}, drawing:string) {
+    debug("Persist session results: ", scores, drawing);
+
     const request = new Request(`/api/user/${userID}/sessionResults`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},
@@ -156,7 +160,7 @@ async function addSessionResults(userID, scores, drawing) {
  * @param {*} userID 
  * @returns string, confirmation
  */
-async function deleteUserDB(userID) {
+export async function deleteUserDB(userID:string) {
     const request = new Request(`/api/user/${userID}`, {
         method: "DELETE",
         headers: {'Content-Type': 'application/json'}
@@ -178,7 +182,7 @@ async function deleteUserDB(userID) {
  * 
  * @returns string, generated username
  */
-async function getGeneratedUsername() {
+export async function getGeneratedUsername() {
     var response = await fetch("/api/openai/username");
     if (response.status === 200) {
         return response.text();
@@ -191,7 +195,7 @@ async function getGeneratedUsername() {
  * 
  * @returns json, generated session paramn
  */
-async function getGeneratedSessionParams(previousThemes) {
+export async function getGeneratedSessionParams(previousThemes:string[]) {
     const request = new Request(`/api/openai/sessionParams`, {
         method: "PATCH",
         headers: {'Content-Type': 'application/json'},
@@ -205,18 +209,3 @@ async function getGeneratedSessionParams(previousThemes) {
         throw new Error(await response.text(), { cause: response.status });
     }
 }
-
-
-// Export db functions
-exports.getUserDB = getUserDB;
-exports.loginUserDB = loginUserDB;
-exports.getUserStatsDB = getUserStatsDB;
-exports.updateUsernameDB = updateUsernameDB;
-exports.updateAvatarDB = updateAvatarDB;
-exports.updatePreviousThemesDB = updatePreviousThemesDB;
-exports.addSessionResults = addSessionResults;
-exports.deleteUserDB = deleteUserDB;
-
-// Export openai functions
-exports.getGeneratedUsername = getGeneratedUsername;
-exports.getGeneratedSessionParams = getGeneratedSessionParams;

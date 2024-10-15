@@ -24,7 +24,7 @@ A web browser-based multiplayer party game for 3-9 players based on skribbl.io, 
         <li><a href="#tests">Tests</a></li>
       </ul>
     <li>
-      <a href="#file-structure">File structure</a>
+      <a href="#code-architecture">Code architecture</a>
       <ul>
         <li><a href="#front-end">Front-end</a></li>
         <li><a href="#back-end">Back-end</a></li>
@@ -42,8 +42,10 @@ At the start of the game everyone receives a prompt that relates to a theme, exc
 
 When the timer runs out voting begins. The players vote what they suspect the theme is and who they think the `Inkposter` is. If the majority of players vote for the `Inkposter` then they're caught!
 
+It is recommended to play the game using your phone and host on a big screen (e.g. TV, computer screen, livestream).
+
 ### Design and Demo
-The layout is designed in Figma following: https://www.figma.com/design/V4OLczauxQRw13nV0fefb7/Inkposter-Design?node-id=2407-292&node-type=frame&t=S5xK8qXW5BX97cNm-0
+The layout is designed in Figma following: https://www.figma.com/design/V4OLczauxQRw13nV0fefb7/Inkposter-Design?node-id=2407-292&node-type=frame&t=S5xK8qXW5BX97cNm-0 (Also see: [Code architecture](#code-architecture)).
 
 A demo is deployed on Heroku: https://inkposter-917d97c7bb64.herokuapp.com.
 
@@ -51,7 +53,7 @@ A demo is deployed on Heroku: https://inkposter-917d97c7bb64.herokuapp.com.
 
 ## Setup
 Prerequisites:
-- You will need env variables `MongoDB_URI` and `OpenAPI_KEY` set.
+- You will need a `.env` file in the root folder with environment variables: `MONGODB_URI`, `OPENAI_API_KEY` and `NODE_ENV`.
 
 ### Built with
 - React
@@ -61,20 +63,19 @@ Prerequisites:
 - Socket.io
 - TailwindCSS
 
+ <a href="https://www.flaticon.com/free-icons/ink-cartridge" title="ink cartridge icons">Favicon created by smalllikeart - Flaticon</a> and <a href="https://github.com/vinothpandian/react-sketch-canvas" title="react-sketch-canvas">react-sketch-canvas</a> package by Vinoth Pandian.
+
 ### Installation
 To start the REST API server and the client application:
 
 **Docker-compose (recommended during development)**
-
 The docker image for Inkposter is deployed on: https://hub.docker.com/repository/docker/ziyi01/inkposter/.
 
-Use `docker pull ziyi01/inkposter` to pull the docker image.
-
-1. Build the image using `docker-compose.yml` from root
+1. Build the image using `docker-compose.yml` from root:
 ```
 $ docker-compose build
 ```
-2. Run the development environment/docker container on `localhost:3000`
+1. Run the development environment/docker container on `localhost:3000`:
 ```
 $ docker-compose up -d
 ```
@@ -83,35 +84,49 @@ Use `docker-compose down -v` to close the container process.
 
 **npm CLI**
 
-1. Install npm dependencies with
+1. Install npm dependencies with:
 ```
 $ npm run dev-build
 ```
-2. Start the server on localhost with
+1. Start the server on `localhost:3000` with:
+```
+$ npm start
+```
+
+To run either the frontend or the backend application separately, enter the `app` or `server` folder:
+1. Install npm dependencies with:
+```
+$ npm install
+```
+2. For the frontend application `app` run:
+```
+$ npm run build
+```
+3. Run the application with:
 ```
 $ npm start
 ```
 
 ### API endpoints
-| **Method**   | **URL**                            | **Description**   |
-|--------------|------------------------------------|-------------------|
-| `POST`       | `/user`                            |                   |
-| `GET`        | `/user/:userID`                    |                   |
-| `GET`        | `/user/:userID/userStats`          |                   |
-| `PUT`        | `/user/:userID/username`           |                   |
-| `PUT`        | `/user/:userID/avatar`             |                   |
-| `PUT`        | `/user/:userID/previousTheme`      |                   |
-| `PUT`        | `/user/:userID/sessionResults`     |                   |
-| `DELETE`     | `/user/:userID/delete`             |                   |
-| `GET`        | `/openai/username`                 |                   |
-| `GET`        | `/openai/sessionPrompts`           |                   |
+| **Method**   | **URL**                        | **Description**                                                        |
+|--------------|--------------------------------|------------------------------------------------------------------------|
+| `POST`       | `/user`                        | Create user with unique userID. If user exists, return a confirmation. |
+| `GET`        | `/user/:userID`                | Get information about user `userID` from database                      |
+| `GET`        | `/user/:userID/userStats`      | Get stats from user's previous games from database                     |
+| `PATCH`      | `/user/:userID/username`       | Update username of user `userID` in database                           |
+| `PATCH`      | `/user/:userID/avatar`         | Upload avatar to user `userID` in database                             |
+| `PATCH`      | `/user/:userID/previousTheme`  | Add current game theme to user `userID`'s previous themes              |
+| `PATCH`      | `/user/:userID/sessionResults` | Add results of the game to user `userID`                               |
+| `DELETE`     | `/user/:userID`                | Delete user of id `userID`                                             |
+| `GET`        | `/openai/username`             | Return a unique username generated by OpenAI                           |
+| `PATCH`      | `/openai/sessionParams`        | Generates theme and prompts for the game                               |
 
 ### Socket communication
 Socket.io is used for real-time communication with the server and clients during the game. The clients are divided into `host` (the client whose display is used to show all drawings and triggers start of the game) and `players` (usually on a phone, where they draw and can see their role and prompt). 
 
 Below shows the events emitted and what each role does in the communication chain:
 
-<img src=".github/Socket.drawio.png" alt="socket-communication" width="70%"/>
+<img src=".github/Socket.drawio.png" alt="socket-communication" width="80%"/>
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
@@ -128,9 +143,10 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 
 | **File**             | **Test**                                       | **Type**            |
 |----------------------|------------------------------------------------|---------------------|
-| `App.test.tsx`       | `App renders login page properly`              | UI test             |
-| `App.test.tsx`       | `Login button fires off callback`              | UI test             |
-| `App.test.tsx`       | `Redirect to /login when app rendered`         | UI test             |
+| `App.test.tsx`       | `Login page has login button`                  | UI test             |
+| `App.test.tsx`       | `Homepage has join game button`                | UI test             |
+| `App.test.tsx`       | `Profile has log out button`                   | UI test             |
+| `App.test.tsx`       | `Redirect to /login when rendered`             | UI test             |
 | `db.test.js`         | `Create and delete user`                       | Database test       |
 | `db.test.js`         | `Retrieve user stats`                          | Database test       |
 | `db.test.js`         | `Update username and retrieve user`            | Database test       |
@@ -142,16 +158,26 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 
 <p align="right">(<a href="#readme-top">Back to Top</a>)</p>
 
-## File structure
+## Code architecture
+File structure in the project that is used to build the application.
+
 ### Front-end
 The front-end application uses a MVP-architecture. The code is divided into folders `components` (for repeated components and cripts), `presenters` and `views`. `userModel.tsx` is the model for the application and the app is mounted using `App.tsx` and `index.tsx`.
 
 ```
-└── src/
+└── app/src/
     ├── components/
-    │   ├── socket-client.js
-    │   └── toolbar.tsx
+    │   ├── button.tsx
+    │   ├── canvas.tsx
+    │   ├── githubCallback.tsx
+    │   ├── layout.tsx
+    │   ├── playerInterface.ts
+    │   ├── popup.tsx
+    │   ├── server-requests.ts
+    │   ├── timer.tsx
+    │   └── socket-client.tsx
     ├── presenters/
+    │   ├── homepage-presenter.tsx
     │   ├── host-end-presenter.tsx
     │   ├── host-game-presenter.tsx
     │   ├── host-voting-presenter.tsx
@@ -168,6 +194,7 @@ The front-end application uses a MVP-architecture. The code is divided into fold
     │   ├── host-waiting.tsx
     │   ├── loading.tsx
     │   ├── login-page.tsx
+    │   ├── mock-login.tsx
     │   ├── player-game.tsx
     │   ├── player-session-end.tsx
     │   ├── player-voting.tsx
