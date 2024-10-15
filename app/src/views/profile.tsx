@@ -7,7 +7,7 @@ interface ProfilePageProps {
 const ProfilePage: React.FC<ProfilePageProps> = ({ handleLogout }) => {
   const [name, setName] = useState<string>('John Doe');
 
-  // Sample data for points and their values
+  // points and their values
   const points = [
     { title: 'Point 1', value: 'Value 1' },
     { title: 'Point 2', value: 'Value 2' },
@@ -23,7 +23,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ handleLogout }) => {
           <h3 className="text-2xl text-white font-semibold mb-6">{name}</h3>
         </div>
         
-        {/* Tracking Points Boxes */}
+        {/* Point tracking boxes */}
         <div className="grid grid-cols-2 gap-4">
           {points.map((point, index) => (
             <div
