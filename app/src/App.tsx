@@ -4,7 +4,7 @@ import { UserModel } from './userModel';
 import { socket, closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 import ProfileNavBar from './components/navbar';
-const LoginPage = React.lazy(() => import('./views/login-page'));
+const LoginPage = React.lazy(() => import('./presenters/login-presenter'));
 const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
 const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
