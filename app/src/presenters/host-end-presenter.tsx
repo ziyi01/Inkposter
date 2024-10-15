@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // import components
-import HostEndView from '../views/host-session-end';
+import HostSessionEndView from '../views/host-session-end';
 import { UserModel } from '../userModel';
 import { closeGame } from '../components/socket-client';
 
@@ -21,7 +21,12 @@ const HostSessionEnd: React.FC<HostSessionEndProps> = ({model}) => {
 
     return (
         <div>
-            {/* Display HostEndView */}
+            <HostSessionEndView
+                inkposter={model.getPlayer(model.sessionHost.inkposterId)}
+                inkposterVotedOut={model.sessionHost.inkposterVotedOut}
+                correctTheme={model.sessionHost.theme}
+                voteResults={model.sessionHost.voteResults}
+                onEndSession={onEndGame}/>
         </div>
     );
 }

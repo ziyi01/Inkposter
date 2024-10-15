@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // import components
 import HostVotingView from '../views/host-voting';
 import { UserModel } from '../userModel';
 import { votingEnded, socket } from '../components/socket-client';
+import Timer from '../components/timer';
 var debug = require('debug')('app:host-voting-presenter');
 
 interface HostVotingProps {
@@ -14,6 +15,12 @@ interface HostVotingProps {
 const HostVoting: React.FC<HostVotingProps> = ({model}) => {
     const [voteCount, setVoteCount] = useState(0);
     const navigate = useNavigate();
+
+    const playerNames = model.sessionHost.players.reduce((acc: {[key: string]: string}, player) => {
+        acc[player.playerId] = player.name;
+        return acc;
+      }, {});
+
 
     useEffect(() => {
         model.initVoting();
@@ -43,8 +50,21 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
     /*
     */
 
+  const handleTimerEnd = () => {
+    debug("Timer ended, navigating to results");
+    const finalResult = model.calculateFinalResult();
+    votingEnded(model.roomId, finalResult);
+    navigate('/host/results');
+  };
+
     return (
-        <HostVotingView />
+        <HostVotingView playerCanvases={model.sessionHost.playersData}
+        playerNames={playerNames}
+        timer={<Timer
+              initialTime={10}
+              onTimerEnd={handleTimerEnd}
+            />}
+        />
     );
 }
 

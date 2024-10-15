@@ -5,7 +5,7 @@ import {
   ReactSketchCanvas,
   type ReactSketchCanvasRef,
 } from "react-sketch-canvas";
-import { useRef, useState, ChangeEvent } from "react";
+import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { FaPen, FaEraser, FaUndo, FaRedo, FaTrashAlt } from 'react-icons/fa';
 
 interface CanvasProps {
@@ -18,6 +18,34 @@ const Canvas: React.FC<CanvasProps> = ({ onDraw }) => {
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [eraserWidth, setEraserWidth] = useState(10);
   const [strokeColor, setStrokeColor] = useState("#000000");
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+
+      const reservedHeight = 220;
+      const availableHeight = windowHeight - reservedHeight;
+
+      const aspectRatio = 16 / 9;
+
+      let newHeight = availableHeight;
+      let newWidth = newHeight / aspectRatio;
+
+      if (newWidth > windowWidth) {
+        newWidth = windowWidth;
+        newHeight = newWidth * aspectRatio;
+      }
+
+      setCanvasSize({ width: newWidth, height: newHeight });
+    };
+
+    window.addEventListener('resize', updateCanvasSize);
+    updateCanvasSize();
+
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, []);
 
   const handleEraserClick = () => {
     setEraseMode(true);
@@ -58,12 +86,12 @@ const Canvas: React.FC<CanvasProps> = ({ onDraw }) => {
   };
 
   return (
-    <div>
-      {/* Canvas */}
-      <div className="rounded-md mb-6 p-4">
+    <div className="flex flex-col items-center justify-center">
+      {/* Canvas Container */}
+      <div style={{ width: `${canvasSize.width}px`, height: `${canvasSize.height}px` }}>
         <ReactSketchCanvas
-          width="600px"
-          height="400px"
+          width={`${canvasSize.width}px`}
+          height={`${canvasSize.height}px`}
           strokeColor={strokeColor}
           ref={canvasRef}
           strokeWidth={strokeWidth}
@@ -74,100 +102,101 @@ const Canvas: React.FC<CanvasProps> = ({ onDraw }) => {
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="fixed bottom-0 left-0 w-full bg-gray-800 p-2 shadow-md flex items-center gap-2 justify-center flex-nowrap">
+        <div className="flex items-center gap-2 justify-center">
+          {/* Stroke Color Picker */}
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={strokeColor}
+              onChange={handleStrokeColorChange}
+              className="w-8 h-8 p-1 rounded-full sm:w-10 sm:h-10"
+            />
+          </div>
 
-        {/* Stroke Color Picker */}
-        <div className="flex items-center gap-2">
-          <input
-            type="color"
-            value={strokeColor}
-            onChange={handleStrokeColorChange}
-            className="w-10 h-10 p-1 rounded-full"
-          />
+          {/* Pen Icon */}
+          <button
+            type="button"
+            className={`text-white bg-gray-600 p-1 sm:p-2 rounded-full transition-colors hover:bg-blue-500 ${eraseMode ? "" : "border-2 border-blue-500"}`}
+            onClick={handlePenClick}
+          >
+            <FaPen className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+
+          {/* Eraser Icon */}
+          <button
+            type="button"
+            className={`text-white bg-gray-600 p-1 sm:p-2 rounded-full transition-colors hover:bg-blue-500 ${eraseMode ? "border-2 border-blue-500" : ""}`}
+            onClick={handleEraserClick}
+          >
+            <FaEraser className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+
+          {/* Eraser Width Control */}
+          {eraseMode && (
+            <div className="flex items-center gap-2">
+              <label htmlFor="eraserWidth" className="text-white text-sm sm:text-base">
+                Eraser Width
+              </label>
+              <input
+                type="range"
+                className="form-range w-16 sm:w-24"
+                min="1"
+                max="20"
+                step="1"
+                id="eraserWidth"
+                value={eraserWidth}
+                onChange={handleEraserWidthChange}
+              />
+            </div>
+          )}
+
+          {/* Stroke Width Control */}
+          {!eraseMode && (
+            <div className="flex items-center gap-2">
+              <label htmlFor="strokeWidth" className="text-white text-sm sm:text-base">
+                Stroke Width
+              </label>
+              <input
+                type="range"
+                className="form-range w-16 sm:w-24"
+                min="1"
+                max="20"
+                step="1"
+                id="strokeWidth"
+                value={strokeWidth}
+                onChange={handleStrokeWidthChange}
+              />
+            </div>
+          )}
+
+          {/* Undo Icon */}
+          <button
+            type="button"
+            className="text-white bg-gray-600 p-1 sm:p-2 rounded-full transition-colors hover:bg-blue-500"
+            onClick={handleUndoClick}
+          >
+            <FaUndo className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+
+          {/* Redo Icon */}
+          <button
+            type="button"
+            className="text-white bg-gray-600 p-1 sm:p-2 rounded-full transition-colors hover:bg-blue-500"
+            onClick={handleRedoClick}
+          >
+            <FaRedo className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+
+          {/* Clear Icon */}
+          <button
+            type="button"
+            className="text-white bg-red-600 p-1 sm:p-2 rounded-full transition-colors hover:bg-red-700"
+            onClick={handleClearClick}
+          >
+            <FaTrashAlt className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
         </div>
-
-        {/* Pen Icon */}
-        <button
-          type="button"
-          className={`text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500 ${eraseMode ? "" : "border-2 border-blue-500"}`}
-          onClick={handlePenClick}
-        >
-          <FaPen size={20} />
-        </button>
-
-        {/* Eraser Icon */}
-        <button
-          type="button"
-          className={`text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500 ${eraseMode ? "border-2 border-blue-500" : ""}`}
-          onClick={handleEraserClick}
-        >
-          <FaEraser size={20} />
-        </button>
-
-        {/* Eraser Width Control */}
-        {eraseMode && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="eraserWidth" className="text-white">
-              Eraser Width
-            </label>
-            <input
-              type="range"
-              className="form-range w-24"
-              min="1"
-              max="20"
-              step="1"
-              id="eraserWidth"
-              value={eraserWidth}
-              onChange={handleEraserWidthChange}
-            />
-          </div>
-        )}
-
-        {/* Stroke Width Control */}
-        {!eraseMode && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="strokeWidth" className="text-white">
-              Stroke Width
-            </label>
-            <input
-              type="range"
-              className="form-range w-24"
-              min="1"
-              max="20"
-              step="1"
-              id="strokeWidth"
-              value={strokeWidth}
-              onChange={handleStrokeWidthChange}
-            />
-          </div>
-        )}
-
-        {/* Undo Icon */}
-        <button
-          type="button"
-          className="text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500"
-          onClick={handleUndoClick}
-        >
-          <FaUndo size={20} />
-        </button>
-
-        {/* Redo Icon */}
-        <button
-          type="button"
-          className="text-white bg-gray-600 p-2 rounded-full transition-colors hover:bg-blue-500"
-          onClick={handleRedoClick}
-        >
-          <FaRedo size={20} />
-        </button>
-
-        {/* Clear Icon */}
-        <button
-          type="button"
-          className="text-white bg-red-600 p-2 rounded-full transition-colors hover:bg-red-700"
-          onClick={handleClearClick}
-        >
-          <FaTrashAlt size={20} />
-        </button>
       </div>
     </div>
   );
