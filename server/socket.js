@@ -23,12 +23,12 @@ module.exports.initSockets = function(socket, io){
     });
     
     socket.on('join-room', (data) => {  // Player join room
-        if(io.sockets.adapter.rooms.get(data.roomId) === undefined){
+        if(io.sockets.adapter.rooms.get(data.roomId) === undefined || roomData[data.roomId] === undefined){ // may be redundant
             socket.emit('room-not-found', {roomId: data.roomId});
             return;
         }
 
-        debug('Player joined: ' + data.playerId);
+        debug('Player joined: ' + data.playerId + "room" + data.roomId);
         socket.join(data.roomId);
         socket.emit('room-joined', {roomId: data.roomId});
         roomData[data.roomId].playerCount++;
@@ -45,11 +45,19 @@ module.exports.initSockets = function(socket, io){
             return
         }
 
-        for(let i = 0; i < data.players.length; i++){
-            const player = roomData[data.roomId].playerSocket[i]; //playerSocket[i]; <-- playerSocket is not defined
-            player.socket.emit(
-                'game-started', {prompt: data.players.find((e) => e.playerId == player.playerId).prompt});
-                //'game-started', {prompt: "test"});
+        for (let i = 0; i < data.players.length; i++){
+            const player = roomData[data.roomId].playerSocket[i];
+            const playerData = data.players.find((e) => e.playerId == player.playerId);
+
+            debug("Attempting to connect", player.playerId);
+
+            if (playerData) {
+                debug("Emit game-started to", player.playerId);
+                player.socket.emit('game-started', {prompt: playerData.prompt, inkposter:playerData.inkposter,  players:data.playersToClient, theme:data.theme, fake_themes:data.fake_themes});
+            } else {
+                debug("Failed to emit game-started to", player.playerId);
+            }
+            
         }
     });
 
@@ -73,7 +81,6 @@ module.exports.initSockets = function(socket, io){
                 const clientSocket = io.sockets.sockets.get(s);
                 clientSocket.emit('game-closed');
                 clientSocket.leave(data.roomId);
-                console.log(clientSocket)
             });
             delete roomData[data.roomId];
         } catch (err) {
@@ -82,25 +89,32 @@ module.exports.initSockets = function(socket, io){
     });
 
     socket.on('disconnect', () => { // Player closes 
-        for(const room in roomData){
+        for (const room in roomData) {
+            // Host left logic
+            if (roomData[room].host.id === socket.id) {
+                io.to(room).emit('host-left'); // Notify players
+                delete roomData[room]; // Clean up the room data
+                break;
+            }
+
+            // Player left
             const player = roomData[room].playerSocket.find((e) => e.socket.id == socket.id);
-            if(player){
+            if(player && roomData[room]){
                 roomData[room].playerCount--;
                 roomData[room].playerSocket.splice(roomData[room].playerSocket.indexOf(player), 1); // delete player
                 roomData[room].host.emit('player-left', {playerId: player.playerId});
                 debug(player.playerId, "left room", room);
-                break;
-            } else {
-                io.to(room).emit('host-left');
-                debug("Host left room", room);
                 break;
             }
         }
     });
 
     socket.on('quit-game', (data) => {
-        roomData[data.roomId].host.emit('player-left', {playerId: data.playerId});
-        socket.leave(data.roomId);
+        debug(data.playerId, "left room", data.roomId);
+        if (roomData[data.roomId]) {
+            roomData[data.roomId].host.emit('player-left', {playerId: data.playerId});
+            socket.leave(data.roomId);
+        }
     });
     
 }

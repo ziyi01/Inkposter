@@ -16,12 +16,13 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
     const navigate = useNavigate();
     useEffect(() => {
         socket.on('game-started', (data) => {   // Player game started
-            debug("Recieved prompt:", data.prompt);
-            model.startGamePlayer(data.prompt);
+            debug("Recieved prompt:", data.prompt, "Inkposter:", data.inkposter, "Params:",  data.players, data.theme, data.fake_themes);
+            model.startGamePlayer(data.prompt, data.inkposter, data.players, data.theme, data.fake_themes);
             navigate('/player/ingame');
         });
         socket.on('host-left', () => {  // Host left room
             model.reset();
+            debug("Host left");
             navigate('/');
         });
 
@@ -41,7 +42,7 @@ const PlayerWaiting: React.FC<PlayerWaitingProps> = ({model}) => {
 
     const handleConfirmLeave = () => {
       console.log('Player has confirmed to leave the game.');
-      socket.emit('disconnect'); // Kan behöva ändras, spelaren försvinner inte hos hosten
+      quitGame(model.roomId, model.playerId);
       navigate('/homepage')
     };
 
