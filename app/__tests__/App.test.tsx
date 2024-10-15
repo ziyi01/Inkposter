@@ -14,16 +14,23 @@ import ProfilePage from "../src/views/profile";
 const model = new UserModel();
 
 test('Login page has login button', async () => {
+  const testFunction = jest.fn(() => false);
+
   await waitFor(() => {
     render(
       <MemoryRouter initialEntries={['/login']}>
-        <LoginPage />
+        <LoginPage
+          onGithubLogin={testFunction}
+          message='' 
+        />
       </MemoryRouter>
     );
   });
   const buttonElement = screen.getAllByRole('button', {name: 'Login with GitHub'})[0];
   expect(buttonElement).toBeInTheDocument();
   expect(buttonElement).not.toBeDisabled();
+  act(() => {fireEvent.click(buttonElement)});
+  expect(testFunction).toHaveBeenCalledTimes(1);
 });
 
 test('Homepage has join game button', async () => {
