@@ -1,6 +1,5 @@
 import { closeGame } from "./components/socket-client";
-import { Player, PlayerCanvas } from "./components/playerInterface";
-import { Session } from "inspector";
+import { Player } from "./components/playerInterface";
 
 var debug = require('debug')('app:userModel');
 

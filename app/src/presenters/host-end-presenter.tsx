@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import HostEndView from '../views/host-session-end';
 import { UserModel } from '../userModel';
 import { closeGame } from '../components/socket-client';
-var debug = require('debug')('app:host-end-presenter');
 
 interface HostSessionEndProps {
     model: UserModel;
