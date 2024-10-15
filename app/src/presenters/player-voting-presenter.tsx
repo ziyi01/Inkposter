@@ -46,13 +46,13 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
    };
 
     function onVote(votePlayer: string, voteTheme: string) {
-        sendVoting(model.roomId, model.name, votePlayer, voteTheme);
+        sendVoting(model.roomId, model.playerId, votePlayer, voteTheme);
         setVoted(true);
     }
 
     return <div>
         <PlayerVotingView
-            name={model.name}
+            playerId={model.playerId}
             themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes]}
             players={model.sessionHost.players}
             onLeaveClick={handleLeaveClick}
