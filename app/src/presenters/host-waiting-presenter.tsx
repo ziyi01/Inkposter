@@ -67,7 +67,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
         navigate('/host/ingame'); // Redirect to host-game
         */
         setLoading(true);
-        await getGeneratedSessionParams([""]).then(startGameACB).catch(handleError);
+        await getGeneratedSessionParams(model.previousThemes).then(startGameACB).catch(handleError);
         setLoading(false);
     }
 

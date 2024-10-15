@@ -27,6 +27,7 @@ export class UserModel {
     roomId: string;
     sessionHost: hostSession;
     sessionPlayer: playerSession;
+    previousThemes: string[];
 
     constructor(playerId='', name='', host: boolean=false) {
         this.playerId= playerId;
@@ -34,7 +35,8 @@ export class UserModel {
         this.host = host;
         this.roomId = ''; 
         this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: []};
-        this.sessionPlayer = {playerId: "", prompt: "", inkposter: false}; 
+        this.sessionPlayer = { playerId: "", prompt: "", inkposter: false }; 
+        this.previousThemes = [];
     }
 
     // General functions
@@ -112,6 +114,8 @@ export class UserModel {
             this.sessionHost.theme = theme;
             this.sessionHost.fake_themes = fake_themes;
             this.sessionHost.playersData = playerData;
+
+            this.previousThemes.push(theme);
         }
     }
 
