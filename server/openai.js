@@ -46,11 +46,11 @@ async function generateUsername() {
             
                 {
                     role: "system",
-                    content: "To the point, respond with the requested username and no more. All lowercase. Spaces should be replaced by underscore."
+                    content: "To the point, respond with the requested username and no more. Write with camel-case, no spaces."
                 },
                 {
                     role: 'assistant',
-                    content: 'elegant_zebra'
+                    content: 'ElegantZebra'
                 },
                 {
                     role: "user",
