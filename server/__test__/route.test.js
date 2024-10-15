@@ -45,5 +45,5 @@ describe('OpenAI endpoint tests', () => {
 
         expect(response.statusCode).toBe(200);
         expect(response.type).toBe('text/html');
-    });
-}, 10000);
+    }, 10000);
+});

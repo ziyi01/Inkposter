@@ -12,12 +12,12 @@ describe("Connection and db test", () => {
         expect(user.avatar).toEqual('rat1.png');
         let res = await db.deleteUserProfile("999");
         expect(res).toBe(true);
-    })
+    }, 10000)
 
     test("Retrieve user stats", async () => {
         const stats = await db.getUserStats("0");
         expect(stats._id).toEqual("0");
-    });
+    }, 10000);
 
     test("Update username", async () => {
         const response = await db.updateUsername("0", "rat1");
@@ -25,7 +25,7 @@ describe("Connection and db test", () => {
         const user = await db.getUser("0");
         expect(user.username).toEqual("rat1");
         await db.updateUsername("0", "rat");
-    });
+    }, 10000);
 
     afterAll((done) => {
         // Close connection
