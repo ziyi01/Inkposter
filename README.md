@@ -143,9 +143,10 @@ Test coverage is reported when creating a pull-request into the `main`-branch. U
 
 | **File**             | **Test**                                       | **Type**            |
 |----------------------|------------------------------------------------|---------------------|
-| `App.test.tsx`       | `App renders login page properly`              | UI test             |
-| `App.test.tsx`       | `Login button fires off callback`              | UI test             |
-| `App.test.tsx`       | `Redirect to /login when app rendered`         | UI test             |
+| `App.test.tsx`       | `Login page has login button`                  | UI test             |
+| `App.test.tsx`       | `Homepage has join game button`                | UI test             |
+| `App.test.tsx`       | `Profile has log out button`                   | UI test             |
+| `App.test.tsx`       | `Redirect to /login when rendered`             | UI test             |
 | `db.test.js`         | `Create and delete user`                       | Database test       |
 | `db.test.js`         | `Retrieve user stats`                          | Database test       |
 | `db.test.js`         | `Update username and retrieve user`            | Database test       |
