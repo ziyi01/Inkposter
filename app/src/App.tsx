@@ -6,7 +6,7 @@ import Loading from './views/loading';
 
 import ProfileNavBar from './components/navbar';
 const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
-=======
+
 
 // const LoginPage = React.lazy(() => import('./views/login-page'));
 const MockLoginPage = React.lazy(() => import('./views/mock-login'));
