@@ -5,6 +5,7 @@ import { socket, closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 import ProfileNavBar from './components/navbar';
 import Cookies from 'js-cookie'; 
+import GitHubCallback from './components/githubCallback';
 
 const LoginPage = React.lazy(() => import('./presenters/login-presenter'));
 const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
@@ -17,6 +18,7 @@ const PlayerWaiting = React.lazy(() => import('./presenters/player-waiting-prese
 const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter-real'));
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
+
 
 // Protected route: Redirects to login if user is not authenticated
 const ProtectedRoute = () => {
@@ -56,6 +58,9 @@ const App: React.FC<AppProps> = ({ model }) => {
                 ? <Navigate to="/homepage" /> 
                 : <LoginPage />
             } 
+          />
+          {/*Githug authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
+          <Route path="/auth/github/callback" element={<GitHubCallback />} 
           />
 
           {/* protected routes */}

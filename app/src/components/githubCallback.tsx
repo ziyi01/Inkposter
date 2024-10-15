@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUserDB } from '../server-requests';
 import Cookies from 'js-cookie';
 import { UserModel } from '../userModel';
-import { FaCode } from 'react-icons/fa';
+
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
