@@ -8,7 +8,7 @@ var logger = require('morgan');
 
 var db = require('./db');
 var apiRouter = require('./routes/api');
-var githubAuthRouter = require('./routes/auth'); 
+
 var app = express();
 
 app.use(logger('dev'));
@@ -20,7 +20,6 @@ const buildPath = path.normalize(path.join(__dirname, '../app/build'));
 app.use(express.static(buildPath));
 
 app.use('/api', apiRouter);
-app.use('/api/github', githubAuthRouter); // UsesGitHub authentication route under '/api/github'
 app.use('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/../app/build', 'index.html'));
 });

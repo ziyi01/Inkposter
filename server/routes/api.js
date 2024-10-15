@@ -3,6 +3,8 @@ var router = express.Router();
 var db = require('../db');
 var openai = require('../openai');
 var debug = require('debug')('server:api');
+var axios = require('axios');
+var Cookies = require('cookies');
 
 // ---------------
 // Database routes
@@ -211,6 +213,50 @@ router.patch('/openai/sessionParams', async function (req, res, next) {
     }
   } catch (err) {
     res.status(500).send('500 | Something went wrong.');
+  }
+});
+
+// ---------------
+// GitHub Login route
+// ---------------
+router.post('/github/login', async (req, res) => {
+  const { code } = req.body;
+
+  try {
+    const response = await axios.post('https://github.com/login/oauth/access_token', {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code,
+    }, {
+      headers: {
+        accept: 'application/json',
+      },
+    });
+
+    // Check if the access token is returned
+    const { access_token } = response.data;
+    if (!access_token) {
+      throw new Error('No access token received');
+    }
+
+    // Fetch user info with the access token
+    const userResponse = await axios.get('https://api.github.com/user', {
+      headers: {
+        Authorization: `token ${access_token}`,
+      },
+    });
+
+    const userId = userResponse.data.id; // Or any other unique identifier
+    const uniqueId = await loginUserDB(userId); // Presumably a function that stores userId in DB
+    const cookies = new Cookies(req, res);
+    cookies.set('userId', uniqueId);
+    cookies.set('isAuthenticated', 'true');
+
+    res.status(200).json({ userId });
+  } catch (error) {
+    // Log the entire error response for better diagnostics
+    console.error('Error during GitHub login:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
