@@ -6,7 +6,7 @@ import PlayerVotingView from '../views/player-voting';
 import { UserModel } from '../userModel';
 import { sendVoting, quitGame, socket } from '../components/socket-client';
 import Popup from '../components/popup';
-var debug = require('debug')('app:host-game-presenter');
+var debug = require('debug')('app:player-voting-presenter');
 
 interface PlayerVotingProps {
     model: UserModel;
@@ -18,7 +18,9 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
 
     useEffect(() => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
-            // model.setResult(data.result); // TODO: Implement setResult in UserModel for player-end
+            debug("set inkposterVotedOut in model: ", data.inkposterVotedOut);
+            model.sessionHost.inkposterVotedOut = (data.inkposterVotedOut);
+            navigate('/player/results');
         });
         socket.on('host-left', () => {  // Host left room
             model.reset();
@@ -46,6 +48,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
    };
 
     function onVote(votePlayer: string, voteTheme: string) {
+        debug(model.playerId, "vote:", votePlayer, "guess:", voteTheme);
         sendVoting(model.roomId, model.playerId, votePlayer, voteTheme);
         setVoted(true);
     }
