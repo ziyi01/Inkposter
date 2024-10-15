@@ -149,7 +149,7 @@ router.patch('/user/:userID/sessionResults', async function (req, res, next) {
         if (response.acknowledged) {
           res.status(200).send('200 | Sessions results added to profile.');  
         } else {
-          res.status(500).send('500 | Could not sessions scores.');
+          res.status(500).send('500 | Could not add sessions scores.');
         }
     } else {
       res.status(500).send('500 | Something went wrong :(');

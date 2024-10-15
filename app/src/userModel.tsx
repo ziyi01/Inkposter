@@ -240,7 +240,12 @@ export class UserModel {
             }
         }
 
-        addSessionResultsDB(this.playerId, this.profileStats, "placeholder.png");
+        addSessionResultsDB(this.playerId, this.profileStats, "placeholder.png").catch(handleErr);
+
+        function handleErr(err:Error) {
+            debug("Something went wrong: ", err);
+            alert("Results could not be saved to database.");
+        }
     }
 
     reset() {
