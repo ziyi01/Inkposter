@@ -13,7 +13,8 @@ module.exports.initSockets = function(socket, io){
         roomData[roomId] = {
             host: socket,
             playerCount: 0,
-            playerSocket: []
+            playerSocket: [],
+            sessionStarted: false
         };
         debug('Room created: ' + roomId);
         debug('Host: ' + roomData[roomId].host.toString());
@@ -26,9 +27,16 @@ module.exports.initSockets = function(socket, io){
         if(io.sockets.adapter.rooms.get(data.roomId) === undefined || roomData[data.roomId] === undefined){ // may be redundant
             socket.emit('room-not-found', {roomId: data.roomId});
             return;
+        } else if (roomData[data.roomId].sessionStarted) {
+            socket.emit('session-already-started', {roomId: data.roomId});
+            return;
+        } else if (roomData[data.roomId].playerCount >= 8) {
+            socket.emit('room-full', { roomId: data.roomId });
+            return;
         }
 
         debug('Player joined: ' + data.playerId + "room" + data.roomId);
+
         socket.join(data.roomId);
         socket.emit('room-joined', {roomId: data.roomId});
         roomData[data.roomId].playerCount++;
@@ -45,7 +53,10 @@ module.exports.initSockets = function(socket, io){
             return
         }
 
+        roomData[data.roomId].sessionStarted = true;
+
         for (let i = 0; i < data.players.length; i++){
+
             const player = roomData[data.roomId].playerSocket[i];
             const playerData = data.players.find((e) => e.playerId == player.playerId);
 
