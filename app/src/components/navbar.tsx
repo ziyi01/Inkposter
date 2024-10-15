@@ -10,7 +10,7 @@ function ProfileNavBar() {
   const [isHowToPlayModalOpen, setHowToPlayModalOpen] = useState(false);
 
   return (
-    <nav className="bg-white dark:bg-black shadow-md p-4 fixed top-0 left-0">
+    <nav className="bg-white dark:bg-black shadow-md p-4">
       <div className="container flex justify-start">
         {/* Game Title */}
         <h1
@@ -20,19 +20,21 @@ function ProfileNavBar() {
         </h1>
 
         {/* Navigation Buttons */}
-        <div className="flex space-x-10">
-          <Button
-           
+        <div className="flex space-x-4">
+          <button
+            className="bg-transparent">
+          </button>
+          <button   
+          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" 
             onClick={() => setProfileModalOpen(true)}
           >
-            My profile
-          </Button>
-
+            MY PROFILE
+          </button>
           <button
-            className="bg-transparent text-black dark:text-white px-4 py-2 rounded hover:bg-purple-800 hover:text-white"
+            className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" 
             onClick={() => setHowToPlayModalOpen(true)}
           >
-            How to play
+            HOW TO PLAY
           </button>
         </div>
       </div>
