@@ -45,7 +45,6 @@ export class UserModel {
         debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
         // TODO update to actually make server-requests and update model from response
 
-        
     }
     
     setRoomId(roomId:string) {
