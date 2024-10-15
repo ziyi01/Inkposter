@@ -55,6 +55,8 @@ const PlayerGame: React.FC<PlayerGameProps> = ({model}) => {
             canvas={<Canvas onDraw={onDraw}/>}
             onLeaveClick={handleLeaveClick}
             prompt={model.sessionPlayer.prompt}
+            name={model.name}
+            inkposter={model.sessionPlayer.inkposter}
         />
         <Popup
             ref={popupRef}

@@ -1,20 +1,17 @@
 // props needed: themes, players, onSubmitGuess (handler, send theme and player guess)
 import React, { useState } from 'react';
 import Button from '../components/button';
-
-interface Player {
-  name: string;
-  //profilePicture: string;
-}
+import { Player } from '../components/playerInterface';
 
 interface PlayerVotingProps {
-  themes: string[];  // Array of six themes
-  players: Player[]; // Array of players
+  playerId: string;
+  themes: string[];
+  players: Player[];
   onLeaveClick: () => void;
   onSubmitGuess: (selectedInkposter: string, selectedTheme: string) => void; // Submission handler
 }
 
-const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeaveClick, onSubmitGuess }) => {
+const PlayerVotingView: React.FC<PlayerVotingProps> = ({ playerId, themes, players, onLeaveClick, onSubmitGuess }) => {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);   // Track the selected theme
   const [selectedInkposter, setSelectedInkposter] = useState<string | null>(null); // Track the selected player (Inkposter)
 
@@ -28,7 +25,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background text-white p-8 relative">
+    <div className="flex flex-col items-center min-h-screen bg-background text-white p-8 pt-16 relative">
 
       {/* Leave Game */}
       <button
@@ -41,7 +38,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
       {/* Guess the Theme Section */}
       <div className="mb-10">
         <h1 className="text-2xl font-bold mb-4">Guess the Theme</h1>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {themes.map((theme, index) => (
             <button
               key={index}
@@ -58,11 +55,11 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
       <div className="mb-10">
         <h1 className="text-2xl font-bold mb-4">Vote for the Inkposter</h1>
         <div className="flex gap-8 justify-center">
-          {players.map((player, index) => (
+          {players.map((player, playerId) => (
             <div
-              key={index}
-              className={`flex flex-col items-center ${selectedInkposter === player.name ? 'scale-110' : 'transition-all duration-300 hover:scale-110'}`}
-              onClick={() => setSelectedInkposter(player.name)}  // Set the selected Inkposter
+              key={playerId}
+              className={`flex flex-col items-center ${selectedInkposter === player.playerId ? 'scale-110' : 'transition-all duration-300 hover:scale-110'}`}
+              onClick={() => setSelectedInkposter(player.playerId)}  // Set the selected Inkposter
               style={{ cursor: 'pointer' }}
             >
               <img
@@ -70,7 +67,7 @@ const PlayerVotingView: React.FC<PlayerVotingProps> = ({ themes, players, onLeav
                 alt={`${player.name}'s profile`}
                 className="w-24 h-24 rounded-md mb-2 bg-blue-400"
               />
-              <p>{player.name}</p>
+              <p>{player.playerId === `${playerId}` ? `${player.name} (You)` : player.name}</p>
             </div>
           ))}
         </div>
