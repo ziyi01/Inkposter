@@ -38,6 +38,7 @@ const GitHubCallback: React.FC = () => {
 
           // Store userId in a cookie if needed
           Cookies.set('userId', data.userId, { expires: 7 });
+          debug(Cookies.get('userId')); // !!! returns undefined, something goes wrong when setting the cookies!
 
           // Redirect to homepage or dashboard
 
