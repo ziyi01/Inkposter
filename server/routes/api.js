@@ -141,6 +141,8 @@ router.patch('/user/:userID/sessionResults', async function (req, res, next) {
   const scores = req.body.scores; // ex. {innocent: {wins: 4, losses:0}, inkposter: {wins: 4, losses: 7}}; 
   const drawing = req.body.drawing; // ex. 'placeholder_drawing.png'
 
+  debug("Recieved: ", userID, scores, drawing);
+
   try {
     var response = await db.addSessionResults(userID, scores, drawing);
     if (response != null) {

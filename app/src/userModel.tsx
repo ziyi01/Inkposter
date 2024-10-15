@@ -1,5 +1,6 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
+import { addSessionResults } from "./components/server-requests";
 
 var debug = require('debug')('app:userModel');
 
@@ -8,6 +9,7 @@ export type playerSession = {
     prompt: string;
     inkposter: boolean;
     canvas?: string; // Base64 encoded image
+    ownVote?: string
 }
 
 export type hostSession = {
@@ -16,7 +18,7 @@ export type hostSession = {
     theme: string;
     fake_themes: string[];
     inkposterId: string;
-    voteResults: { playerId: string, voteCount: number, themeGuess: string }[];
+    voteResults: { playerId: string, playerName:string, voteCount: number, themeGuess: string }[];
     inkposterVotedOut: boolean;
 };
 
@@ -31,6 +33,7 @@ export class UserModel {
     sessionHost: hostSession;
     sessionPlayer: playerSession;
     previousThemes: string[];
+    profileStats: {innocent: {wins: number, losses: number}, inkposter: {wins:number, losses: number}};
 
     constructor(playerId='', name='', host: boolean=false) {
         this.playerId= playerId;
@@ -40,6 +43,7 @@ export class UserModel {
         this.sessionHost = {players: [], playersData: [], theme: "", fake_themes: [], inkposterId:"", voteResults: [], inkposterVotedOut: false};
         this.sessionPlayer = { playerId: "", prompt: "", inkposter: false }; 
         this.previousThemes = [];
+        this.profileStats = {innocent: {wins: 0, losses: 0}, inkposter: {wins: 0, losses: 0}}
     }
 
     // General functions
@@ -134,9 +138,10 @@ export class UserModel {
     initVoting() {
         this.sessionHost.voteResults = this.getAllPlayers().map((player) => {
             return {
-              playerId: player.playerId,
-              voteCount: 0,
-              themeGuess: ""
+                playerId: player.playerId,
+                playerName: player.name,
+                voteCount: 0,
+                themeGuess: ""
             }
         });
 
@@ -150,6 +155,7 @@ export class UserModel {
         // update own guess
         this.sessionHost.voteResults[voterIndex] = { 
             playerId: this.sessionHost.voteResults[voterIndex].playerId, 
+            playerName: this.sessionHost.voteResults[voterIndex].playerName,
             voteCount: this.sessionHost.voteResults[voterIndex].voteCount, 
             themeGuess: voteTheme, 
         };
@@ -157,11 +163,16 @@ export class UserModel {
         // update voteCount for the player that this player voted for
         this.sessionHost.voteResults[votedForIndex] = { 
             playerId: this.sessionHost.voteResults[votedForIndex].playerId, 
+            playerName: this.sessionHost.voteResults[votedForIndex].playerName,
             voteCount: this.sessionHost.voteResults[votedForIndex].voteCount + 1, 
             themeGuess: this.sessionHost.voteResults[votedForIndex].themeGuess 
         };
 
         debug("Results after ", playerId, "'s vote: ", this.sessionHost.voteResults);
+    }
+
+    setOwnVote(voteTheme: string) {
+        this.sessionPlayer.ownVote = voteTheme;
     }
 
     calculateFinalResult() {
@@ -194,6 +205,37 @@ export class UserModel {
         debug("Inkposter voted out: ", inkposterVotedOut);
         this.sessionHost.inkposterVotedOut = inkposterVotedOut;
         return inkposterVotedOut;
+    }
+
+    setProfileStats(inkposterVotedOut: boolean) {
+        var newInnocentWins = this.profileStats.innocent.wins;
+        var newInnocentLoss = this.profileStats.innocent.losses;
+        var newInkposterWin = this.profileStats.inkposter.wins;
+        var newInkposterLoss = this.profileStats.inkposter.losses;
+
+        if (!this.sessionPlayer.inkposter && inkposterVotedOut) {
+            newInnocentWins = newInnocentWins + 1;
+        } else if (!this.sessionPlayer.inkposter && !inkposterVotedOut) {
+            newInnocentLoss = newInnocentLoss + 1;
+        } else if (this.sessionPlayer.inkposter && !inkposterVotedOut) {
+            newInkposterWin = newInkposterWin + 1;
+        } else if (this.sessionPlayer.inkposter && inkposterVotedOut) {
+            newInkposterLoss = newInkposterLoss + 1;
+        }
+
+        this.profileStats = {
+            innocent: {
+                wins: newInnocentWins,
+                losses: newInnocentLoss
+            },
+            inkposter:
+            {
+                wins: newInkposterWin,
+                losses: newInkposterLoss
+            }
+        }
+
+        addSessionResults(this.playerId, this.profileStats, "placeholder.png");
     }
 
     reset() {

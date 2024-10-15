@@ -23,6 +23,21 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
       navigate('/player/game');
     });
 
+    socket.on('room-not-found', (data) => {
+      debug("Room not found:", data.roomId);
+      alert("Room not found.\nCheck that you have the correct code!");
+    });
+
+    socket.on('session-already-started', (data) => {
+      debug("Session already started:", data.roomId);
+      alert("Game already in session! Join the next one :)");
+    });
+
+    socket.on('room-full', (data) => {
+      debug("Room full:", data.roomId);
+      alert("Room full!");
+    });
+    
     return () => {
       socket.off('room-joined');
     }
