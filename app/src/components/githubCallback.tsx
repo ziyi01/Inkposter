@@ -4,6 +4,10 @@ import { loginUserDB } from '../server-requests';
 import Cookies from 'js-cookie';
 import { UserModel } from '../userModel';
 
+interface YourComponentProps {
+  model: UserModel;
+}
+
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -21,10 +25,11 @@ const GitHubCallback: React.FC = () => {
           // Send the code to backend, receive userID
           const uniqueId = await loginUserDB(code);
           console.log(uniqueId); // TA BORT INNAN DEPLOY
-
+          
           // Store the userId in a cookie for persistence
           Cookies.set('userId', uniqueId, { expires: 7 }); // Expires in 7 days
           Cookies.set('isAuthenticated', 'true', { expires: 7 });
+          model.
 
           // Redirect to homepage
           navigate('/homepage'); 

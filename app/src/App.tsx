@@ -32,7 +32,6 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ model }) => {
-  const isAuthenticated = true; // Set to true to bypass the login system
 
   useEffect(() => {
     return () => {
