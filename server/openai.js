@@ -2,7 +2,7 @@ var debug = require('debug')('server:openai');
 var OpenAI = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function generateSessionParams(previousThemes="", fakeThemeCount=3, playerCount=8) {
+async function generateSessionParams(previousThemes="", fakeThemeCount=3, playerCount=9) {
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
