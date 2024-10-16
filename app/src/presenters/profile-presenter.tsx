@@ -1,35 +1,28 @@
 import React, { useState } from 'react';
 import ProfilePageView from '../views/profile';
-import NavBar from '../components/navbar';
-import { useNavigate } from 'react-router-dom';
+import { UserModel } from '../userModel';
 
 interface ProfilePresenterProps {
-  handleLogout: (isAuthenticated: boolean) => void; // Define the handleLogout prop
+  handleLogout: () => void; // Define the handleLogout prop
+  model: UserModel;
 }
 
-const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout }) => {
-  const navigate = useNavigate();
-  const [name] = useState<string>('John Doe'); // Use state for the name
+const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout, model }) => {
   const points = [
-    { title: 'Point 1', value: 'Value 1' },
-    { title: 'Point 2', value: 'Value 2' },
-    { title: 'Point 3', value: 'Value 3' },
-    { title: 'Point 4', value: 'Value 4' },
+    { title: 'Wins as innocent', value: model.profileStats.innocent.wins.toString() },
+    { title: 'Losses as innocent', value: model.profileStats.innocent.losses.toString() },
+    { title: 'Wins as Inkposter', value: model.profileStats.inkposter.wins.toString() },
+    { title: 'Losses as Inkposter', value: model.profileStats.inkposter.losses.toString() },
   ];
 
-  const onLogout = () => {
-    handleLogout(false);
-    navigate("/login");
-  };
-
   return (
-    <div>
+    <>
       <ProfilePageView
-        name={name} // Pass the name variable here
+        name={model.name} // Pass the name variable here
         points={points} // Pass the points array here
-        onLogout={onLogout} // Pass the handleLogout function here
+        onLogout={handleLogout} // Pass the handleLogout function here
       />
-    </div>
+    </>
   );
 };
 

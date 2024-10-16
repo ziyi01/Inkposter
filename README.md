@@ -53,7 +53,7 @@ The layout is designed in Figma following: https://www.figma.com/design/V4OLczau
 
 ## 🛠️ Setup
 Prerequisites:
-- You will need env variables `MongoDB_URI` and `OpenAPI_KEY` set.
+- You will need env variables `MongoDB_URI`, `OpenAPI_KEY`, `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` set.
 
 ### Built with
 - **React** v.18.3.1
@@ -139,11 +139,13 @@ Unit tests are separated into the folders `./app/__tests__` for UI tests and `./
 | `route.test.js`      | `/api/user/0 return test user`                 | REST API test       |
 | `route.test.js`      | `/api/user/0/userStats return stats`           | REST API test       |
 | `route.test.js`      | `/api/user/10000 return 404`                   | REST API test       |
-| `route.test.js`      | `/api/openai/username should return 200`       | REST API test       |
+| `route.test.js`      | `/api/openai/username should return 500`       | REST API test       |
 | `route.test.js`      | `/api/openai/sessionPrompts should return 200` | REST API test       |
 
 ## 📄 Architecture
 Architecture and file structure in the project.
+
+<img src=".github/Architecture.png" alt="project-architecture" width="80%"/>
 
 ### API endpoints
 | **Method**   | **URL**                            | **Description**   |

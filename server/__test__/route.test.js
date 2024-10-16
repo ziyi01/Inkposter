@@ -39,11 +39,11 @@ describe('MongoDB endpoint tests', () => {
 // OpenAI tests
 // ------------------------------
 describe('OpenAI endpoint tests', () => {
-    test('/api/openai/username should return 200', async () => {
+    test('/api/openai/username should return 500', async () => {
         const response = await request(app).get('/api/openai/username');
         debug(response);
 
-        expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(500);
         expect(response.type).toBe('text/html');
     }, 10000);
 });

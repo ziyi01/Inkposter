@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { UserModel } from '../userModel';
 
 interface LoginPageProps {
@@ -10,11 +9,10 @@ interface LoginPageProps {
 const MockLoginPage: React.FC<LoginPageProps> = ({ model, handleLogin }) => {
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
-    const navigate = useNavigate();
     
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      model.login(userId, username);
+      model.mockLogin(userId, username);
       handleLogin();
     };
 

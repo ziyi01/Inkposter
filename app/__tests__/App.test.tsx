@@ -20,6 +20,8 @@ test('Login page has login button', async () => {
     render(
       <MemoryRouter initialEntries={['/login']}>
         <LoginPage 
+          message={''}
+          onGithubLogin={testFunction}
         />
       </MemoryRouter>
     );

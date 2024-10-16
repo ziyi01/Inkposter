@@ -19,7 +19,8 @@ var debug = require('debug')('app:server-requests');
  * @param {string} avatar 
  * @returns string, confirmation
  */
-export async function loginUserDB(userID:string, username:string="new_user", avatar:string="") {
+
+export async function ensureUserExistsDB(userID:string, username="NewUser", avatar="placeholder.png") {
     const request = new Request("/api/user", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -39,7 +40,7 @@ export async function loginUserDB(userID:string, username:string="new_user", ava
 /**
  * 
  * @param {number, string} userID 
- * @returns json, user information
+ * @returns json, { _id: string, username:string, previousThemes:string[] }
  */
 export async function getUserDB(userID:string) {
     var response = await fetch(`/api/user/${userID}`);
@@ -53,7 +54,7 @@ export async function getUserDB(userID:string) {
 /**
  * 
  * @param {*} userID 
- * @returns json, user stats
+ * @returns json, { _id: string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}, gallery:string[] }
  */
 export async function getUserStatsDB(userID:string) {
     var response = await fetch(`/api/user/${userID}/userStats`);
@@ -195,11 +196,11 @@ export async function getGeneratedUsername() {
  * 
  * @returns json, generated session paramn
  */
-export async function getGeneratedSessionParams(previousThemes:string[]) {
+export async function getGeneratedSessionParams(previousThemes: string[]) {
     const request = new Request(`/api/openai/sessionParams`, {
         method: "PATCH",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({previousThemes})
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ previousThemes })
     });
 
     var response = await fetch(request);

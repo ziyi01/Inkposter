@@ -3,6 +3,8 @@ var router = express.Router();
 var db = require('../db');
 var openai = require('../openai');
 var debug = require('debug')('server:api');
+var axios = require('axios');
+var Cookies = require('cookies');
 
 // ---------------
 // Database routes
@@ -213,6 +215,59 @@ router.patch('/openai/sessionParams', async function (req, res, next) {
     }
   } catch (err) {
     res.status(500).send('500 | Something went wrong.');
+  }
+});
+
+// ---------------
+// GitHub Login route
+// ---------------
+router.post('/github/login', async function (req, res) {
+  const { code } = req.body;
+  debug("Received code:", code);
+  debug("Client ID:", process.env.GITHUB_CLIENT_ID);
+  debug("Client Secret:", process.env.GITHUB_CLIENT_SECRET ? "Set" : "Not set");
+
+  try {
+    debug("Requesting access token from GitHub...");
+    const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code: code
+    }, {
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+
+    debug("Token response status:", tokenResponse.status);
+    debug("Token response data:", tokenResponse.data);
+
+    const { access_token } = tokenResponse.data;
+
+    if (!access_token) {
+      throw new Error('No access token received from GitHub');
+    }
+
+    debug("Fetching user data...");
+    const userResponse = await axios.get('https://api.github.com/user', {
+      headers: {
+        Authorization: `token ${access_token}`
+      }
+    });
+
+    debug("User response status:", userResponse.status);
+    debug("User data:", userResponse.data);
+
+    const uniqueId = userResponse.data.id.toString(); // Convert ID to string
+
+    res.json({ uniqueId, access_token });
+  } catch (error) {
+    debug('Error during GitHub login:', error.response ? error.response.data : error.message);
+    if (error.response) {
+      debug('Error response status:', error.response.status);
+      debug('Error response headers:', error.response.headers);
+    }
+    res.status(500).json({ error: 'Failed to authenticate with GitHub' });
   }
 });
 

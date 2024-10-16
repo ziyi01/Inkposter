@@ -61,7 +61,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     e.preventDefault(); // Prevents page refresh
     debug('Join Code:', joinCode);
     setIsJoinInputVisible(false);
-
+    
     //game logic
     joinRoom(joinCode, model.playerId, model.name);
   };
