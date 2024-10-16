@@ -1,5 +1,5 @@
-import React, { useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useState, useEffect, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, redirect } from 'react-router-dom';
 import { UserModel } from './userModel';
 import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
@@ -7,6 +7,7 @@ import Loading from './views/loading';
 import ProfileNavBar from './components/navbar';
 const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
 
+var debug = require('debug')('app:app');
 
 // const LoginPage = React.lazy(() => import('./views/login-page'));
 const MockLoginPage = React.lazy(() => import('./views/mock-login'));
@@ -34,7 +35,7 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ model }) => {
-  const isAuthenticated = false; // Set to true to bypass the login system
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Set to true to bypass the login system
 
   useEffect(() => {
     return () => {
@@ -43,8 +44,16 @@ const App: React.FC<AppProps> = ({ model }) => {
   }, []);
 
   const handleLogout = () => {
-    console.log('User has logged out');
+    debug("logout");
+    redirect('/homepage');
+    setIsAuthenticated(false);
   };
+
+  const handleLogin = () => {
+    debug("login");
+    setIsAuthenticated(true);
+  };
+
 
   return (
     <Router>
@@ -52,23 +61,11 @@ const App: React.FC<AppProps> = ({ model }) => {
         <Routes>
           <Route 
             path="/login" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="0" />} 
-          />
-          <Route 
-            path="/1" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="1" />} 
-          />
-          <Route 
-            path="/2" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="2"/>} 
-          />
-          <Route 
-            path="/3" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} user="3"/>} 
+            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} handleLogin={handleLogin}/>} 
           />
           <Route 
             path="/homepage" 
-            element={<HomePage model={model} />} 
+            element={isAuthenticated ? <HomePage model={model} /> : <MockLoginPage model={model} handleLogin={handleLogin} />} 
           />
           <Route
             path="/profile"
