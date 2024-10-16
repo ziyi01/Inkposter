@@ -49,7 +49,7 @@ const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
             Cookies.set('isAuthenticated', 'true', { expires: 7 });
             
             // Get persisted data from database and set in model
-            await model.login(data.uniqueId); // async, need to 
+            await model.login(data.uniqueId, data.username); // async, need to 
 
             navigate('/homepage');
           } else {

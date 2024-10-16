@@ -1,8 +1,7 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
 import { ensureUserExistsDB, getUserDB, getUserStatsDB, updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
-import { StringMappingType } from "typescript";
-var debug = require('debug')('app:userModel');
+const debug = require('debug')('app:userModel');
 
 export type playerSession = {
     playerId: string;
@@ -51,11 +50,11 @@ export class UserModel {
         this.name = username;
     }
 
-    async login(playerId: string) {
+    async login(playerId: string, username: string) {
         this.playerId = playerId;
         try {
             // check if user exists or create
-            await ensureUserExistsDB(playerId);
+            await ensureUserExistsDB(playerId, username);
             
             // get persisted userdata
             const userData = await getUserDB(playerId);
@@ -71,7 +70,6 @@ export class UserModel {
 
         } catch (err) {
             debug("Error during database communication: ", err);
-            // TODO alert? redirect? Or is that handled somewhere else?
         }
     }
     

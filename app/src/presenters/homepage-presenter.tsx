@@ -39,6 +39,10 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
       debug("Room full:", data.roomId);
       alert("Room full!");
     });
+
+    socket.on('player-exists', () => {  // Player join error
+      alert('Player already exists in session');
+    });
     
     return () => {
       socket.off('room-joined');

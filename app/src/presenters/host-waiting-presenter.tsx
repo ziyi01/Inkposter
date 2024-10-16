@@ -29,9 +29,18 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             model.roomId = data.roomId;
         }); 
         socket.on('player-joined', (data) => {  // Player joined room
-            model.addPlayer(data.playerId, data.playerName);
-            setPlayers([...model.sessionHost.players]);
-            debug('Player joined: ' + data.playerName);
+            try {
+                if(model.sessionHost.players.find(player => player.playerId === data.playerId)) {
+                    throw new Error('Player already exists in session');
+                }
+                socket.emit('player-join', {playerId: data.playerId, roomId: model.roomId}); // Send success to server
+                model.addPlayer(data.playerId, data.playerName);
+                setPlayers([...model.sessionHost.players]);
+                debug('Player joined: ' + data.playerName);
+            }
+            catch {
+                socket.emit('player-exists', {playerId: data.playerId, roomId: model.roomId}); // Send error to server
+            }
         });
         socket.on('player-left', async (data) => {  // Player left room
             model.removePlayer(data.playerId); // Should just be removed if player left
