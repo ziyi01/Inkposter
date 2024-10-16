@@ -59,6 +59,7 @@ const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
         .catch(err => {
           debug('Authentication error:', err);
           setError('Failed to authenticate with GitHub. Please try again.');
+          navigate('/login')
         });
     } else {
       setError('No code found in URL');
