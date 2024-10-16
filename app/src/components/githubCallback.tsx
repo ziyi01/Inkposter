@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+const debug = require('debug')('app:githubCallback');
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const GitHubCallback: React.FC = () => {
       const fetchAccessToken = async () => {
         try {
           const response = await axios.post('http://your-backend-url/auth/github', { code });
-          console.log('Response from backend:', response.data); // Log the response for debugging
+          debug('Response from backend:', response.data); // Log the response for debugging
 
           if (response.data && response.data.uniqueId) {
             const { uniqueId } = response.data; // Get the unique identifier from the response

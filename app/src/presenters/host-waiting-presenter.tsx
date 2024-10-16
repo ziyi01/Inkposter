@@ -61,11 +61,6 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             return;
         }
 
-        /*
-        model.updateGame("ocean", [], []);
-        startGame(roomCode, model.sessionHost?.playersData); 
-        navigate('/host/ingame'); // Redirect to host-game
-        */
         setLoading(true);
         await getGeneratedSessionParams(model.previousThemes).then(startGameACB).catch(handleError);
         setLoading(false);
