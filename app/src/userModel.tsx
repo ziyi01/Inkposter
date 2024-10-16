@@ -51,7 +51,6 @@ export class UserModel {
     }
 
     async login(playerId: string) {
-        console.log("Logging in with playerId: ", playerId);
         this.playerId = playerId;
         try {
             // check if user exists or create
