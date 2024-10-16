@@ -128,9 +128,11 @@ module.exports.initSockets = function(socket, io){
         }
     });
 
-    socket.on('quit-game', (data) => {
+    socket.on('quit-game', (data) => {  // Player presses quit game
         debug(data.playerId, "left room", data.roomId);
         if (roomData[data.roomId]) {
+            roomData[data.roomId].playerCount--;
+            roomData[data.roomId].playerSocket.splice(roomData[data.roomId].playerSocket.indexOf(data.playerId), 1); // delete player
             roomData[data.roomId].host.emit('player-left', {playerId: data.playerId});
             socket.leave(data.roomId);
         }

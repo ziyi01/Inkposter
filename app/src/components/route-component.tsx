@@ -8,13 +8,11 @@ interface RouteProps {
 
 // Player route: Redirects to homepage if user is not in a room
 export const PlayerRoute: React.FC<RouteProps> = ({model}) => {
-    console.log(model.roomId);
     return model.roomId !== '' ? <Outlet /> : <Navigate to="/homepage" />;
 };
 
 // Host route: Redirects to homepage if user is not a host
 export const HostRoute: React.FC<RouteProps> = ({model}) => {
-    console.log(model.host);
     return model.host ? <Outlet/> : <Navigate to="/homepage" />;
 };
 
