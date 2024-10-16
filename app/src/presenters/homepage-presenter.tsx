@@ -19,6 +19,8 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
   const [joinCode, setJoinCode] = useState('');
 
   useEffect(() => {
+    model.reset();
+    
     socket.on('room-joined', (data) => {
       debug("Room joined:", data.roomId);
       model.setRoomId(data.roomId);
