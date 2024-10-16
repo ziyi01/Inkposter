@@ -9,6 +9,7 @@ interface ProfilePresenterProps {
 }
 
 const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout, model }) => {
+  const [name, setName] = useState(model.name); 
   const [points, setPoints] = useState([
     {title: 'Wins as innocent', value: '0'},
     {title: 'Losses as innocent', value: '0'},
@@ -25,6 +26,8 @@ const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout, m
       await model.login(Cookies.get('uniqueId')!);
     }
     
+    setName(model.name);
+
     setPoints([
       { title: 'Wins as innocent', value: model.profileStats.innocent.wins.toString() },
       { title: 'Losses as innocent', value: model.profileStats.innocent.losses.toString() },
@@ -36,7 +39,7 @@ const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout, m
   return (
     <div>
       <ProfilePageView
-        name={model.name} // Pass the name variable here
+        name={name} // Pass the name variable here
         points={points} // Pass the points array here
         onLogout={handleLogout} // Pass the handleLogout function here
       />
