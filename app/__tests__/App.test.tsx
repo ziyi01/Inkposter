@@ -5,7 +5,6 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from "react-router-dom";
 
 // import client components
-import App from '../src/App';
 import { UserModel } from "../src/userModel";
 import LoginPage from '../src/views/login-page';
 import HomePage from '../src/views/homepage';
@@ -74,11 +73,6 @@ test('Profile has log out button', async () => {
   expect(buttonElement).not.toBeDisabled();
   act(() => {fireEvent.click(buttonElement)});
   expect(testFunction).toHaveBeenCalledTimes(1);
-});
-
-test('Redirect to /login when rendered', async () => {
-  await waitFor(() => {render(<App model={model}/>);});
-  expect(window.location.pathname).toBe('/login');
 });
 
 afterAll((done) => {

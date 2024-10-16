@@ -1,10 +1,11 @@
-import React, { useEffect, useState, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, Outlet} from 'react-router-dom';
+import React, { useEffect, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { UserModel } from './userModel';
 import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
 import Cookies from 'js-cookie'; 
 import GitHubCallback from './components/githubCallback';
+import { ProtectedRoute, PlayerRoute, HostRoute } from './components/route-component';
 
 var debug = require('debug')('app:app');
 
@@ -19,14 +20,6 @@ const PlayerWaiting = React.lazy(() => import('./presenters/player-waiting-prese
 const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter'));
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
-
-// Protected route: Redirects to login if user is not authenticated
-const ProtectedRoute = () => {
-  const isAuthenticated = Cookies.get('isAuthenticated') === 'true'; // check auth status
-
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
-
-};
 
 interface AppProps {
   model: UserModel;
@@ -60,7 +53,7 @@ const App: React.FC<AppProps> = ({ model }) => {
                 : <LoginPage />
             }
           />
-          {/*GitHub authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
+          {/*GitHub authorization url, defined in file */ }
           <Route path="/auth/github/callback" element={<GitHubCallback model={model} />} />
 
           {/* protected routes */}
@@ -72,14 +65,16 @@ const App: React.FC<AppProps> = ({ model }) => {
             <Route path="/host">
               <Route index element={<HostWaiting model={model} />} 
               />
-              <Route path="ingame" element={<HostGame model={model} />} 
-              />
-              <Route path="voting" element={<HostVote model={model} />} 
-              />
-              <Route path="results" element={<HostEnd model={model} />} 
-              />
+              <Route path="*" element={<HostRoute model={model}/>}>
+                <Route path="ingame" element={<HostGame model={model} />}
+                />
+                <Route path="voting" element={<HostVote model={model} />} 
+                />
+                <Route path="results" element={<HostEnd model={model} />} 
+                />
+              </Route>
             </Route>
-            <Route path="/player">
+            <Route path="/player" element={<PlayerRoute model={model}/>}>
               <Route index element={<PlayerWaiting model={model} />} 
               />
               <Route path="ingame" element={<PlayerGame model={model} />} 

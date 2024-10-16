@@ -43,6 +43,7 @@ const PlayerEnd: React.FC<PlayerEndProps> = ({model}) => {
   useEffect(() => {
     socket.on('game-closed', () => { // Receive signal from server/host that game ended
       alert("Host has ended game!");
+      model.reset();
       navigate('/homepage');
 
       return () => {
