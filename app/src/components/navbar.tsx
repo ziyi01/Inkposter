@@ -55,14 +55,20 @@ function ProfileNavBar() {
           onClick={() => setHowToPlayModalOpen(false)}
         >
           <div className="relative p-4">
+            <br></br>
             <h2 className="text-xl font-bold mb-4">How to Play</h2>
-            <p>Here are the game instructions...</p>
+            <p>Start a host session on a large, shared screen. Players can now join the game on mobile by entering the room code.</p>
+            <br></br>
+            <p>All players except one receive <b>prompts</b> belonging to a <b>secret theme</b>. Draw the prompt while keeping an eye on the other masterpieces in the room. What is the theme? Who is the <b>inkposter?</b></p>
+            <br></br>
+            <p>When the time comes to review, be prepared to argue for your place in the gallery!</p>
             <button
               className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
               onClick={() => setHowToPlayModalOpen(false)}
             >
               Close
             </button>
+            <br></br>
           </div>
         </div>
       )}
