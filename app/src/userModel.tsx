@@ -67,7 +67,8 @@ export class UserModel {
             // set data in model
             this.name = userData.username;
             this.previousThemes = userData.previousThemes;
-            this.profileStats = userStats.scores;
+            this.profileStats.innocent = userStats.innocent;
+            this.profileStats.inkposter = userStats.inkposter;
 
         } catch (err) {
             debug("Error during database communication: ", err);
