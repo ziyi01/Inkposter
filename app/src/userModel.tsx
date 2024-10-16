@@ -1,7 +1,7 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
-import { updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
-
+import { ensureUserExistsDB, getUserDB, getUserStatsDB, updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
+import { StringMappingType } from "typescript";
 var debug = require('debug')('app:userModel');
 
 export type playerSession = {
@@ -46,13 +46,33 @@ export class UserModel {
         this.profileStats = {innocent: {wins: 0, losses: 0}, inkposter: {wins: 0, losses: 0}}
     }
 
-    // General functions
-    login(playerId: string, playerName: string) {
+    mockLogin(playerId: string, username: string) {
         this.playerId = playerId;
-        this.name = playerName;
-        debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
-        // TODO update to actually make server-requests and update model from response
+        this.name = username;
+    }
 
+    async login(playerId: string) {
+        this.playerId = playerId;
+        try {
+            // check if user exists or create
+            await ensureUserExistsDB(playerId);
+            
+            // get persisted userdata
+            const userData = await getUserDB(playerId);
+            const userStats = await getUserStatsDB(playerId);
+
+            debug("userData: ", userData);
+            debug("userStats: ", userStats);
+
+            // set data in model
+            this.name = userData.username;
+            this.previousThemes = userData.previousThemes;
+            this.profileStats = userStats.scores;
+
+        } catch (err) {
+            debug("Error during database communication: ", err);
+            // TODO alert? redirect? Or is that handled somewhere else?
+        }
     }
     
     setRoomId(roomId:string) {

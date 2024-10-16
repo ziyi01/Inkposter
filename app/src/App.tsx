@@ -1,18 +1,16 @@
-import React, { useState, useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, redirect } from 'react-router-dom';
+import React, { useEffect, useState, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet} from 'react-router-dom';
 import { UserModel } from './userModel';
 import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
-
-import ProfileNavBar from './components/navbar';
-const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
+import Cookies from 'js-cookie'; 
+import GitHubCallback from './components/githubCallback';
 
 var debug = require('debug')('app:app');
 
-// const LoginPage = React.lazy(() => import('./views/login-page'));
-const MockLoginPage = React.lazy(() => import('./views/mock-login'));
+const LoginPage = React.lazy(() => import('./presenters/login-presenter'));
 const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
-
+const ProfilePage = React.lazy(() => import('./presenters/profile-presenter'));
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
@@ -22,20 +20,19 @@ const PlayerGame = React.lazy(() => import('./presenters/player-game-presenter')
 const PlayerVote = React.lazy(() => import('./presenters/player-voting-presenter'));
 const PlayerEnd = React.lazy(() => import('./presenters/player-end-presenter'));
 
-// GitHub OAuth Callback Component
-/* TODO: Add back
-const GitHubCallback: React.FC = () => {
-  
-  return <div>Loading...</div>;
+// Protected route: Redirects to login if user is not authenticated
+const ProtectedRoute = () => {
+  const isAuthenticated = Cookies.get('isAuthenticated') === 'true'; // check auth status
+
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+
 };
-*/
 
 interface AppProps {
   model: UserModel;
 }
 
 const App: React.FC<AppProps> = ({ model }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Set to true to bypass the login system
 
   useEffect(() => {
     return () => {
@@ -44,70 +41,55 @@ const App: React.FC<AppProps> = ({ model }) => {
   }, []);
 
   const handleLogout = () => {
-    debug("logout");
-    redirect('/homepage');
-    setIsAuthenticated(false);
+    console.log('User has logged out');
+    Cookies.remove('isAuthenticated'); // clear the auth cookie
+    Cookies.remove('userId'); // Clear the user ID cookie
+    window.location.reload();
   };
-
-  const handleLogin = () => {
-    debug("login");
-    setIsAuthenticated(true);
-  };
-
 
   return (
     <Router>
       <Suspense fallback={<Loading />}>
         <Routes>
+          {/* Login route first*/}
           <Route 
             path="/login" 
-            element={isAuthenticated ? <Navigate to="/homepage" /> : <MockLoginPage model={model} handleLogin={handleLogin}/>} 
+            element={
+              Cookies.get('isAuthenticated') === 'true' 
+                ? <Navigate to="/homepage" /> 
+                : <LoginPage />
+            } 
           />
-          <Route 
-            path="/homepage" 
-            element={isAuthenticated ? <HomePage model={model} /> : <MockLoginPage model={model} handleLogin={handleLogin} />} 
+          {/*Githug authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
+          <Route path="/auth/github/callback" element={<GitHubCallback model={model} />} 
           />
-          <Route
-            path="/profile"
-            element={<ProfilePage handleLogout={handleLogout} />} 
-          />
-          <Route path="/host">
-            <Route 
-              path="game" 
-              element={<HostWaiting model={model} />} 
+
+          {/* protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/homepage" element={<HomePage model={model} />} 
             />
-            <Route 
-              path="ingame" 
-              element={<HostGame model={model} />} 
+            <Route path="/profile" element={<ProfilePage handleLogout={handleLogout} model={model} />} 
             />
-            <Route 
-              path="voting" 
-              element={<HostVote model={model} />} 
+            <Route path="/host/game" element={<HostWaiting model={model} />} 
             />
-            <Route 
-              path="results" 
-              element={<HostEnd model={model} />} 
+            <Route path="/host/ingame" element={<HostGame model={model} />} 
+            />
+            <Route path="/host/voting" element={<HostVote model={model} />} 
+            />
+            <Route path="/host/results" element={<HostEnd model={model} />} 
+            />
+            <Route path="/player/game" element={<PlayerWaiting model={model} />} 
+            />
+            <Route path="/player/ingame" element={<PlayerGame model={model} />} 
+            />
+            <Route path="/player/voting" element={<PlayerVote model={model} />} 
+            />
+            <Route path="/player/results" element={<PlayerEnd model={model} />} 
             />
           </Route>
-          <Route path="/player">
-            <Route 
-              path="game" 
-              element={<PlayerWaiting model={model} />} 
-            />
-            <Route 
-              path="ingame" 
-              element={<PlayerGame model={model} />} 
-            />
-            <Route 
-              path="voting" 
-              element={<PlayerVote model={model} />} 
-            />
-            <Route 
-              path="results" 
-              element={<PlayerEnd model={model} />} 
-            />
-          </Route>
-          <Route path="*" element={<Navigate to="/homepage" />} /> {/* Redirect all unknown routes to homepage */}
+
+          {/* redirect unknown routes to homepage */}
+          <Route path="*" element={<Navigate to="/homepage" />} />
         </Routes>
       </Suspense>
     </Router>

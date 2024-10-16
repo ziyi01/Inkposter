@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import ProfilePageView from '../views/profile';
-import NavBar from '../components/navbar';
+import { UserModel } from '../userModel';
 
 interface ProfilePresenterProps {
   handleLogout: () => void; // Define the handleLogout prop
+  model: UserModel;
 }
 
-const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout }) => {
+const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout, model }) => {
   const [name] = useState<string>('John Doe'); // Use state for the name
   const points = [
     { title: 'Point 1', value: 'Value 1' },
