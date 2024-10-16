@@ -3,15 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import HomePageView from '../views/homepage';
 import { UserModel } from '../userModel';
+import ProfileNavBar from '../components/navbar';
 
 import { joinRoom, socket } from '../components/socket-client';
 const debug = require('debug')('app:homepage-presenter');
 
 interface HomePageProps {
-  model: UserModel;
+    model: UserModel;
 }
 
 const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
+
   const navigate = useNavigate();
   const [isJoinInputVisible, setIsJoinInputVisible] = useState(false);
   const [joinCode, setJoinCode] = useState('');
@@ -40,14 +42,18 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
     
     return () => {
       socket.off('room-joined');
+      socket.off('room-not-found');
+      socket.off('session-already-started');
+      socket.off('room-full');
     }
   }, []);
 
   const handleJoinClick = () => {
+
     setIsJoinInputVisible(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setJoinCode(e.target.value);
   };
 
@@ -61,14 +67,18 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
   };
 
   return (
-    <HomePageView
-      model={model}
-      isJoinInputVisible={isJoinInputVisible}
-      onJoinClick={handleJoinClick}
-      joinCode={joinCode}
-      onInputChange={handleInputChange}
-      onSubmit={handleSubmit}
-    />
+    <>
+    <ProfileNavBar/>
+        <HomePageView
+        model={model}
+        isJoinInputVisible={isJoinInputVisible}
+        onJoinClick={handleJoinClick}
+        joinCode={joinCode}
+        onInputChange={handleInputChange}
+        onSubmit={handleSubmit}
+        />
+    </>
+
   );
 };
 

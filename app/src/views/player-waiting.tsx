@@ -17,7 +17,7 @@ const PlayerWaiting: React.FC<PlayerGameViewProps> = ({onLeaveClick}) => {
       </button>
 
       {/* Text */}
-      <h1 className="text-3xl font-bold animate-pulse">
+      <h1 className="text-3xl font-bold animate-pulse text-center">
         Waiting for host to start game...
       </h1>
     </div>

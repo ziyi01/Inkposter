@@ -61,8 +61,9 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     return <div>
         <PlayerVotingView
             playerId={model.playerId}
-            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes]}
+            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes].sort(() => Math.random() - 0.5)}
             players={model.sessionHost.players}
+            voted={voted}
             onLeaveClick={handleLeaveClick}
             onSubmitGuess={onVote}
         />
@@ -72,7 +73,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
             message="Are you sure you want to leave the game? This action cannot be undone."
             onConfirm={handleConfirmLeave}
         />
-    </div> // TODO: Implement onVote in view
+    </div>
 }
 
 export default PlayerVoting;
