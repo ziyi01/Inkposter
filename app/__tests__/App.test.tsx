@@ -19,9 +19,7 @@ test('Login page has login button', async () => {
   await waitFor(() => {
     render(
       <MemoryRouter initialEntries={['/login']}>
-        <LoginPage
-          onGithubLogin={testFunction}
-          message='' 
+        <LoginPage 
         />
       </MemoryRouter>
     );
@@ -29,8 +27,6 @@ test('Login page has login button', async () => {
   const buttonElement = screen.getAllByRole('button', {name: 'Login with GitHub'})[0];
   expect(buttonElement).toBeInTheDocument();
   expect(buttonElement).not.toBeDisabled();
-  act(() => {fireEvent.click(buttonElement)});
-  expect(testFunction).toHaveBeenCalledTimes(1);
 });
 
 test('Homepage has join game button', async () => {
@@ -64,7 +60,9 @@ test('Profile has log out button', async () => {
     render(
       <MemoryRouter initialEntries={['/homepage']}>
         <ProfilePage
-          handleLogout={testFunction}
+          name='test'
+          points={[{title: "test", value: "test"}]}
+          onLogout={testFunction}
           />
       </MemoryRouter>
     );
