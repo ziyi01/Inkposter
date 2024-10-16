@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { UserModel } from '../userModel';
+var debug = require('debug')('app:githubCallback');
 
 interface GithubCallbackProps {
   model: UserModel;
@@ -24,11 +25,11 @@ const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
         body: JSON.stringify({ code }),
       })
         .then(async response => {
-          console.log("Response status:", response.status);
-          console.log("Response headers:", response.headers);
+          debug("Response status:", response.status);
+          debug("Response headers:", response.headers);
           
           const text = await response.text();
-          console.log("Response text:", text);
+          debug("Response text:", text);
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -37,7 +38,7 @@ const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
           try {
             return JSON.parse(text);
           } catch (e) {
-            console.error("Failed to parse JSON:", e);
+            debug("Failed to parse JSON:", e);
             throw new Error("Invalid JSON response from server");
           }
         })
@@ -56,7 +57,7 @@ const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
           }
         })
         .catch(err => {
-          console.error('Authentication error:', err);
+          debug('Authentication error:', err);
           setError('Failed to authenticate with GitHub. Please try again.');
         });
     } else {
