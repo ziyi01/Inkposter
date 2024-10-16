@@ -20,10 +20,10 @@ const PlayerGameView: React.FC<PlayerGameViewProps> = ({ canvas, onLeaveClick, p
       </button>
 
       {/* Word */}
-      <h1 className="text-3xl font-bold mb-4 text-center">
+      <h1 className="text-3xl font-bold mb-2 text-center">
         {name}, your word is <span className="text-red-500">{prompt}</span>
       </h1>
-      {inkposter && (<h2 className="text-lg">You are the inkposter</h2>)}
+      {inkposter && (<h2 className="text-lg font-semibold mb-2">You are the <span className="text-red-500">inkposter</span></h2>)}
 
       {/* Canvas Section */}
       <div>
