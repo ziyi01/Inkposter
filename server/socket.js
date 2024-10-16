@@ -14,7 +14,6 @@ module.exports.initSockets = function(socket, io){
             host: socket,
             playerCount: 0,
             playerSocket: [],
-            joining: {},
             sessionStarted: false
         };
         debug('Room created: ' + roomId);
@@ -36,23 +35,17 @@ module.exports.initSockets = function(socket, io){
             return;
         }
 
-        roomData[data.roomId].playerCount++;
-        roomData[data.roomId].joining = {socket: socket, playerId: data.playerId};
-        roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
-
-        debug(data.playerId, "joined with socket", socket.id);
-    });
-
-    socket.on('player-join', (data) => { // Player join room
-        debug('Player joined: ' + data.playerId + "room" + data.roomId);
-        const joiningPlayer = roomData[data.roomId].joining;
-        roomData[data.roomId].playerSocket.push(joiningPlayer);
-        joiningPlayer.socket.emit('room-joined', {roomId: data.roomId});
-        joiningPlayer.socket.join(data.roomId);
-    });
-
-    socket.on('player-exists', (data) => { // Player join error
-        roomData[data.roomId].joining.socket.emit('player-exists');
+        
+        if(!roomData[data.roomId].playerSocket.find((e) => e.playerId == data.playerId)){
+            debug('Player joined: ' + data.playerId + "room" + data.roomId);
+            roomData[data.roomId].playerCount++;
+            roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
+            socket.join(data.roomId);
+            socket.emit('room-joined', {roomId: data.roomId});
+            roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
+        } else {
+            socket.emit('player-exists');
+        }
     });
 
     socket.on('start-game', (data) => { // Host start game  
