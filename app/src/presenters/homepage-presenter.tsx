@@ -20,7 +20,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
 
   useEffect(() => {
     model.reset();
-    
+
     socket.on('room-joined', (data) => {
       debug("Room joined:", data.roomId);
       model.setRoomId(data.roomId);
@@ -51,6 +51,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
       socket.off('room-not-found');
       socket.off('session-already-started');
       socket.off('room-full');
+      socket.off('player-exists');
     }
   }, []);
 
