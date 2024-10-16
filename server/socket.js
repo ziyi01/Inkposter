@@ -47,7 +47,7 @@ module.exports.initSockets = function(socket, io){
         debug('Player joined: ' + data.playerId + "room" + data.roomId);
         const joiningPlayer = roomData[data.roomId].joining;
         roomData[data.roomId].playerSocket.push(joiningPlayer);
-        joiningPlayer.socket.emit('room-joined', {room: data.roomId});
+        joiningPlayer.socket.emit('room-joined', {roomId: data.roomId});
         joiningPlayer.socket.join(data.roomId);
     });
 
