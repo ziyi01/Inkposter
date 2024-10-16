@@ -50,21 +50,31 @@ function ProfileNavBar() {
 
       {/* How to Play Modal */}
       {isHowToPlayModalOpen && (
-        <div
-          className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-1/3 mx-auto mt-24 fixed inset-0 flex items-center justify-center"
-          onClick={() => setHowToPlayModalOpen(false)}
-        >
-          <div className="relative p-4">
-            <h2 className="text-xl font-bold mb-4">How to Play</h2>
-            <p>Here are the game instructions...</p>
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-              onClick={() => setHowToPlayModalOpen(false)}
-            >
-              Close
-            </button>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-11/12 sm:w-1/2 md:w-1/3 mx-auto mt-24 fixed inset-0 overflow-y-auto flex items-center justify-center">
+        <div className="relative w-full">
+          {/* Close Button */}
+          <button
+            className="absolute top-2 left-2 bg-red-500 text-white px-4 py-2 rounded"
+            onClick={() => setHowToPlayModalOpen(false)}
+          >
+            Close
+          </button>
+      
+          {/* Modal Content */}
+          <div className="p-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center">How to Play</h2>
+            <p className="mb-2 text-base md:text-lg">Welcome to <span className="font-bold text-blue-600">INKPOSTER</span>—the ultimate blend of drawing, guessing, and deception!</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">1. <span className="text-blue-600">Gather your friends</span>: This game is perfect for 3-8 players!</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">2. <span className="text-blue-600">Host the fun</span>: One player hosts the game on a larger screen (TV, projector, etc.) while everyone else joins on their phones using a code displayed on the host screen.</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">3. <span className="text-blue-600">Get drawing</span>: Once the game starts, players will receive a word to draw, while one sneaky player, the <span className="font-bold text-blue-600">INKPOSTER</span>, gets no prompt and must draw something misleading!</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">4. <span className="text-blue-600">Create chaos</span>: The INKPOSTER must blend in while the others draw themed prompts (like robots or nature). Can you spot the liar?</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">5. <span className="text-blue-600">Vote wisely</span>: When time’s up, everyone votes on who they think the INKPOSTER is. Points are awarded for correct guesses!</p>
+            <p className="mb-2 text-base md:text-lg font-semibold">6. <span className="text-blue-600">Guess the theme</span>: Finally, everyone tries to guess the theme of the drawings. More points await the savvy guessers!</p>
+            <p className="text-base md:text-lg font-bold text-center">Get ready for laughs, deception, and creative chaos!</p>
           </div>
         </div>
+      </div>
+      
       )}
     </nav>
   );
