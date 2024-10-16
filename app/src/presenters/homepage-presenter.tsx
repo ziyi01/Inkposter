@@ -6,6 +6,7 @@ import { UserModel } from '../userModel';
 import ProfileNavBar from '../components/navbar';
 
 import { joinRoom, socket } from '../components/socket-client';
+import Cookies from 'js-cookie';
 const debug = require('debug')('app:homepage-presenter');
 
 interface HomePageProps {
@@ -19,7 +20,7 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
   const [joinCode, setJoinCode] = useState('');
 
   useEffect(() => {
-    model.reset();
+    fillModelData();
 
     socket.on('room-joined', (data) => {
       debug("Room joined:", data.roomId);
@@ -54,6 +55,12 @@ const HomePagePresenter: React.FC<HomePageProps> = ({ model }) => {
       socket.off('player-exists');
     }
   }, []);
+
+  const fillModelData = async () => {
+    if (Cookies.get('uniqueId') !== model.playerId && Cookies.get('uniqueId') !== undefined) {
+      await model.login(Cookies.get('uniqueId')!);
+    }
+  }
 
   const handleJoinClick = () => {
 

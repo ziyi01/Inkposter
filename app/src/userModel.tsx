@@ -50,11 +50,12 @@ export class UserModel {
         this.name = username;
     }
 
-    async login(playerId: string, username: string) {
+    async login(playerId: string) {
+        console.log("Logging in with playerId: ", playerId);
         this.playerId = playerId;
         try {
             // check if user exists or create
-            await ensureUserExistsDB(playerId, username);
+            await ensureUserExistsDB(playerId);
             
             // get persisted userdata
             const userData = await getUserDB(playerId);
