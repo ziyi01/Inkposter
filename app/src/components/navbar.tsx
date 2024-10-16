@@ -71,6 +71,7 @@ function ProfileNavBar() {
             <p className="mb-2 text-base md:text-lg font-semibold">5. <span className="text-blue-600">Vote wisely</span>: When time’s up, everyone votes on who they think the INKPOSTER is. Points are awarded for correct guesses!</p>
             <p className="mb-2 text-base md:text-lg font-semibold">6. <span className="text-blue-600">Guess the theme</span>: Finally, everyone tries to guess the theme of the drawings. More points await the savvy guessers!</p>
             <p className="text-base md:text-lg font-bold text-center">Get ready for laughs, deception, and creative chaos!</p>
+        
           </div>
         </div>
       </div>
