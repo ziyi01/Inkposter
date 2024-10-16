@@ -29,6 +29,7 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             model.roomId = data.roomId;
         }); 
         socket.on('player-joined', (data) => {  // Player joined room
+            socket.emit('player-join', {playerId: data.playerId, roomId: model.roomId}); // Send success to server
             model.addPlayer(data.playerId, data.playerName);
             setPlayers([...model.sessionHost.players]);
             debug('Player joined: ' + data.playerName);
@@ -61,11 +62,6 @@ const HostWaiting: React.FC<HostWaitingProps> = ({model}) => {
             return;
         }
 
-        /*
-        model.updateGame("ocean", [], []);
-        startGame(roomCode, model.sessionHost?.playersData); 
-        navigate('/host/ingame'); // Redirect to host-game
-        */
         setLoading(true);
         await getGeneratedSessionParams(model.previousThemes).then(startGameACB).catch(handleError);
         setLoading(false);

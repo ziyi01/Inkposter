@@ -1,8 +1,7 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
 import { ensureUserExistsDB, getUserDB, getUserStatsDB, updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
-import { StringMappingType } from "typescript";
-var debug = require('debug')('app:userModel');
+const debug = require('debug')('app:userModel');
 
 export type playerSession = {
     playerId: string;
@@ -72,7 +71,6 @@ export class UserModel {
 
         } catch (err) {
             debug("Error during database communication: ", err);
-            // TODO alert? redirect? Or is that handled somewhere else?
         }
     }
     

@@ -50,11 +50,10 @@ function ProfileNavBar() {
 
       {/* How to Play Modal */}
       {isHowToPlayModalOpen && (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-11/12 sm:w-1/2 md:w-1/3 mx-auto mt-24 fixed inset-0 overflow-y-auto flex items-center justify-center">
-        <div className="relative w-full">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-11/12 sm:w-1/2 md:w-1/3 mx-auto mt-24 fixed inset-0 overflow-y-auto flex-row items-center justify-center">
           {/* Close Button */}
           <button
-            className="absolute top-2 left-2 bg-red-500 text-white px-4 py-2 rounded"
+            className="top-2 left-2 bg-red-500 text-white px-4 py-2 rounded sticky"
             onClick={() => setHowToPlayModalOpen(false)}
           >
             Close
@@ -74,7 +73,6 @@ function ProfileNavBar() {
         
           </div>
         </div>
-      </div>
       
       )}
     </nav>

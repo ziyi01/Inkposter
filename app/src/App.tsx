@@ -41,7 +41,7 @@ const App: React.FC<AppProps> = ({ model }) => {
   }, []);
 
   const handleLogout = () => {
-    console.log('User has logged out');
+    debug('User has logged out');
     Cookies.remove('isAuthenticated'); // clear the auth cookie
     Cookies.remove('userId'); // Clear the user ID cookie
     window.location.reload();
@@ -58,11 +58,10 @@ const App: React.FC<AppProps> = ({ model }) => {
               Cookies.get('isAuthenticated') === 'true' 
                 ? <Navigate to="/homepage" /> 
                 : <LoginPage />
-            } 
+            }
           />
-          {/*Githug authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
-          <Route path="/auth/github/callback" element={<GitHubCallback model={model} />} 
-          />
+          {/*GitHub authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
+          <Route path="/auth/github/callback" element={<GitHubCallback model={model} />} />
 
           {/* protected routes */}
           <Route element={<ProtectedRoute />}>
@@ -70,22 +69,26 @@ const App: React.FC<AppProps> = ({ model }) => {
             />
             <Route path="/profile" element={<ProfilePage handleLogout={handleLogout} model={model} />} 
             />
-            <Route path="/host/game" element={<HostWaiting model={model} />} 
-            />
-            <Route path="/host/ingame" element={<HostGame model={model} />} 
-            />
-            <Route path="/host/voting" element={<HostVote model={model} />} 
-            />
-            <Route path="/host/results" element={<HostEnd model={model} />} 
-            />
-            <Route path="/player/game" element={<PlayerWaiting model={model} />} 
-            />
-            <Route path="/player/ingame" element={<PlayerGame model={model} />} 
-            />
-            <Route path="/player/voting" element={<PlayerVote model={model} />} 
-            />
-            <Route path="/player/results" element={<PlayerEnd model={model} />} 
-            />
+            <Route path="/host">
+              <Route index element={<HostWaiting model={model} />} 
+              />
+              <Route path="ingame" element={<HostGame model={model} />} 
+              />
+              <Route path="voting" element={<HostVote model={model} />} 
+              />
+              <Route path="results" element={<HostEnd model={model} />} 
+              />
+            </Route>
+            <Route path="/player">
+              <Route index element={<PlayerWaiting model={model} />} 
+              />
+              <Route path="ingame" element={<PlayerGame model={model} />} 
+              />
+              <Route path="voting" element={<PlayerVote model={model} />} 
+              />
+              <Route path="results" element={<PlayerEnd model={model} />} 
+              />
+            </Route>
           </Route>
 
           {/* redirect unknown routes to homepage */}

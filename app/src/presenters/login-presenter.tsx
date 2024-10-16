@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
 import LoginPageView from '../views/login-page';
 
 const LoginPagePresenter: React.FC = () => {
@@ -7,7 +6,8 @@ const LoginPagePresenter: React.FC = () => {
 
   const handleGithubLogin = () => {
     const clientId = 'Ov23liBylLWgQxX2zv8L'; 
-    const redirectUri = 'http://localhost:3000/auth/github/callback';
+
+    const redirectUri = window.location.origin + '/auth/github/callback';
     const scope = 'user:email';
 
     try {

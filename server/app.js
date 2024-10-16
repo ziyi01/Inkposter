@@ -7,21 +7,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 
 var db = require('./db')
-/* OLD VERSION?
-var logger = require('morgan');
-var cors = require('cors');
-*/
-
 var apiRouter = require('./routes/api');
 
 var app = express();
 
 var logger = require('morgan'); // HTTP request logger middleware for node.js
-app.use(logger('dev', { stream: { write: function(msg) { debug(msg); } }}));
-/* OLD VERSION?
-app.use(cors());
-app.use(logger('dev'));
-*/ 
+app.use(logger('dev', { stream: { write: function(msg) { debug(msg); } }})); 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -42,11 +34,5 @@ app.use(function(req, res, next) {
 
 // setup database connection
 db.connectToMongoDB();
-
-// Start the server
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 module.exports = app;

@@ -35,15 +35,17 @@ module.exports.initSockets = function(socket, io){
             return;
         }
 
-        debug('Player joined: ' + data.playerId + "room" + data.roomId);
-
-        socket.join(data.roomId);
-        socket.emit('room-joined', {roomId: data.roomId});
-        roomData[data.roomId].playerCount++;
-        roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
-        roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
-
-        debug(data.playerId, "joined with socket", socket.id);
+        
+        if(!roomData[data.roomId].playerSocket.find((e) => e.playerId == data.playerId)){
+            debug('Player joined: ' + data.playerId + "room" + data.roomId);
+            roomData[data.roomId].playerCount++;
+            roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
+            socket.join(data.roomId);
+            socket.emit('room-joined', {roomId: data.roomId});
+            roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
+        } else {
+            socket.emit('player-exists');
+        }
     });
 
     socket.on('start-game', (data) => { // Host start game  

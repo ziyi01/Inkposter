@@ -14,10 +14,15 @@ import ProfilePage from "../src/views/profile";
 const model = new UserModel();
 
 test('Login page has login button', async () => {
+  const testFunction = jest.fn(() => false);
+
   await waitFor(() => {
     render(
       <MemoryRouter initialEntries={['/login']}>
-        <LoginPage />
+        <LoginPage 
+          message={''}
+          onGithubLogin={testFunction}
+        />
       </MemoryRouter>
     );
   });
@@ -57,7 +62,9 @@ test('Profile has log out button', async () => {
     render(
       <MemoryRouter initialEntries={['/homepage']}>
         <ProfilePage
-          handleLogout={testFunction}
+          name='test'
+          points={[{title: "test", value: "test"}]}
+          onLogout={testFunction}
           />
       </MemoryRouter>
     );

@@ -259,8 +259,9 @@ router.post('/github/login', async function (req, res) {
     debug("User data:", userResponse.data);
 
     const uniqueId = userResponse.data.id.toString(); // Convert ID to string
+    const username = userResponse.data.login;
 
-    res.json({ uniqueId, access_token });
+    res.json({ username, uniqueId, access_token });
   } catch (error) {
     debug('Error during GitHub login:', error.response ? error.response.data : error.message);
     if (error.response) {
