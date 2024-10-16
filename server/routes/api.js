@@ -219,52 +219,53 @@ router.patch('/openai/sessionParams', async function (req, res, next) {
 // ---------------
 // GitHub Login route
 // ---------------
-router.post('/github/login', async (req, res) => {
-  const { code } = req.body; // const { code } = req.body
-  debug("Req.body: ", req.body);
-  debug("req.body.code: ", code);
+router.post('/github/login', async function (req, res) {
+  const { code } = req.body;
+  console.log("Received code:", code);
+  console.log("Client ID:", process.env.GITHUB_CLIENT_ID);
+  console.log("Client Secret:", process.env.GITHUB_CLIENT_SECRET ? "Set" : "Not set");
 
   try {
-    const response = await axios.post('https://github.com/login/oauth/access_token', {
+    console.log("Requesting access token from GitHub...");
+    const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
       client_id: process.env.GITHUB_CLIENT_ID,
       client_secret: process.env.GITHUB_CLIENT_SECRET,
-      code,
+      code: code
     }, {
       headers: {
-        accept: 'application/json',
-      },
+        Accept: 'application/json'
+      }
     });
 
-    debug("Try to get accesstoken");
+    console.log("Token response status:", tokenResponse.status);
+    console.log("Token response data:", tokenResponse.data);
 
-    // Check if the access token is returned
-    debug("Response thats gonna have token: ", response);
-    const { access_token } = await response.data;
+    const { access_token } = tokenResponse.data;
+
     if (!access_token) {
-      debug("No accesstoken recieved")
-      throw new Error('No access token received');
+      throw new Error('No access token received from GitHub');
     }
 
-    debug("Got accesstoken: ", access_token);
-
-    // Fetch user info with the access token
+    console.log("Fetching user data...");
     const userResponse = await axios.get('https://api.github.com/user', {
       headers: {
-        Authorization: `token ${access_token}`,
-      },
+        Authorization: `token ${access_token}`
+      }
     });
 
-    const userId = userResponse.data.id; // Or any other unique identifier
-    //const uniqueId = await loginUserDB(userId); // Presumably a function that stores userId in DB
-    const cookies = new Cookies(req, res);
-    cookies.set('userId', userId);
-    cookies.set('isAuthenticated', 'true');
+    console.log("User response status:", userResponse.status);
+    console.log("User data:", userResponse.data);
 
-    res.status(200).json({ userId });
+    const uniqueId = userResponse.data.id.toString(); // Convert ID to string
+
+    res.json({ uniqueId, access_token });
   } catch (error) {
-    // Log the entire error response for better diagnostics
-    debug('Error during GitHub login:', error.response ? error.response.data : error.message);
-    res.status(500).json({ error: 'Login failed' });
+    console.error('Error during GitHub login:', error.response ? error.response.data : error.message);
+    if (error.response) {
+      console.error('Error response status:', error.response.status);
+      console.error('Error response headers:', error.response.headers);
+    }
+    res.status(500).json({ error: 'Failed to authenticate with GitHub' });
   }
 });
 

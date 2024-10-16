@@ -1,82 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-var debug = require('debug')('app:github-callback');
 
 const GitHubCallback: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    debug("Code: ", code);
 
     if (code) {
-      const handleLogin = async () => {
-        try {
-          const response = await fetch('/api/github/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code }),
-            
-          });
+      fetch('/api/github/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      })
+        .then(async response => {
+          console.log("Response status:", response.status);
+          console.log("Response headers:", response.headers);
+          
+          const text = await response.text();
+          console.log("Response text:", text);
 
           if (!response.ok) {
-            throw new Error('Login failed');
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          debug("Response ok?: ", response);
-
-          const data = await response.json();
-          debug("Response ok?: ", data);
-
-          console.log('User ID:', data.userId);
-
-          // Store userId in a cookie if needed
-          Cookies.set('userId', data.userId, { expires: 7 });
-          debug(Cookies.get('userId')); // !!! returns undefined, something goes wrong when setting the cookies!
-
-          // Redirect to homepage or dashboard
-
-        } catch (error) {
-          console.error('Login error:', error, " ", code);
-          setErrorMessage('Login failed. Please try again.');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      handleLogin();
-
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            console.error("Failed to parse JSON:", e);
+            throw new Error("Invalid JSON response from server");
+          }
+        })
+        .then(data => {
+          if (data.uniqueId && data.access_token) {
+            Cookies.set('uniqueId', data.uniqueId, { expires: 7 });
+            Cookies.set('accessToken', data.access_token, { expires: 7 });
+            Cookies.set('isAuthenticated', 'true', { expires: 7 });
+            navigate('/homepage');
+          } else {
+            throw new Error('Invalid response data');
+          }
+        })
+        .catch(err => {
+          console.error('Authentication error:', err);
+          setError('Failed to authenticate with GitHub. Please try again.');
+        });
     } else {
-      setErrorMessage('No authorization code found in the URL.');
-      navigate('/login');
-      setLoading(false);
+      setError('No code found in URL');
     }
   }, [navigate]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (error) {
+    return <div>{error}</div>;
   }
 
-  return (
-    <div className="error-message-container flex items-center justify-center min-h-screen">
-      {errorMessage ? (
-        <div className="bg-white text-red-700 p-4 rounded shadow-md">
-          <p>{errorMessage}</p>
-          <button onClick={() => navigate('/login')} className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-            Go to Login
-          </button>
-        </div>
-      ) : (
-        <div>Redirecting...</div>
-      )}
-    </div>
-  );
+  return <div>Authenticating...</div>;
 };
 
 export default GitHubCallback;
