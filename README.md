@@ -139,7 +139,7 @@ Unit tests are separated into the folders `./app/__tests__` for UI tests and `./
 | `route.test.js`      | `/api/user/0 return test user`                 | REST API test       |
 | `route.test.js`      | `/api/user/0/userStats return stats`           | REST API test       |
 | `route.test.js`      | `/api/user/10000 return 404`                   | REST API test       |
-| `route.test.js`      | `/api/openai/username should return 500`       | REST API test       |
+| `route.test.js`      | `/api/openai/username should return 200`       | REST API test       |
 | `route.test.js`      | `/api/openai/sessionPrompts should return 200` | REST API test       |
 
 ## 📄 Architecture
