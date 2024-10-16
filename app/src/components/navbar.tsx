@@ -51,7 +51,7 @@ function ProfileNavBar() {
       {/* How to Play Modal */}
       {isHowToPlayModalOpen && (
         <div
-          className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-1/3 mx-auto mt-24 fixed inset-0 flex items-center justify-center"
+          className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg sm:w-1/2 lg:w-1/3 mx-auto mt-24 fixed inset-0 flex items-center justify-center overflow-auto"
           onClick={() => setHowToPlayModalOpen(false)}
         >
           <div className="relative p-4">

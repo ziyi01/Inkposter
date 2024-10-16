@@ -30,7 +30,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
         <div className="flex space-x-4">
           <Link
-            to="/host/game"
+            to="/host"
             className="text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition"
           >
             Host Game

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { UserModel } from './userModel';
 import { closeConnection } from './components/socket-client';
 import Loading from './views/loading';
@@ -12,7 +12,6 @@ var debug = require('debug')('app:app');
 // const LoginPage = React.lazy(() => import('./views/login-page'));
 const MockLoginPage = React.lazy(() => import('./views/mock-login'));
 const HomePage = React.lazy(() => import('./presenters/homepage-presenter'));
-
 const HostWaiting = React.lazy(() => import('./presenters/host-waiting-presenter'));
 const HostGame = React.lazy(() => import('./presenters/host-game-presenter'));
 const HostVote = React.lazy(() => import('./presenters/host-voting-presenter'));
@@ -43,12 +42,6 @@ const App: React.FC<AppProps> = ({ model }) => {
     };
   }, []);
 
-  const handleLogout = () => {
-    debug("logout");
-    redirect('/homepage');
-    setIsAuthenticated(false);
-  };
-
   const handleLogin = () => {
     debug("login");
     setIsAuthenticated(true);
@@ -65,15 +58,15 @@ const App: React.FC<AppProps> = ({ model }) => {
           />
           <Route 
             path="/homepage" 
-            element={isAuthenticated ? <HomePage model={model} /> : <MockLoginPage model={model} handleLogin={handleLogin} />} 
+            element={isAuthenticated ? <HomePage model={model} /> : <Navigate to="/login" />} 
           />
           <Route
             path="/profile"
-            element={<ProfilePage handleLogout={handleLogout} />} 
+            element={<ProfilePage handleLogout={setIsAuthenticated} />} 
           />
           <Route path="/host">
             <Route 
-              path="game" 
+              index 
               element={<HostWaiting model={model} />} 
             />
             <Route 
@@ -91,7 +84,7 @@ const App: React.FC<AppProps> = ({ model }) => {
           </Route>
           <Route path="/player">
             <Route 
-              path="game" 
+              index
               element={<PlayerWaiting model={model} />} 
             />
             <Route 

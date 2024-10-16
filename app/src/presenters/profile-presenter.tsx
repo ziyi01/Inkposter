@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import ProfilePageView from '../views/profile';
 import NavBar from '../components/navbar';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfilePresenterProps {
-  handleLogout: () => void; // Define the handleLogout prop
+  handleLogout: (isAuthenticated: boolean) => void; // Define the handleLogout prop
 }
 
 const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout }) => {
+  const navigate = useNavigate();
   const [name] = useState<string>('John Doe'); // Use state for the name
   const points = [
     { title: 'Point 1', value: 'Value 1' },
@@ -15,14 +17,19 @@ const ProfilePagePresenter: React.FC<ProfilePresenterProps> = ({ handleLogout })
     { title: 'Point 4', value: 'Value 4' },
   ];
 
+  const onLogout = () => {
+    handleLogout(false);
+    navigate("/login");
+  };
+
   return (
-    <>
+    <div>
       <ProfilePageView
         name={name} // Pass the name variable here
         points={points} // Pass the points array here
-        onLogout={handleLogout} // Pass the handleLogout function here
+        onLogout={onLogout} // Pass the handleLogout function here
       />
-    </>
+    </div>
   );
 };
 
