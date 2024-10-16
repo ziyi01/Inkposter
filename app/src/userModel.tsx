@@ -1,4 +1,6 @@
 import { closeGame } from "./components/socket-client";
+import { ensureUserExistsDB, getUserDB, getUserStatsDB } from "./server-requests";
+var debug = require('debug')('app:userModel');
 
 export type playerSession = {
     playerName: string;
@@ -33,9 +35,27 @@ export class UserModel {
         this.sessionPlayer = {playerName: "", prompt: "", role: ""}; 
     }
 
-    login(id: number, playerName: string) {
+    async login(id: number,) {
         this.id = id;
-        this.name = playerName;
+        try {
+            // check if user exists or create
+            await ensureUserExistsDB(id);
+            
+            // get persisted userdata
+            const userData = await getUserDB(id);
+            const userStats = await getUserStatsDB(id);
+
+            debug("userData: ", userData);
+            debug("userStats: ", userStats);
+
+            // set data in model
+            this.name = userData.username;
+            // !!! add after merge: this.previousThemes = userData.previousThemes;
+
+            // !!! add after merge: this.playerStats.scores = userStats.scores;
+        } catch {
+            // if ok, get user!
+        }
     }
     
     setRoomId(roomId:string) {

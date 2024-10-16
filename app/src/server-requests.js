@@ -17,7 +17,7 @@
  * @param {string} avatar 
  * @returns string, confirmation
  */
-async function loginUserDB(userID, username="new_user", avatar="") {
+async function ensureUserExistsDB(userID, username="NewUser", avatar="placeholder.png") {
     const request = new Request("/api/user", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -37,7 +37,7 @@ async function loginUserDB(userID, username="new_user", avatar="") {
 /**
  * 
  * @param {number, string} userID 
- * @returns json, user information
+ * @returns json, { _id: string, username:string, previousThemes:string[] }
  */
 async function getUserDB(userID) {
     var response = await fetch(`/api/user/${userID}`);
@@ -51,7 +51,7 @@ async function getUserDB(userID) {
 /**
  * 
  * @param {*} userID 
- * @returns json, user stats
+ * @returns json, { _id: string, scores:{innocent:{wins:number, losses:number}, inkposter:{wins:number, losses:number}, gallery:string[] }
  */
 async function getUserStatsDB(userID) {
     var response = await fetch(`/api/user/${userID}/userStats`);
@@ -209,7 +209,7 @@ async function getGeneratedSessionParams(previousThemes) {
 
 // Export db functions
 exports.getUserDB = getUserDB;
-exports.loginUserDB = loginUserDB;
+exports.ensureUserExistsDB = ensureUserExistsDB;
 exports.getUserStatsDB = getUserStatsDB;
 exports.updateUsernameDB = updateUsernameDB;
 exports.updateAvatarDB = updateAvatarDB;

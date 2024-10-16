@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { UserModel } from '../userModel';
 
-const GitHubCallback: React.FC = () => {
+interface GithubCallbackProps {
+  model: UserModel;
+}
+
+const GitHubCallback: React.FC<GithubCallbackProps> = ({model}) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -36,11 +41,15 @@ const GitHubCallback: React.FC = () => {
             throw new Error("Invalid JSON response from server");
           }
         })
-        .then(data => {
+        .then(async data => {
           if (data.uniqueId && data.access_token) {
             Cookies.set('uniqueId', data.uniqueId, { expires: 7 });
             Cookies.set('accessToken', data.access_token, { expires: 7 });
             Cookies.set('isAuthenticated', 'true', { expires: 7 });
+            
+            // Get persisted data from database and set in model
+            await model.login(data.uniqueId); // async, need to 
+
             navigate('/homepage');
           } else {
             throw new Error('Invalid response data');

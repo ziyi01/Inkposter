@@ -60,7 +60,7 @@ const App: React.FC<AppProps> = ({ model }) => {
             } 
           />
           {/*Githug authorization url, defined in file, CHECK BEFORE DEPLOYMENT*/ }
-          <Route path="/auth/github/callback" element={<GitHubCallback />} 
+          <Route path="/auth/github/callback" element={<GitHubCallback model={model} />} 
           />
 
           {/* protected routes */}
