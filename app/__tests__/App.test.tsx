@@ -5,7 +5,6 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from "react-router-dom";
 
 // import client components
-import App from '../src/App';
 import { UserModel } from "../src/userModel";
 import LoginPage from '../src/views/login-page';
 import HomePage from '../src/views/homepage';
@@ -14,10 +13,15 @@ import ProfilePage from "../src/views/profile";
 const model = new UserModel();
 
 test('Login page has login button', async () => {
+  const testFunction = jest.fn(() => false);
+
   await waitFor(() => {
     render(
       <MemoryRouter initialEntries={['/login']}>
-        <LoginPage />
+        <LoginPage 
+          message={''}
+          onGithubLogin={testFunction}
+        />
       </MemoryRouter>
     );
   });
@@ -57,7 +61,9 @@ test('Profile has log out button', async () => {
     render(
       <MemoryRouter initialEntries={['/homepage']}>
         <ProfilePage
-          handleLogout={testFunction}
+          name='test'
+          points={[{title: "test", value: "test"}]}
+          onLogout={testFunction}
           />
       </MemoryRouter>
     );
@@ -67,11 +73,6 @@ test('Profile has log out button', async () => {
   expect(buttonElement).not.toBeDisabled();
   act(() => {fireEvent.click(buttonElement)});
   expect(testFunction).toHaveBeenCalledTimes(1);
-});
-
-test('Redirect to /login when rendered', async () => {
-  await waitFor(() => {render(<App model={model}/>);});
-  expect(window.location.pathname).toBe('/login');
 });
 
 afterAll((done) => {

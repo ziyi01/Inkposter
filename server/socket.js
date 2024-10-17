@@ -35,15 +35,17 @@ module.exports.initSockets = function(socket, io){
             return;
         }
 
-        debug('Player joined: ' + data.playerId + "room" + data.roomId);
-
-        socket.join(data.roomId);
-        socket.emit('room-joined', {roomId: data.roomId});
-        roomData[data.roomId].playerCount++;
-        roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
-        roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
-
-        debug(data.playerId, "joined with socket", socket.id);
+        
+        if(!roomData[data.roomId].playerSocket.find((e) => e.playerId == data.playerId)){
+            debug('Player joined: ' + data.playerId + "room" + data.roomId);
+            roomData[data.roomId].playerCount++;
+            roomData[data.roomId].playerSocket.push({socket: socket, playerId: data.playerId});
+            socket.join(data.roomId);
+            socket.emit('room-joined', {roomId: data.roomId});
+            roomData[data.roomId].host.emit('player-joined', {playerId: data.playerId, playerName: data.playerName});
+        } else {
+            socket.emit('player-exists');
+        }
     });
 
     socket.on('start-game', (data) => { // Host start game  
@@ -126,9 +128,11 @@ module.exports.initSockets = function(socket, io){
         }
     });
 
-    socket.on('quit-game', (data) => {
+    socket.on('quit-game', (data) => {  // Player presses quit game
         debug(data.playerId, "left room", data.roomId);
         if (roomData[data.roomId]) {
+            roomData[data.roomId].playerCount--;
+            roomData[data.roomId].playerSocket.splice(roomData[data.roomId].playerSocket.indexOf(data.playerId), 1); // delete player
             roomData[data.roomId].host.emit('player-left', {playerId: data.playerId});
             socket.leave(data.roomId);
         }

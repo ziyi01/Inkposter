@@ -1,32 +1,25 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { UserModel } from '../userModel';
 
 interface LoginPageProps {
     model: UserModel;
-    user: string;
+    handleLogin: () => void;
 }
 
-const MockLoginPage: React.FC<LoginPageProps> = ({ model, user }) => {
+const MockLoginPage: React.FC<LoginPageProps> = ({ model, handleLogin }) => {
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    const [userId, setUserId] = useState('');
     
-    if (user !== "0") {
-        model.login(user, "User" + user);
-        navigate('/homepage'); 
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        model.login(password, username);
-        navigate('/homepage'); 
+      e.preventDefault();
+      model.mockLogin(userId, username);
+      handleLogin();
     };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-xl font-semibold mb-4 text-center">Login</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center">Mock Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700">Username:</label>
@@ -40,14 +33,14 @@ const MockLoginPage: React.FC<LoginPageProps> = ({ model, user }) => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">Password:</label>
+            <label htmlFor="password" className="block text-gray-700">UserID:</label>
             <input
-              type="password"
-              id="password"
+              type="text"
+              id="userID"
               className="mt-1 p-2 border border-gray-300 rounded w-full text-black bg-gray-100"
-              value={password}
-              placeholder="Enter a userID"
-              onChange={(e) => setPassword(e.target.value)}
+              value={userId}
+              placeholder="Enter a unique userID"
+              onChange={(e) => setUserId(e.target.value)}
             />
           </div>
           <button 

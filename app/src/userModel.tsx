@@ -1,8 +1,7 @@
 import { closeGame } from "./components/socket-client";
 import { Player } from "./components/playerInterface";
-import { addSessionResults } from "./components/server-requests";
-
-var debug = require('debug')('app:userModel');
+import { ensureUserExistsDB, getUserDB, getUserStatsDB, updatePreviousThemesDB, addSessionResultsDB } from "./components/server-requests";
+const debug = require('debug')('app:userModel');
 
 export type playerSession = {
     playerId: string;
@@ -46,13 +45,33 @@ export class UserModel {
         this.profileStats = {innocent: {wins: 0, losses: 0}, inkposter: {wins: 0, losses: 0}}
     }
 
-    // General functions
-    login(playerId: string, playerName: string) {
+    mockLogin(playerId: string, username: string) {
         this.playerId = playerId;
-        this.name = playerName;
-        debug("MODELPARAMS SET", "playerId:", this.playerId, "playerName:", this.name);
-        // TODO update to actually make server-requests and update model from response
+        this.name = username;
+    }
 
+    async login(playerId: string) {
+        this.playerId = playerId;
+        try {
+            // check if user exists or create
+            await ensureUserExistsDB(playerId);
+            
+            // get persisted userdata
+            const userData = await getUserDB(playerId);
+            const userStats = await getUserStatsDB(playerId);
+
+            debug("userData: ", userData);
+            debug("userStats: ", userStats);
+
+            // set data in model
+            this.name = userData.username;
+            this.previousThemes = userData.previousThemes;
+            this.profileStats.innocent = userStats.innocent;
+            this.profileStats.inkposter = userStats.inkposter;
+
+        } catch (err) {
+            debug("Error during database communication: ", err);
+        }
     }
     
     setRoomId(roomId:string) {
@@ -123,6 +142,11 @@ export class UserModel {
             this.sessionHost.playersData = playerData;
 
             this.previousThemes.push(theme);
+            updatePreviousThemesDB(this.playerId, theme).catch(handleErr); // not crucial, only to make generated params better
+        }
+
+        function handleErr(err:Error) {
+            debug("Persist failed: ", err);
         }
     }
 
@@ -141,7 +165,7 @@ export class UserModel {
                 playerId: player.playerId,
                 playerName: player.name,
                 voteCount: 0,
-                themeGuess: ""
+                themeGuess: "-"
             }
         });
 
@@ -235,7 +259,12 @@ export class UserModel {
             }
         }
 
-        addSessionResults(this.playerId, this.profileStats, "placeholder.png");
+        addSessionResultsDB(this.playerId, this.profileStats, "placeholder.png").catch(handleErr);
+
+        function handleErr(err:Error) {
+            debug("Something went wrong: ", err);
+            alert("Results could not be saved to database.");
+        }
     }
 
     reset() {
