@@ -1,13 +1,14 @@
 import React from 'react';
+import { BiCheck } from "react-icons/bi";
 import { playerSession } from '../userModel';
 
 interface HostVotingProps {
   playerCanvases: playerSession[];
-  playerNames: {[key: string]: string};
+  playerInfo: {[key: string]: [string, boolean]}; // key: playerId, values: [playerName, connection]
   timer: React.ReactNode;
 }
 
-const HostVoting: React.FC<HostVotingProps> = ({ playerCanvases, playerNames, timer }) => {
+const HostVotingView: React.FC<HostVotingProps> = ({ playerCanvases, playerInfo, timer }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-background text-white">
       {/* Timer */}
@@ -26,14 +27,20 @@ const HostVoting: React.FC<HostVotingProps> = ({ playerCanvases, playerNames, ti
         {playerCanvases.map(canvasData => (
           <div key={canvasData.playerId} className="flex flex-col items-center">
             <div
-              className="h-64 w-36 bg-sky-400 rounded-lg mb-2"
+              className={`flex h-64 w-36 bg-gray-800 rounded-lg mb-2 shadow-md 
+              ${playerInfo[canvasData.playerId][1]? 
+                "bg-blend-normal" : 
+                "bg-blend-overlay"}`}
               style={{ 
                 backgroundImage: `url(${canvasData.canvas})`, 
                 backgroundSize: 'cover', 
                 backgroundPosition: 'center' 
-              }}
-            />
-            <p className="text-lg font-semibold">{playerNames[canvasData.playerId]}</p>
+              }}>
+              <p className="text-center place-self-center text-white font-bold">
+                {playerInfo[canvasData.playerId][1]? "" : "Player Disconnected"}
+                </p>
+            </div>
+            <p className="text-lg font-semibold">{playerInfo[canvasData.playerId][0]}</p>
           </div>
         ))}
       </div>
@@ -41,4 +48,4 @@ const HostVoting: React.FC<HostVotingProps> = ({ playerCanvases, playerNames, ti
   );
 }
 
-export default HostVoting;
+export default HostVotingView;

@@ -16,8 +16,8 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
     const [voteCount, setVoteCount] = useState(0);
     const navigate = useNavigate();
 
-    const playerNames = model.sessionHost.players.reduce((acc: {[key: string]: string}, player) => {
-        acc[player.playerId] = player.name;
+    const playerInfo = model.sessionHost.players.reduce((acc: {[key: string]: [string, boolean]}, player) => {
+        acc[player.playerId] = [player.name, player.connection];
         return acc;
       }, {});
 
@@ -59,7 +59,7 @@ const HostVoting: React.FC<HostVotingProps> = ({model}) => {
 
     return (
         <HostVotingView playerCanvases={model.sessionHost.playersData}
-        playerNames={playerNames}
+        playerInfo={playerInfo}
         timer={<Timer
               initialTime={10}
               onTimerEnd={handleTimerEnd}
