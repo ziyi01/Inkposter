@@ -15,6 +15,9 @@ interface PlayerVotingProps {
 const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     const [voted, setVoted] = useState(false);
     const navigate = useNavigate();
+    const [themes, setThemes] = useState<string[]>(() => {
+        return [model.sessionHost.theme, ...model.sessionHost.fake_themes].sort(() => Math.random() - 0.5);
+    });
 
     useEffect(() => {
         socket.on('voting-ended', (data) => {  // Voting ended at the end of game
@@ -61,7 +64,7 @@ const PlayerVoting: React.FC<PlayerVotingProps> = ({model}) => {
     return <div>
         <PlayerVotingView
             playerId={model.playerId}
-            themes={[model.sessionHost.theme, ...model.sessionHost.fake_themes].sort(() => Math.random() - 0.5)}
+            themes={themes}
             players={model.sessionHost.players}
             voted={voted}
             onLeaveClick={handleLeaveClick}
